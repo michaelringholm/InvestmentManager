@@ -1,0 +1,63 @@
+runAllManagedModulesForAllRequests
+
+<system.webServer>
+  <modules runAllManagedModulesForAllRequests="true"/>
+</system.webServer>
+
+
+http://188.121.60.77:93/
+
+
+http://invest.ihedge.dk/
+
+
+InvestmentManager
+App ID: 	432126790209278
+App Secret: 	a70ec9940e2ff59e18ec51a87dc69d12
+
+
+https://graph.facebook.com/oauth/access_token?client_id=432126790209278&redirect_uri=http%3a%2f%2finvest.ihedge.dk%2fHome%2fAuthorized&client_secret=a70ec9940e2ff59e18ec51a87dc69d12&code=AQDcs9_6vhOOn_r8fgifMj95AhjWHiNztVZtJJjJdIlJhPfrbb04nmSkxXRwpsywM7NFi_ox7T7KDoNqtFyQ8Yr078MZ-k4Qu-NIeetangDA41E1GYkwOpQJRJPT61JGfy1-8_vznogbYgDcAuFFR970-WNERb55J3-G5HBKTVFI1rZlgFCRF1s4UbMJZxalQ-8nOLG9ebf8-czyess6B6uK
+
+
+access_token=AAAGJBFvUDv4BAPr4qDnuHINAWGgydRJBPqBz7cpGY1akhindrTttoTYrS6bjQU4fCnOAyZAJPVRWL3B9OAEEla3w9vT4PZAy6QaVtQcgZDZD&expires=5177146
+
+{
+   "id": "100001477828296",
+   "name": "IHedge As",
+   "first_name": "IHedge",
+   "last_name": "As",
+   "link": "http://www.facebook.com/ihedge.as",
+   "username": "ihedge.as",
+   "location": {
+      "id": "110343502319180",
+      "name": "Copenhagen, Denmark"
+   },
+   "bio": "I \u00e5r 2000 fik fire udviklere fra den finansielle sektor en god ide. Deres \u00f8nske var at udvikle og levere et risikostyringssystem, til de st\u00f8rste banker i Norden. De fire udviklere havde set et behov i finansverdenen, som de, med deres erfaring kunne opfylde. Derfor stiftede udviklerne iHedge A/S og siden da er det g\u00e5et st\u00e6rkt.\r\n\r\nHos iHedge A/S, er vi p\u00e5 nuv\u00e6rende tidspunkt 12 ansatte, hvoraf st\u00f8rstedelen er udviklere, som med deres st\u00e6rke kompetencer l\u00f8ser mange komplekse opgaver for vores kunder. Fra vores kontor i \u00d8restaden, holder vi os l\u00f8bende orienteret om hvad der sker, hos vores kunder, samt i de brancher som vi besk\u00e6ftiger os med. Medarbejderne p\u00e5 kontoret arbejder prim\u00e6rt med Projekt- og processtyring, salg og marketing. Vi har en god energi og vi har l\u00f8bende gang i udviklingsprojekter.  \r\n\r\niHedge \u00f8nsker at v\u00e6re st\u00e6rke p\u00e5 forretningen, vi vil v\u00e6re med til at skabe v\u00e6rdi for vores kunder og deres forretning. Derfor er vi blevet specialister i at effektivisere og automatisere arbejdsprocesser for vores kunder.\r\n\r\nNedenfor er der en liste over husets kompetencer, men er der specifikke sp\u00f8rgsm\u00e5l til opgaver, forsl\u00e5r vi at du/I kontakter os for en uddybbelse.\r\n\r\n\r\n1.PROCESS AND METHOD\r\n\r\nType\r\nObject Oriented Analysis\r\nObject Oriented Design\r\nObject Oriented Programming\r\nRational Unified Processing (RUP)\r\nSCRUM\r\nStructured Analysis\r\nStructured Design\r\nSOA (Service Oriented Architecture)\r\nModel Driven Architecture\r\nTest Driven Development\r\nUML\r\nTeaching\r\nDocumentation\r\n2.PROGRAMMING LANGUAGES\r\nType\r\nJava (JDK)\r\nC# .Net\r\nOracle PL/SQL\r\nSQL\r\nMicrosoft T-SQL\r\nXML\r\nXSLT\r\nJSP, JSF and Woodstock\r\nASP and ASP.net\r\nHTML / JavaScript\r\nJava Swing\r\nWinforms\r\nVisual Basic\r\nC++\r\nC\r\nApplets\r\n\r\n\r\n3.QUEUES AND PROTOCOLS\r\nType\r\nSOAP / WebServices\r\nIBM MQ Series / WebSphere\r\nOracle Advanced Queueing (AQ)\r\nJMS\r\nTibco Rendezvous and RVCM\r\nFTP\r\nTCP/IP\r\nIP and UDP Sockets\r\n\r\n4.DATABASES\r\nType\r\nOracle and Oracle Express\r\nMicrosoft SQL Server and MSSQL Express\r\nMySQL\r\n\r\n5.WEB SERVERS\r\nType\r\nApache Tomcat\r\nIIS (Microsoft)\r\n\r\n6.PLATFORMS\r\nType\r\nWindows XP, 2000, 2003, 2008, Vista\r\nSun Solaris\r\nAIX, UNIX, LINUX, SCOUNIX\r\n\r\n7.CMS\r\nType\r\nMicrosoft Office Sharepoint Server 2007\r\nWindows Sharepoint Services 3.0\r\nUmbraco\r\n\r\n\r\n8.VERSION CONTROL\r\nType\r\nSubversion\r\nClearCase\r\nVisual Source Safe\r\nCCC Harvest\r\nTeam Foundation\r\n\r\n9.TEST\r\nType\r\nUnit testing\r\nIntegration testing\r\nRegression testing\r\nInspections and Reviews\r\n\r\n10.CONCEPTS\r\nType\r\nScalability\r\nPerformance\r\nClustering\r\nGrid and farms\r\nLogging\r\nAudit",
+   "work": [
+      {
+         "employer": {
+            "id": "178358562198270",
+            "name": "IHedge As"
+         },
+         "position": {
+            "id": "109439219074169",
+            "name": "Project Manager"
+         }
+      }
+   ],
+   "gender": "female",
+   "timezone": 1,
+   "locale": "en_US",
+   "languages": [
+      {
+         "id": "114665915212391",
+         "name": "Danish"
+      },
+      {
+         "id": "106059522759137",
+         "name": "English"
+      }
+   ],
+   "verified": true,
+   "updated_time": "2013-03-06T09:47:54+0000"
+}

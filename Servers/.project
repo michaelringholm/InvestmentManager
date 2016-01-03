@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>Servers</name>
+	<comment></comment>
+	<projects>
+		<project>InvestmentManagerDAL</project>
+		<project>InvestmentManagerDTL</project>
+		<project>InvestmentManagerWS</project>
+		<project>PriceFeed</project>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+</projectDescription>

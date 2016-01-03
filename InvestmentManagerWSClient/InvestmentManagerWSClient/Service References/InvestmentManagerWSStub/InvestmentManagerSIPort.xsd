@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://finance.ihedge.dk/" targetNamespace="http://finance.ihedge.dk/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="getAssets" type="tns:getAssets" />
+  <xs:element name="getAssetsResponse" type="tns:getAssetsResponse" />
+  <xs:element name="getCategories" type="tns:getCategories" />
+  <xs:element name="getCategoriesResponse" type="tns:getCategoriesResponse" />
+  <xs:element name="getPortfolio" type="tns:getPortfolio" />
+  <xs:element name="getPortfolioResponse" type="tns:getPortfolioResponse" />
+  <xs:element name="getPortfolios" type="tns:getPortfolios" />
+  <xs:element name="getPortfoliosResponse" type="tns:getPortfoliosResponse" />
+  <xs:element name="helloWorld" type="tns:helloWorld" />
+  <xs:element name="helloWorldResponse" type="tns:helloWorldResponse" />
+  <xs:complexType name="helloWorld">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:complexType name="helloWorldResponse">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:complexType name="getCategories">
+    <xs:sequence />
+  </xs:complexType>
+  <xs:complexType name="getCategoriesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="return" type="tns:category" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="category">
+    <xs:sequence>
+      <xs:element name="id" type="xs:int" />
+      <xs:element minOccurs="0" name="title" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPortfolio">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element name="arg1" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPortfolioResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:portfolio" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="portfolio">
+    <xs:sequence>
+      <xs:element name="id" type="xs:int" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="securities" nillable="true" type="tns:security" />
+      <xs:element minOccurs="0" name="title" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="security">
+    <xs:sequence>
+      <xs:element name="anualVolatility" type="xs:double" />
+      <xs:element name="avgVoltatility" type="xs:double" />
+      <xs:element name="dailyVolatility" type="xs:double" />
+      <xs:element name="marketValue" type="xs:double" />
+      <xs:element name="position" type="xs:int" />
+      <xs:element name="purchaceQuote" type="xs:double" />
+      <xs:element name="purchaseAmount" type="xs:double" />
+      <xs:element name="quote" type="xs:double" />
+      <xs:element minOccurs="0" name="symbol" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAssets">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAssetsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="return" type="tns:asset" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="asset">
+    <xs:sequence>
+      <xs:element name="id" type="xs:int" />
+      <xs:element name="quote" type="xs:double" />
+      <xs:element minOccurs="0" name="symbol" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPortfolios">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPortfoliosResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="return" type="tns:portfolio" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

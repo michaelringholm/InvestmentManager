@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://finance.ihedge.dk/" name="InvestmentManagerSIService" targetNamespace="http://finance.ihedge.dk/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="http://192.168.1.101:8081/InvestmentManagerWS/services/InvestmentManagerSIPort?xsd=investmentmanagersi_schema1.xsd" namespace="http://finance.ihedge.dk/" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="getAssets">
+    <wsdl:part name="parameters" element="tns:getAssets" />
+  </wsdl:message>
+  <wsdl:message name="getAssetsResponse">
+    <wsdl:part name="parameters" element="tns:getAssetsResponse" />
+  </wsdl:message>
+  <wsdl:message name="getPortfolios">
+    <wsdl:part name="parameters" element="tns:getPortfolios" />
+  </wsdl:message>
+  <wsdl:message name="helloWorld">
+    <wsdl:part name="parameters" element="tns:helloWorld" />
+  </wsdl:message>
+  <wsdl:message name="getPortfolio">
+    <wsdl:part name="parameters" element="tns:getPortfolio" />
+  </wsdl:message>
+  <wsdl:message name="helloWorldResponse">
+    <wsdl:part name="parameters" element="tns:helloWorldResponse" />
+  </wsdl:message>
+  <wsdl:message name="getCategories">
+    <wsdl:part name="parameters" element="tns:getCategories" />
+  </wsdl:message>
+  <wsdl:message name="getPortfoliosResponse">
+    <wsdl:part name="parameters" element="tns:getPortfoliosResponse" />
+  </wsdl:message>
+  <wsdl:message name="getCategoriesResponse">
+    <wsdl:part name="parameters" element="tns:getCategoriesResponse" />
+  </wsdl:message>
+  <wsdl:message name="getPortfolioResponse">
+    <wsdl:part name="parameters" element="tns:getPortfolioResponse" />
+  </wsdl:message>
+  <wsdl:portType name="InvestmentManagerInterface">
+    <wsdl:operation name="helloWorld">
+      <wsdl:input name="helloWorld" message="tns:helloWorld" />
+      <wsdl:output name="helloWorldResponse" message="tns:helloWorldResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getCategories">
+      <wsdl:input name="getCategories" message="tns:getCategories" />
+      <wsdl:output name="getCategoriesResponse" message="tns:getCategoriesResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getPortfolio">
+      <wsdl:input name="getPortfolio" message="tns:getPortfolio" />
+      <wsdl:output name="getPortfolioResponse" message="tns:getPortfolioResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getAssets">
+      <wsdl:input name="getAssets" message="tns:getAssets" />
+      <wsdl:output name="getAssetsResponse" message="tns:getAssetsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getPortfolios">
+      <wsdl:input name="getPortfolios" message="tns:getPortfolios" />
+      <wsdl:output name="getPortfoliosResponse" message="tns:getPortfoliosResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InvestmentManagerSIServiceSoapBinding" type="tns:InvestmentManagerInterface">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getCategories">
+      <soap:operation soapAction="urn:GetCategories" style="document" />
+      <wsdl:input name="getCategories">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getCategoriesResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="helloWorld">
+      <soap:operation soapAction="urn:HelloWorld" style="document" />
+      <wsdl:input name="helloWorld">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="helloWorldResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPortfolio">
+      <soap:operation soapAction="urn:GetPortfolio" style="document" />
+      <wsdl:input name="getPortfolio">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getPortfolioResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAssets">
+      <soap:operation soapAction="urn:GetAssets" style="document" />
+      <wsdl:input name="getAssets">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getAssetsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPortfolios">
+      <soap:operation soapAction="urn:GetPortfolios" style="document" />
+      <wsdl:input name="getPortfolios">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getPortfoliosResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="InvestmentManagerSIService">
+    <wsdl:port name="InvestmentManagerSIPort" binding="tns:InvestmentManagerSIServiceSoapBinding">
+      <soap:address location="http://192.168.1.101:8081/InvestmentManagerWS/services/InvestmentManagerSIPort" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
