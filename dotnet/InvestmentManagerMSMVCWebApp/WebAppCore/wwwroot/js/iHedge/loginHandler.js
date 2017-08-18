@@ -11,6 +11,13 @@
         });
         FB.AppEvents.logPageView();
 
+        if (FB) {
+            // check if already logged in and whether an auth token has been provided by InvestmentManager auth service
+            //FB.getLoginStatus(function (status) { console.log(status); })
+            if($("#investAuthToken").val() == "")
+                loginHelper.afterFBLogin();
+        }
+
         FB.Event.subscribe('auth.login', function (response) { loginHelper.afterFBLogin(); });
         FB.Event.subscribe('auth.logout', function (response) { loginHelper.afterFBLogout(); });
     };
@@ -38,6 +45,7 @@ function LoginHelper() {
                 // request, and the time the access token and signed request each expire
                 var uid = response.authResponse.userID;
                 var accessToken = response.authResponse.accessToken;
+                _this.requestAuthToken("FB", uid);
             } else if (response.status === 'not_authorized') {
                 console.log("FB login succeeded, but was not authorized by user!");
                 // the user is logged in to Facebook, but has not authenticated your app
@@ -53,7 +61,23 @@ function LoginHelper() {
     };
 
     this.requestAuthToken = function (loginProvider, userId) {
+        var loginInfo = { loginProvider: loginProvider, providerSpecificUserId:userId };
 
+        $.ajax({
+            type: "POST",
+            url: "/Account/RequestAuthToken",
+            contentType: 'application/json',
+            dataType: 'json',
+            cache: false,
+            data: { loginInfo: loginInfo },
+            success: function (result) {
+                console.log("got an auth token from server!");
+                $("#investAuthToken").val(result.authToken);
+            },
+            error: function (result) {
+                ShowError(result.responseText);
+            }
+        });
     };
 }
 

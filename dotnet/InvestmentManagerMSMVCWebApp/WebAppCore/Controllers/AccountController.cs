@@ -26,6 +26,11 @@ namespace WebAppCore.Controllers
         public ActionResult Login()
         {
             return View();
-        }       
+        }
+
+        public JsonResult RequestAuthToken(String authProvider, String providerSpecificUserId)
+        {
+            return new JsonResult(new { authToken = AuthService.GetAuthToken(authProvider, providerSpecificUserId) });
+        }
     }
 }
