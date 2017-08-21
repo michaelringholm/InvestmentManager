@@ -17,6 +17,8 @@ const dynamo = new doc.DynamoDB();
  * query string parameter. To put, update, or delete an item, make a POST,
  * PUT, or DELETE request respectively, passing in the payload to the
  * DynamoDB API as a JSON body.
+ 
+ * http://dev.splunk.com/view/event-collector/SP-CAAAE6Z
  * 
  * curl -H "x-api-key: maZYMtpzBw6PEscbRQASw8er5uvtiBaT8trhSoy6" -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"TableName":"Category","Item":{"CategoryName":"finance","Title":"Finance"}}' https://81kkzuo344.execute-api.eu-central-1.amazonaws.com/dev/StoreCategoryNJS
  * curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"TableName":"Category","Item":{"CategoryName": "finance","Title": "Finance"}' https://07pjh8rce8.execute-api.eu-central-1.amazonaws.com/prod/StoreCategoryNJS
