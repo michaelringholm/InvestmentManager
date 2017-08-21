@@ -1,7 +1,9 @@
-﻿
-@{
-    ViewData["Title"] = "Portfolios";
+﻿@model WebAppCore.Models.Account.AuthModel
+@section Scripts
+{
+    <script src="@Url.Content("~/js/iHedge/Portfolio.js")"></script>
 }
+@{ ViewData["Title"] = "Portfolios"; }
 
 <h2>Portfolios</h2>
 <div style="margin-left: 46px; margin-top: 12px;">
@@ -59,7 +61,7 @@
     
     <!-- Templates -->
     <!-- Portfolio Header Template -->
-    <div class="portfolio portfolioTemplate" data-portfolio-id="" data-portfolio-title="">
+    <div id="portfolioTemplate" class="portfolio" data-portfolio-id="" data-portfolio-title="">
         <div style="margin-left: 8px; margin-top: 10px; float: left;">
             <img alt="portfolioTitle" src="/Content/images/Pie-Chart-icon128.png" />
         </div>

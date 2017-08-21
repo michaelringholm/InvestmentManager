@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAppCore.Models.Account;
 using WebAppCore.Services;
 
 namespace WebAppCore.Auth
@@ -11,12 +12,26 @@ namespace WebAppCore.Auth
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, LoginProviderAuthTokenRequirement loginProviderAuthTokenRequirement)
         {
-            var q = ((Microsoft.AspNetCore.Http.Internal.QueryCollection)((Microsoft.AspNetCore.Http.Internal.DefaultHttpRequest)((Microsoft.AspNetCore.Http.DefaultHttpContext)((Microsoft.AspNetCore.Mvc.ActionContext)context.Resource).HttpContext).Request).Query);
-            var loginInfo = AuthService.GetLoginInfo(q);            
+            var method = ((Microsoft.AspNetCore.Http.Internal.DefaultHttpRequest)((Microsoft.AspNetCore.Http.DefaultHttpContext)((Microsoft.AspNetCore.Mvc.ActionContext)context.Resource).HttpContext).Request).Method;
+            AuthModel authModel;
+            if (method.ToUpper() == "GET")
+            {
+                var q = ((Microsoft.AspNetCore.Http.Internal.QueryCollection)((Microsoft.AspNetCore.Http.Internal.DefaultHttpRequest)((Microsoft.AspNetCore.Http.DefaultHttpContext)((Microsoft.AspNetCore.Mvc.ActionContext)context.Resource).HttpContext).Request).Query);
+                authModel = AuthService.GetLoginInfo(q);
+            }
+            else if (method.ToUpper() == "POST") {
+                var headers = ((Microsoft.AspNetCore.Http.Internal.DefaultHttpRequest)((Microsoft.AspNetCore.Http.DefaultHttpContext)((Microsoft.AspNetCore.Mvc.ActionContext)context.Resource).HttpContext).Request).Headers;
+                authModel = AuthService.GetLoginInfo(headers);
+            }
+            else {
+                //"Unsupported METHOD [" + method.ToUpper() + "]"
+                context.Fail();
+                return Task.CompletedTask;
+            }
 
-            loginProviderAuthTokenRequirement.AuthToken = loginInfo.AuthToken;
-            loginProviderAuthTokenRequirement.Provider = loginInfo.Provider;
-            loginProviderAuthTokenRequirement.UserId = loginInfo.UserId;
+            loginProviderAuthTokenRequirement.AuthToken = authModel.investAuthToken;
+            loginProviderAuthTokenRequirement.Provider = authModel.authProvider;
+            loginProviderAuthTokenRequirement.UserId = authModel.fbUserId;
 
             if (loginProviderAuthTokenRequirement == null || loginProviderAuthTokenRequirement.AuthToken == null)
             {

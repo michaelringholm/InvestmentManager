@@ -20,15 +20,19 @@ namespace InMaApp.Controllers
 
         public IActionResult Index()
         {
-            var loginInfo = AuthService.GetLoginInfo(HttpContext.Request.Query);
+            var authModel = AuthService.GetLoginInfo(HttpContext.Request.Query);
+            ViewData["InvestAuthToken"] = authModel.investAuthToken;
+            ViewData["AuthProviderUserId"] = authModel.fbUserId;
+            ViewData["AuthProviderName"] = authModel.authProvider;
+
             return View();
         }
 
         [HttpPost]
-        public JsonResult GetPortfolioHeaderList(AuthModel authModel)
+        public IActionResult GetPortfolioHeaders(AuthModel authModel)
         {
             var portfolioHeaders = dataService.GetPortfolioHeaders();
-            return Json(new { portfolioHeaders = portfolioHeaders });
+            return new JsonResult(new { portfolioHeaders = portfolioHeaders });
         }
 
         [HttpPost]

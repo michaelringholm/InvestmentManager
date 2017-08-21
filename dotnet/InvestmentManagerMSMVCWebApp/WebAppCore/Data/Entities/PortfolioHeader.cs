@@ -7,11 +7,11 @@ namespace WebAppCore.Data.Entities
 {
     public class PortfolioHeader
     {
-        public int Id { get; set; }
-        public double Cash { get; set; }        
-        public double MarketValue { get; set; }
-        public int Rank { get; set; }
-        public string Title { get; set; }
-        public int TournamentId { get; set; }
+        public String Id { get; set; }
+        public Double Cash { get; set; }        
+        public Double MarketValue { get; set; }
+        public Int16 Rank { get; set; }
+        public String Name { get; set; }
+        public Int16 TournamentId { get; set; }
     }
 }

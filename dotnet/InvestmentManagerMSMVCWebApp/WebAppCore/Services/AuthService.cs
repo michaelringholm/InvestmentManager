@@ -38,13 +38,21 @@ namespace WebAppCore.Services
                 return authTokenDic[key] == loginProviderAuthTokenRequirement.AuthToken;
         }
 
-        internal static LoginProviderAuthTokenRequirement GetLoginInfo(IQueryCollection q)
+        internal static AuthModel GetLoginInfo(IHeaderDictionary headers)
         {
-            var loginInfo = new LoginProviderAuthTokenRequirement();
-            loginInfo.AuthToken = q["authToken"];
-            loginInfo.Provider = q["authProviderName"];
-            loginInfo.UserId = q["authProviderUserId"];
+            var loginInfo = new AuthModel();
+            loginInfo.investAuthToken = headers["X-Auth-Token"];
+            loginInfo.authProvider = headers["X-Auth-Provider"];
+            loginInfo.fbUserId = headers["X-Auth-UserId"];
+            return loginInfo;
+        }
 
+        internal static AuthModel GetLoginInfo(IQueryCollection q)
+        {
+            var loginInfo = new AuthModel();
+            loginInfo.investAuthToken = q["authToken"];
+            loginInfo.authProvider = q["authProviderName"];
+            loginInfo.fbUserId = q["authProviderUserId"];
             return loginInfo;
         }
 

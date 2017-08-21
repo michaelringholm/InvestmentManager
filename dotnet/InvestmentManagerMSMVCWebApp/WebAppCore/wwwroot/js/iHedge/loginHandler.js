@@ -73,7 +73,7 @@ function LoginHelper() {
     this.afterFBLogout = function () {
         console.log("After FB logout!");
 
-        var logoutModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
+        var authModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
 
         $.ajax({
             type: "POST",
@@ -81,7 +81,7 @@ function LoginHelper() {
             contentType: 'application/json',
             dataType: 'json',
             cache: false,
-            data: JSON.stringify(logoutModel),
+            data: JSON.stringify(authModel),
             traditional: true,
             success: function (result) {
                 $("#investAuthToken").val("");

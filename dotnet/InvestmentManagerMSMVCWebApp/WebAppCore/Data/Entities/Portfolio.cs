@@ -7,8 +7,12 @@ namespace WebAppCore.Data.Entities
 {
     public class Portfolio
     {
-        private PortfolioHeader portfolioHeaderField;
-            private Security[] securitiesField;
-            private Security[] securitiesSummedField;
-        }
+        public String Id { get; set; }
+        public  String UserKey{ get; set; }
+        public String Cash { get; set; }
+        public String Title { get; set; }
+                                           /*private PortfolioHeader portfolioHeaderField;
+                                               private Security[] securitiesField;
+                                               private Security[] securitiesSummedField;*/
+    }
 }

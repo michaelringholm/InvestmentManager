@@ -6,20 +6,41 @@
 function Portfolio() {
     var _this = this;
 
-    function populateList() {
+    this.populateList = function() {
+        var authModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
+
         $.ajax({
             type: "POST",
-            url: "/Portfolio/GetPortfolioList",
+            url: "/Portfolio/GetPortfolioHeaders",
+            headers: {
+                'X-Auth-Provider': authModel.authProvider,
+                'X-Auth-UserId': authModel.fbUserId,
+                'X-Auth-Token': authModel.investAuthToken
+            },
             contentType: "application/json",
             dataType: "json",
             cache: false,
-            //data: null,
+            data: JSON.stringify(authModel),
             beforeSend: function () {
-                ShowAjaxLoader();
+                //xhr.setRequestHeader("Authorization", "Basic " + btoa(authModel.fbUserId + ":" + ""));
+                ShowAjaxLoader();                
             },
             complete: function () { HideAjaxLoader(); },
             success: function (result) {
-                $("#div1").html(result);
+                var portfolioHeaders = result.portfolioHeaders;
+                for (var portfolioIndex = 0; portfolioIndex < portfolioHeaders.length; portfolioIndex++) {
+                    var portfolio = portfolioHeaders[portfolioIndex];
+                    var portfolioWidget = $("#portfolioTemplate").clone();
+                    $(portfolioWidget).removeAttr("id");
+                    $(portfolioWidget).attr("data-portfolio-id", portfolio.id);
+                    $(portfolioWidget).attr("data-portfolio-title", portfolio.name);
+                    $(portfolioWidget).find(".portfolioCash").text(portfolio.cash);
+                    $(portfolioWidget).find(".portfolioMarketValue").text(portfolio.marketValue);
+                    $(portfolioWidget).find(".portfolioTitle").text(portfolio.name);
+                    $(portfolioWidget).show();
+                    portfolioWidget.appendTo("#portfolios");
+                }
+
                 $(".portfolio").click(function () {
                     var portfolioId = $(this).attr("data-portfolio-id");
                     ShowPortfolioSecurityList(portfolioId);

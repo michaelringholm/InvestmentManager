@@ -7,7 +7,7 @@ namespace WebAppCore.Extensions
 {
     internal class AWSHttpHelper
     {
-        internal static void PostJson(String baseUri, String apiMethod, StringContent payload)
+        internal static Object PostJson(String baseUri, String apiMethod, StringContent payload)
         {
             // https://81kkzuo344.execute-api.eu-central-1.amazonaws.com/prod/Invest_StoreDocNJS
             HttpClient httpClient = new HttpClient();
@@ -23,6 +23,8 @@ namespace WebAppCore.Extensions
             readTask.Wait();
             Console.Out.WriteLine("StatusCode:" + resultTask.StatusCode);
             Console.Out.WriteLine("Content:" + readTask.Result);
+
+            return readTask.Result;
         }
     }
 }
