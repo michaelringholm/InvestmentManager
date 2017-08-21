@@ -17,9 +17,16 @@ namespace WebAppCore.Controllers
 {
     public class HomeController : Controller
     {
+        private IDataService dataService;
+
+        public HomeController(IDataService dataService)
+        {
+            this.dataService = dataService;
+        }
+
         public IActionResult Index()
         {
-            DataService.StoreCategory();
+            dataService.StoreCategory();
             return View();
 
             // System.Net.Http.NoWriteNoSeekStreamContent

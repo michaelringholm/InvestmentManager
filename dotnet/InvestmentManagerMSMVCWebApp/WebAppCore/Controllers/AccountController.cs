@@ -1,36 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using WebAppCore.Models;
 using WebAppCore.Services;
-using WebAppCore.Context;
-using System.Net;
-using System.Text;
-using System.IO;
-using System.Web;
+using WebAppCore.Models.Account;
 
 namespace WebAppCore.Controllers
 {
     //[Authorize]
     public class AccountController : Controller
     {
-        public ActionResult Login()
+        /*private static String googleClientId = "869095199020.apps.googleusercontent.com";
+        private static String googleClientSecret = "tMaNuHx8SV1j4Ukh5DB9fDR-";
+        private static String redirectURI = "http://invest.ihedge.dk/Home/Authorized";
+        private static String uniqueToken = "1020312390123";*/
+
+        public IActionResult Login()
         {
             return View();
         }
 
-        public JsonResult RequestAuthToken(String authProvider, String providerSpecificUserId)
+        [HttpPost]
+        public IActionResult Logout([FromBody] AuthModel logoutModel)
         {
-            return new JsonResult(new { authToken = AuthService.GetAuthToken(authProvider, providerSpecificUserId) });
+            AuthService.InvalidateUser(logoutModel);
+            return new JsonResult(new { message = "User was logged out!" });
         }
+
+
+        //https://andrewlock.net/model-binding-json-posts-in-asp-net-core/
+        [HttpPost]
+        public IActionResult RequestAuthToken([FromBody] LoginModel loginModel)
+        {
+            if(String.IsNullOrEmpty(loginModel.authProvider) || String.IsNullOrEmpty(loginModel.fbUserId) || String.IsNullOrEmpty(loginModel.fbAccessToken))
+                return new JsonResult(new { authToken = "", errorMessage = "Some values were not provided!" });
+            else if (AuthService.isAuthProviderTokenValid(loginModel.fbAccessToken))
+                return new JsonResult(new { authToken = AuthService.GetAuthToken(loginModel.authProvider, loginModel.fbUserId) });
+            else
+                return new JsonResult(new { authToken = "", errorMessage = "Validation of Facebook token failed!" });
+        }
+
     }
 }

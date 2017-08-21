@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WebAppCore.Data;
-using WebAppCore.Models;
+using Microsoft.AspNetCore.Authorization;
+using WebAppCore.Auth;
 using WebAppCore.Services;
 
 namespace WebAppCore
@@ -27,9 +22,12 @@ namespace WebAppCore
         public void ConfigureServices(IServiceCollection services)
         {
             // Add application services.
-            services.AddTransient<IEmailSender, EmailSender>();
+            //services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
+            services.AddAuthorization(options => options.AddPolicy("InvestAuthTokenPolicy", policy => policy.Requirements.Add(new LoginProviderAuthTokenRequirement())));
+            services.AddSingleton<IAuthorizationHandler, InvestmentManagerAuthorizationHandler>();
+            services.AddSingleton<IDataService, DataService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

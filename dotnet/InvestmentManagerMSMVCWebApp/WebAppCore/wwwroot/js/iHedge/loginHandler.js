@@ -14,8 +14,10 @@
         if (FB) {
             // check if already logged in and whether an auth token has been provided by InvestmentManager auth service
             //FB.getLoginStatus(function (status) { console.log(status); })
-            if($("#investAuthToken").val() == "")
+            if (loginHelper.getAuthToken() === "")
                 loginHelper.afterFBLogin();
+            else
+                $("#authenticated").val("true");
         }
 
         FB.Event.subscribe('auth.login', function (response) { loginHelper.afterFBLogin(); });
@@ -35,17 +37,27 @@ function LoginHelper() {
 
     var _this = this;
 
+    this.getAuthToken = function () {
+        if ($("#investAuthToken").length > 0)
+            return $("#investAuthToken").val();
+        else
+            return "";
+    };
+
     this.afterFBLogin = function () {
         console.log("After FB login!");
 
-        FB.getLoginStatus(function (response) {
+        FB.getLoginStatus(function (response, err) {
             if (response.status === 'connected') {
                 console.log("FB login succeeded!");
                 // the user is logged in and has authenticated your app, and response.authResponse supplies the user's ID, a valid access token, a signed
                 // request, and the time the access token and signed request each expire
                 var uid = response.authResponse.userID;
                 var accessToken = response.authResponse.accessToken;
-                _this.requestAuthToken("FB", uid);
+                $("#authProviderUserId").val(uid);
+                $("#authProviderName").val("FB");
+
+                _this.requestAuthToken("FB", uid, accessToken);
             } else if (response.status === 'not_authorized') {
                 console.log("FB login succeeded, but was not authorized by user!");
                 // the user is logged in to Facebook, but has not authenticated your app
@@ -54,14 +66,40 @@ function LoginHelper() {
                 console.log("FB login failed!");
             }
         });
+
+
     };
 
     this.afterFBLogout = function () {
         console.log("After FB logout!");
+
+        var logoutModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
+
+        $.ajax({
+            type: "POST",
+            url: "/Account/Logout",
+            contentType: 'application/json',
+            dataType: 'json',
+            cache: false,
+            data: JSON.stringify(logoutModel),
+            traditional: true,
+            success: function (result) {
+                $("#investAuthToken").val("");
+                $("#authProviderUserId").val(uid);
+                $("#authProviderName").val("");
+                $("#authenticated").val("false");
+                $(".authorized").hide();
+
+                windows.location.href("/");
+            },
+            error: function (result) {
+                ShowError(result.responseText);
+            }
+        });
     };
 
-    this.requestAuthToken = function (loginProvider, userId) {
-        var loginInfo = { loginProvider: loginProvider, providerSpecificUserId:userId };
+    this.requestAuthToken = function (authProvider, userId, accessToken) {
+        var loginModel = { authProvider: authProvider, fbUserId: userId, fbAccessToken: accessToken };
 
         $.ajax({
             type: "POST",
@@ -69,9 +107,18 @@ function LoginHelper() {
             contentType: 'application/json',
             dataType: 'json',
             cache: false,
-            data: { loginInfo: loginInfo },
+            data: JSON.stringify(loginModel),
+            traditional: true,
             success: function (result) {
-                console.log("got an auth token from server!");
+                if (result.authToken && result.authToken.length > 0) {
+                    console.log("got auth token [" + result.authToken + "] from server!");
+                    $("#investAuthToken").val(result.authToken);
+                    $("#authenticated").val("true");
+                    $(".authorized").show();
+                }
+                else
+                    ShowError(result.errorMessage);
+
                 $("#investAuthToken").val(result.authToken);
             },
             error: function (result) {
