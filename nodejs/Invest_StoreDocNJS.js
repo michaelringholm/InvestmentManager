@@ -3,6 +3,7 @@
 console.log('Loading function');
 
 const doc = require('dynamodb-doc');
+const uuid = require('uuid');
 var d = require('domain').create()
 
 const dynamo = new doc.DynamoDB();
@@ -17,8 +18,6 @@ const dynamo = new doc.DynamoDB();
  * query string parameter. To put, update, or delete an item, make a POST,
  * PUT, or DELETE request respectively, passing in the payload to the
  * DynamoDB API as a JSON body.
- 
- * http://dev.splunk.com/view/event-collector/SP-CAAAE6Z
  * 
  * curl -H "x-api-key: maZYMtpzBw6PEscbRQASw8er5uvtiBaT8trhSoy6" -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"TableName":"Category","Item":{"CategoryName":"finance","Title":"Finance"}}' https://81kkzuo344.execute-api.eu-central-1.amazonaws.com/dev/StoreCategoryNJS
  * curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"TableName":"Category","Item":{"CategoryName": "finance","Title": "Finance"}' https://07pjh8rce8.execute-api.eu-central-1.amazonaws.com/prod/StoreCategoryNJS
@@ -59,8 +58,8 @@ exports.handler = (event, context, callback) => {
             
         callback(null, {
             statusCode: err ? '400' : '200',
-            //body: err ? err.message : JSON.stringify(res),
-            body: err ? err.message : JSON.stringify({message:"item upserted!"}),
+            body: err ? err.message : JSON.stringify(res),
+            //body: err ? err.message : JSON.stringify({message:"item upserted!"}),
             headers: {
                 'Content-Type': 'application/json',
             }
@@ -80,12 +79,19 @@ exports.handler = (event, context, callback) => {
             dynamo.deleteItem(data, doCallback);
             break;
         case 'GET':
-            dynamo.scan({ TableName: event.queryStringParameters.TableName }, doCallback);
+            dynamo.scan({ 
+                    TableName: event.queryStringParameters.TableName
+                    ,ExpressionAttributeValues: {":userKey": "FB672079753"}
+                    ,FilterExpression: "UserKey = :userKey"
+                }, doCallback);
             break;
         case 'POST':
             console.log("before put....");
             
             // The signature of the callback (2nd parameter of putItem) is function(err,data)
+            if(!data.Item.Id)
+                data.Item.Id = uuid.v4();
+            console.log("created new id " + data.ItemId);
             dynamo.putItem(data, doCallback);
             //console.log("after put....");
             
