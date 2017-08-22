@@ -46,13 +46,30 @@ namespace WebAppCore.Services
             return portfolios;
         }
 
-        public List<PortfolioHeader> GetPortfolioHeadersOld()
+        /* public List<PortfolioHeader> GetPortfolioHeadersOld()
         {
             var portfolioHeaders = new List<PortfolioHeader>();
             var portfoliosJson = GetPortfolios();
             //var p = Newtonsoft.Json.JsonConvert.DeserializeObject<Portfolio>(portfolios.ToString());
             portfolioHeaders.Add(new PortfolioHeader { Cash = 5000, MarketValue = 6000, Name = "Dummy Portfolio", Rank = 1 });
             return portfolioHeaders;
+        }*/
+
+
+        public List<AssetCategory> GetAssetCategories()
+        {
+            String json = @"{ ""TableName"":""Invest_AssetCategory"" }";
+            var documents = GetDocuments(json);
+            var assetCategories = JsonConvert.DeserializeObject<List<AssetCategory>>(documents.ToString());
+            return assetCategories;
+        }
+
+        public List<Asset> GetAssets(String assetCategoryTitle)
+        {
+            String json = @"{ ""TableName"":""Invest_Asset"", ""FilterExpr"":""AssetCategoryTitle = :assetCategoryTitle"", ""ExprAttrVals"":{ "":assetCategoryTitle"": """ + assetCategoryTitle + @"""} }";
+            var documents = GetDocuments(json);
+            var assets = JsonConvert.DeserializeObject<List<Asset>>(documents.ToString());
+            return assets;
         }
     }
 }

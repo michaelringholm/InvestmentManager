@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WebAppCore.Data.Entities;
 
 namespace WebAppCore.Services
@@ -7,5 +8,7 @@ namespace WebAppCore.Services
     {
         List<PortfolioHeader> GetPortfolioHeaders();
         void StoreCategory();
+        List<AssetCategory> GetAssetCategories();
+        List<Asset> GetAssets(String assetCategoryTitle);
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using WebAppCore.Services;
 using WebAppCore.Models.Account;
+using WebAppCore.Models.Portfolio;
 
 namespace InMaApp.Controllers
 {
@@ -18,14 +16,25 @@ namespace InMaApp.Controllers
             this.dataService = dataService;
         }
 
-        public IActionResult Index()
+        public IActionResult ShowHeaders()
         {
             var authModel = AuthService.GetLoginInfo(HttpContext.Request.Query);
             ViewData["InvestAuthToken"] = authModel.investAuthToken;
             ViewData["AuthProviderUserId"] = authModel.fbUserId;
             ViewData["AuthProviderName"] = authModel.authProvider;
 
-            return View();
+            return View("index");
+        }
+
+        public IActionResult ShowDetails(String portfolioId)
+        {
+            var authModel = AuthService.GetLoginInfo(HttpContext.Request.Query);
+            ViewData["InvestAuthToken"] = authModel.investAuthToken;
+            ViewData["AuthProviderUserId"] = authModel.fbUserId;
+            ViewData["AuthProviderName"] = authModel.authProvider;
+            ViewData["PortfolioId"] = portfolioId;
+
+            return View("details");
         }
 
         [HttpPost]
@@ -34,6 +43,27 @@ namespace InMaApp.Controllers
             var portfolioHeaders = dataService.GetPortfolioHeaders();
             return new JsonResult(new { portfolioHeaders = portfolioHeaders });
         }
+
+        [HttpPost]
+        public IActionResult GetDetails([FromBody] PortfolioDetailsModel portfolioDetailsModel)
+        {
+            var portfolioHeaders = dataService.GetPortfolioHeaders();
+            return new JsonResult(new { portfolioHeaders = portfolioHeaders, portfolioId = portfolioDetailsModel.PortfolioId });
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         [HttpPost]
         public JsonResult UpdatePortfolioHeader(string login, int portfolioId)

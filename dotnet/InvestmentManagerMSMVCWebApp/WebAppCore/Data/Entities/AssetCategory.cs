@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace WebAppCore.Data.Entities
 {
-    public class Category
+    public class AssetCategory
     {
-        private int idField;
-
-        private string titleField;
+        public String Id { get; set; }
+        public String Title { get; set; }
     }
 }

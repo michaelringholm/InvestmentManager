@@ -1,12 +1,12 @@
 ﻿$(function () {
-    var portfolio = new Portfolio();
-    portfolio.populateList();
+    var portfolioHeader = new PortfolioHeader();
+    portfolioHeader.populateList();
 });
 
-function Portfolio() {
+function PortfolioHeader() {
     var _this = this;
 
-    this.populateList = function() {
+    this.populateList = function () {
         var authModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
 
         $.ajax({
@@ -20,10 +20,10 @@ function Portfolio() {
             contentType: "application/json",
             dataType: "json",
             cache: false,
-            data: JSON.stringify(authModel),
+            //data: JSON.stringify(authModel),
             beforeSend: function () {
                 //xhr.setRequestHeader("Authorization", "Basic " + btoa(authModel.fbUserId + ":" + ""));
-                ShowAjaxLoader();                
+                ShowAjaxLoader();
             },
             complete: function () { HideAjaxLoader(); },
             success: function (result) {
@@ -54,9 +54,9 @@ function Portfolio() {
                 ShowError(result.responseText);
             }
         });
-    }
+    };
 
-    function ShowPortfolioSecurityList(portfolioId) {
+    this.GetPortfolioSecurityList = function (portfolioId) {
         $.ajax({
             type: "get",
             url: "/Portfolio/ShowPortfolioSecurityList",
@@ -117,7 +117,7 @@ function Portfolio() {
                 ShowError(result.responseText);
             }
         });
-    }
+    };
 
     function DrawDraggableSecurity(securityDiv) {
         var imgSrc = $(securityDiv).attr("data-asset-img-src");

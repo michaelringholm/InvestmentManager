@@ -37,7 +37,12 @@ function LoginHelper() {
 
     var _this = this;
 
-    this.getAuthToken = function () {
+    this.getAuthModel = function() {
+        var authModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
+        return authModel;
+    };
+
+    this.getAuthToken = function() {
         if ($("#investAuthToken").length > 0)
             return $("#investAuthToken").val();
         else

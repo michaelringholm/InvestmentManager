@@ -43,34 +43,8 @@
 <body>
     <!-- FB Login -->
     <div id="fb-root"></div>
-    <script>
-
-    </script>
-    
     <!-- End FB Login -->
 
-
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">WebAppCore</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><div class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="true" data-use-continue-as="false"></div></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
     <div class="container body-content">
         @RenderBody()
 
@@ -78,6 +52,7 @@
             <!-- FB Button -->
             <!--<div class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="true" data-use-continue-as="false"></div> -->
             <!-- End FB Button -->
+            <hr />
             <div id="miHome" class="toolbarButton" style="margin-left: 8px; margin-right: 100px;">
                 <div style="float: left;"><img title="Home" style="width: 60px; height: 60px;" alt="" src="/images/home-icon72.png" /></div>
                 <div style="float: left; margin-left: -48px; margin-top: 58px;" class="normalCaption">Home</div>
@@ -106,6 +81,7 @@
             <div class="toolbarButton" style="margin-left: 100px; float: right; margin-right: 20px;">
                 <img title="Help" alt="" src="/images/help-icon72.png" />
             </div>
+            <div class="toolbarButton fb-login-button" style="margin-left: 100px; float: right; margin-right: 20px;" data-max-rows="1" data-size="medium" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="true" data-use-continue-as="false"></div>
             <div style="clear: both;">
             </div>
         </div>

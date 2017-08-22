@@ -7,28 +7,19 @@ namespace WebAppCore.Data.Entities
 {
     public class Asset
     {
-        private double anualVolatilityField;
+        public String Id { get; set; }
+        public String Symbol { get; set; }
+        public String Title { get; set; }
+        public String Quote { get; set; }
+        public String MarketValue { get; set; }
+        public String Change { get; set; }
+        public String PreviousClose { get; set; }        
+        public String Volume { get; set; }
+        public String AssetCategoryTitle { get; set; }
 
-        private double avgVoltatilityField;
-
-        private string categoryTitleField;
-
-        private double changeField;
-
-        private double dailyVolatilityField;
-
-        private int idField;
-
-        private double marketValueField;
-
-        private double previousCloseField;
-
-        private double quoteField;
-
-        private string symbolField;
-
-        private string titleField;
-
-        private double volumeField;
+        //public String AnualVolatility { get; set; }
+        //private double avgVoltatility;
+        //private string categoryTitle;
+        //private double dailyVolatility;
     }
 }

@@ -39,7 +39,7 @@ p, ul {
 ----------------------------------------------------------*/
 h1, h2, h3, h4, h5, h6 {
     font-size: 1.5em;
-    color: #000;
+    color: #ffffff;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -336,7 +336,7 @@ div#title {
     color: #ffffff;
 }
 
-.instrumentCategory {
+.assetCategory {
     width: 200px;
     height: 192px;
     border: solid 3px #1c1c1c;
@@ -559,4 +559,12 @@ div#title {
 
 img {
     border: 0;
+}
+
+#assetCategoryTemplate {
+    display: none;
+}
+
+#assetTemplate {
+    display: none;
 }
