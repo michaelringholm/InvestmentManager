@@ -8,10 +8,11 @@ function PortfolioHeader() {
 
     this.populateList = function () {
         var authModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
+        var model = { userKey: new LoginHelper().getUserKey() };
 
         $.ajax({
             type: "POST",
-            url: "/Portfolio/GetPortfolioHeaders",
+            url: "/Portfolio/GetPortfolios",
             headers: {
                 'X-Auth-Provider': authModel.authProvider,
                 'X-Auth-UserId': authModel.fbUserId,
@@ -20,23 +21,23 @@ function PortfolioHeader() {
             contentType: "application/json",
             dataType: "json",
             cache: false,
-            //data: JSON.stringify(authModel),
+            data: JSON.stringify(model),
             beforeSend: function () {
                 //xhr.setRequestHeader("Authorization", "Basic " + btoa(authModel.fbUserId + ":" + ""));
                 ShowAjaxLoader();
             },
             complete: function () { HideAjaxLoader(); },
             success: function (result) {
-                var portfolioHeaders = result.portfolioHeaders;
-                for (var portfolioIndex = 0; portfolioIndex < portfolioHeaders.length; portfolioIndex++) {
-                    var portfolio = portfolioHeaders[portfolioIndex];
+                var portfolios = result.portfolios;
+                for (var portfolioIndex = 0; portfolioIndex < portfolios.length; portfolioIndex++) {
+                    var portfolio = portfolios[portfolioIndex];
                     var portfolioWidget = $("#portfolioTemplate").clone();
                     $(portfolioWidget).removeAttr("id");
                     $(portfolioWidget).attr("data-portfolio-id", portfolio.id);
-                    $(portfolioWidget).attr("data-portfolio-title", portfolio.name);
+                    $(portfolioWidget).attr("data-portfolio-title", portfolio.title);
                     $(portfolioWidget).find(".portfolioCash").text(portfolio.cash);
                     $(portfolioWidget).find(".portfolioMarketValue").text(portfolio.marketValue);
-                    $(portfolioWidget).find(".portfolioTitle").text(portfolio.name);
+                    $(portfolioWidget).find(".portfolioTitle").text(portfolio.title);
                     $(portfolioWidget).show();
                     portfolioWidget.appendTo("#portfolios");
                 }

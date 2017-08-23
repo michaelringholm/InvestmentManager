@@ -278,8 +278,8 @@ div#title {
 
 /*********** iHedge ******************/
 .toolbarButton {
-    margin-top: 6px;
-    float: left;
+    top: 10px;
+    position: absolute;
     cursor: pointer;
 }
 
@@ -305,11 +305,13 @@ div#title {
 }
 
 #footer {
-    position: relative;
-    margin-bottom: 0px;
+    position: fixed;
+    bottom: 0px;
     padding: 0;
-    background-image: url('/Content/images/header-background.png');
-    height: 86px;
+    /*background-image: url('/Content/images/header-background.png');*/
+    height: 90px;
+    width: 1000px;
+    background-color: #303030;
 }
 
 #logindisplay {
@@ -482,7 +484,6 @@ div#title {
     font-size: 12pt;
     width: 958px;
     border-bottom: solid 2px #1c1c1c;
-    float: left;
     margin: 4px 20px 4px 20px;
     cursor: pointer;
     background-color: #313131;
@@ -500,8 +501,6 @@ div#title {
     color: #ffffff;
     width: 958px;
     border-bottom: solid 2px #1c1c1c;
-    float: left;
-    margin: 4px 20px 4px 20px;
     cursor: pointer;
     background-color: #313131;
     filter: alpha(opacity=80); /* IE */
@@ -514,7 +513,6 @@ div#title {
     line-height: 136px;
     width: 958px;
     border-bottom: solid 2px #1c1c1c;
-    float: left;
     margin: 8px 20px 2px 20px;
     cursor: pointer;
     background-color: #313131;
@@ -542,7 +540,6 @@ div#title {
 }
 
 .dropZone {
-    float: right;
     margin: 8px 18px 8px 8px;
     border: dashed 2px #7e7a7a;
     border-radius: 8px;
@@ -550,7 +547,6 @@ div#title {
 }
 
 .dropZoneHover {
-    float: right;
     margin: 8px 18px 8px 8px;
     border-radius: 8px;
     border: dashed 2px #ffffff;
@@ -566,5 +562,13 @@ img {
 }
 
 #assetTemplate {
+    display: none;
+}
+
+#portfolioItemTemplate {
+    display: none;
+}
+
+#portfolioItemSubListTemplate {
     display: none;
 }

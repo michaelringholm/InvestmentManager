@@ -9,7 +9,7 @@ function PortfolioDetails() {
 
     this.populateDetails = function (portfolioId) {        
         var authModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
-        var model = { portfolioId: portfolioId }
+        var model = { userKey: new LoginHelper().getUserKey(), portfolioId: portfolioId }
 
         $.ajax({
             type: "POST",
@@ -29,24 +29,32 @@ function PortfolioDetails() {
             complete: function () { HideAjaxLoader(); },
             success: function (result) {
                 //$("#div1").html(result);
-                /*for (var portfolioIndex = 0; portfolioIndex < portfolioHeaders.length; portfolioIndex++) {
-                    var portfolio = portfolioHeaders[portfolioIndex];
-                    var portfolioWidget = $("#portfolioTemplate").clone();
-                    $(portfolioWidget).removeAttr("id");
-                    $(portfolioWidget).attr("data-portfolio-id", portfolio.id);
-                    $(portfolioWidget).attr("data-portfolio-title", portfolio.name);
-                    $(portfolioWidget).find(".portfolioCash").text(portfolio.cash);
-                    $(portfolioWidget).find(".portfolioMarketValue").text(portfolio.marketValue);
-                    $(portfolioWidget).find(".portfolioTitle").text(portfolio.name);
-                    $(portfolioWidget).show();
-                    portfolioWidget.appendTo("#portfolios");
+                var portfolio = result.portfolio;
+
+                if (portfolio.portfolioItems) {
+                    for (var portfolioItemIndex = 0; portfolioItemIndex < portfolio.portfolioItems.length; portfolioItemIndex++) {
+                        var portfolioItem = portfolio.portfolioItems[portfolioItemIndex];
+                        var portfolioItemWidget = $("#portfolioItemTemplate").clone();
+                        $(portfolioItemWidget).removeAttr("id");
+                        //$(portfolioItemWidget).attr("data-portfolio-id", portfolio.id);
+                        //$(portfolioItemWidget).attr("data-portfolio-title", portfolio.name);
+                        $(portfolioItemWidget).find(".title").text("[N/A]");
+                        $(portfolioItemWidget).find(".symbol").text(portfolioItem.assetSymbol);
+                        $(portfolioItemWidget).find(".position").text(portfolioItem.position);
+                        $(portfolioItemWidget).find(".purchaseQuote").text(portfolioItem.purchaseQuote);
+                        $(portfolioItemWidget).find(".purchaseAmount").text(portfolioItem.position * portfolioItem.purchaseQuote);
+                        $(portfolioItemWidget).find(".marketValue").text(portfolioItem.position * portfolioItem.purchaseQuote);
+                        $(portfolioItemWidget).find(".change").text("-5"); //<!-- <%=InMaApp.DisplayHelper.FormatMoney((security.position * security.quote)-security.purchaseAmount)%> -->
+                        $(portfolioItemWidget).show();
+                        portfolioItemWidget.appendTo("#portfolioItems");
+                    }
                 }
 
-                $(".subListItem").hide();
-                $(".securitySummaryItem").click(function (e) { $(".subListItem[data-asset-symbol=\"" + $(e.currentTarget).attr("data-asset-symbol") + "\"]").toggle(); });
-                $(".security").on("swiperight", function () { ShowBuySellDialog(this, "BUY", true, ShowPortfolioSecurityList); });
-                $(".security").on("swipeleft", function () { ShowBuySellDialog(this, "SELL", true, ShowPortfolioSecurityList); });
-                $(".security").draggable(
+                /*$(".subListItem").hide();
+                $(".portfolioItemSummaryItem").click(function (e) { $(".subListItem[data-asset-symbol=\"" + $(e.currentTarget).attr("data-asset-symbol") + "\"]").toggle(); });
+                $(".portfolioItem").on("swiperight", function () { ShowBuySellDialog(this, "BUY", true, ShowPortfolioSecurityList); });
+                $(".portfolioItem").on("swipeleft", function () { ShowBuySellDialog(this, "SELL", true, ShowPortfolioSecurityList); });
+                $(".portfolioItem").draggable(
                     {
                         cursor: "move",
                         cursorAt: { top: 38, left: 40 },
@@ -82,9 +90,9 @@ function PortfolioDetails() {
                         drop: function (event, ui) {
                             alert("Add to ToDo [" + $(ui.draggable).attr("data-asset-symbol") + "]");
                         }
-                    });
-                */
-                $(".securityEmptyList").click(function () { ShowStockMarket($("#portfolioId").val()); });
+                    });*/
+                
+                $(".portfolioItemEmptyList").click(function () { ShowStockMarket($("#portfolioId").val()); });
             },
             error: function (result) {
                 ShowError(result.responseText);
@@ -92,13 +100,21 @@ function PortfolioDetails() {
         });
     };
 
-    function DrawDraggableSecurity(securityDiv) {
+    this.shortenText = function (title) {
+        //<!-- <%=InMaApp.DisplayHelper.ShortenText(security.title, 20) %> -->
+    };
+
+    this.formatMoney = function (moneyStr) {        
+        //<!-- <%=InMaApp.DisplayHelper.FormatDouble(security.quote) %> (<%=InMaApp.DisplayHelper.FormatDouble(Math.Round(security.quote - security.purchaceQuote, 2)) %>) -->
+    };
+
+    this.drawDraggableSecurity = function (securityDiv) {
         var imgSrc = $(securityDiv).attr("data-asset-img-src");
         // TODO - A smaller picture should be used for load performance reasons
         return '<div data-asset-symbol="' + $(securityDiv).attr("data-asset-symbol") + '" data-asset-quote="' + $(securityDiv).attr("data-asset-quote") + '" class="draggableAsset" style=""><img src="' + imgSrc + '" style="width: 32px; height: 32px; margin-left: 10px;" /><div class="caption" style="margin-left: 10px; margin-top: 4px;">Symbol</div><div style="margin-left: 10px; margin-top: 0px;">' + $(securityDiv).attr("data-asset-symbol") + '</div></div>';
-    }
+    };
 
-    function UpdatePortfolioHeader(portfolioId) {
+    this.updatePortfolioHeader = function (portfolioId) {
         $.ajax({
             type: "POST",
             url: "/Portfolio/UpdatePortfolioHeader",
@@ -122,9 +138,9 @@ function PortfolioDetails() {
                 ShowError(result.responseText);
             }
         });
-    }
+    };
 
-    function ShowNewPortfolioDialog() {
+    this.showNewPortfolioDialog = function () {
         //alert("Add new portfolio");    
 
         $.ajax({
@@ -153,9 +169,9 @@ function PortfolioDetails() {
                 ShowError(result.responseText);
             }
         });
-    }
+    };
 
-    function CreatePortfolio() {
+    this.createPortfolio = function () {
         var title = $("#generalDialog #tbPortfolioTitle").val();
         var startCash = $("#generalDialog #tbPortfolioStartCash").val();
         $.ajax({
@@ -174,6 +190,6 @@ function PortfolioDetails() {
                 ShowError(result.responseText);
             }
         });
-    }
+    };
 
 }

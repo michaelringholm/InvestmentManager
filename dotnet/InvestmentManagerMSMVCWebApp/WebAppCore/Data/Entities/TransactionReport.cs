@@ -7,10 +7,9 @@ namespace WebAppCore.Data.Entities
 {
     public class TransactionReport
     {
-        public Security[] securitiesField;
-
-        public double totalBuyField;
-
-        public double totalSellField;
+        //public Security[] securitiesField;
+        public List<PortfolioItem> PortfolioItems { get; set; }
+        public String TotalBuy { get; set; }
+        public String TotalSell { get; set; }
     }
 }

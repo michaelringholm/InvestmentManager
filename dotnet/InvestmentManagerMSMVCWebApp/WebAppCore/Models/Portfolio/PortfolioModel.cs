@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace WebAppCore.Models.Portfolio
 {
-    public class PortfolioDetailsModel
+    public class PortfolioModel
     {
         public String UserKey { get; set; }
-        public String PortfolioId { get; set; }
     }
 }

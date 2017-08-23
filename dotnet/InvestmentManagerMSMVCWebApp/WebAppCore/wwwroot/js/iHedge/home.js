@@ -11,18 +11,10 @@
     $("#miBrowseInstruments").click(function () { ShowAssetCategories(); });
     $("#depotTitleHeaderSection").click(function () { UpdatePortfolioHeader(GetSelectedPortfolioId()); ShowPortfolioSecurityList(GetSelectedPortfolioId()); });
     //$("#miRemoveFromCart").click(function () { RemoveFromCart(); });
-
-    CheckAuthentication();
 });
 
 
 /******************* Home ***********************/
-function CheckAuthentication() {
-    if($("#authenticated").val() === "false")
-        $(".authorized").hide();
-    else
-        $(".authorized").show();
-}
 
 function ShowWelcomePage() {
     window.location.href = "/";
@@ -202,101 +194,7 @@ function ExecuteTrades(symbol, quote, quantity, status, fnCallOnSuccess) {
 
 
 
-/******************* Assets *******************/
-function ShowBuySellDialog(asset, buySellCode, instantBuySell, fnCallOnSuccess) {
-    var symbol = $(asset).attr("data-asset-symbol");
-    var quote = $(asset).attr("data-asset-quote");
-    var title = $(asset).attr("data-asset-title");
-    var categoryTitle = $(asset).attr("data-asset-category-title");
-    //var imgSrc = $(asset).find("#draggableAssetImgSrc").val();
-    //var categoryTitle = $("#assetCategoryTitle").html();
 
-    $.ajax({
-        type: "get",
-        url: "/Asset/ShowBuySellDialog",
-        contentType: "html",
-        data: "symbol=" + symbol + "&buySellCode=" + buySellCode + "&instantBuySell=" + instantBuySell + "&title=" + title + "&quote=" + quote + "&categoryTitle=" + categoryTitle,
-        beforeSend: function () {
-            ShowAjaxLoader();
-        },
-        complete: function () { HideAjaxLoader(); },
-        success: function (result) {
-            $("#generalDialog").html(result);
-            $("#generalDialog").dialog({ title: "Buy/Sell" });
-            $("#buySellRG").buttonset();
-            $("#nowToDoRG").buttonset();
-            $("#btnConfirmBuySell").button().click(function () { BuySellSecurity(symbol, quote, fnCallOnSuccess); });
-            $("#btnCancelBuySell").button().click(function () { $("#generalDialog").dialog("close"); });
-            $("#btnOk").button().click(function () { $("#generalDialog").dialog("close"); });
-            $("#generalDialog .bottomArea .beforeConfirm").show();
-            $("#generalDialog .bottomArea .afterConfirm").hide();
-            $("#generalDialog").dialog("open");            
-        },
-        error: function (result) {
-            ShowError(result.responseText);
-        }
-    });
-}
-
-function BuySellSecurity(symbol, quote, fnCallOnSuccess) {
-    var buySellIndicatorId = $("#generalDialog #buySellRG :radio:checked").attr("id");
-    var statusIndicatorId = $("#generalDialog #nowToDoRG :radio:checked").attr("id");
-    var quantity = $("#generalDialog #tbQuantity").val();
-    var status = "";
-
-    if (statusIndicatorId === "btnBuySellDlgNow")
-        status = "Confirmed";
-    else if (statusIndicatorId === "btnBuySellDlgToDo")
-        status = "NotConfirmed";
-
-    if (buySellIndicatorId === "btnBuySellDlgBuy")
-        BuySecurity(symbol, quote, quantity, status, fnCallOnSuccess);
-    else if (buySellIndicatorId === "btnBuySellDlgSell")
-        SellSecurity(symbol, quote, quantity, status, fnCallOnSuccess);    
-}
-
-function BuySecurity(symbol, quote, quantity, status, fnCallOnSuccess) {
-    $.ajax({
-        type: "POST",
-        url: "/Portfolio/BuySecurity",
-        //contentType: 'application/json',
-        dataType: 'json',
-        data: { login: $("#login").val(), portfolioId: GetSelectedPortfolioId(), symbol: symbol, quote: quote, quantity: quantity, status: status },
-        traditional: true,
-        success: function (result) {
-            UpdatePortfolioHeader(GetSelectedPortfolioId());
-            if (fnCallOnSuccess !== null)
-                fnCallOnSuccess(GetSelectedPortfolioId());
-
-            $("#generalDialog .bottomArea .beforeConfirm").hide();
-            $("#generalDialog .bottomArea .afterConfirm").show();
-        },
-        error: function (result) {
-            ShowError(result.responseText);
-        }
-    });
-}
-
-function SellSecurity(symbol, quote, quantity, status, fnCallOnSuccess) {
-    $.ajax({
-        type: "POST",
-        url: "/Portfolio/SellSecurity",
-        //contentType: 'application/json',
-        dataType: 'json',
-        data: { login: $("#login").val(), portfolioId: GetSelectedPortfolioId(), symbol: symbol, quote: quote, quantity: quantity, status: status },
-        traditional: true,
-        success: function (result) {
-            UpdatePortfolioHeader(GetSelectedPortfolioId());
-            if (fnCallOnSuccess !== null)
-                fnCallOnSuccess(GetSelectedPortfolioId());
-
-            $("#generalDialog .bottomArea").html('<div style="margin-top: 14px; color: green;">Success!</div>');
-        },
-        error: function (result) {
-            ShowError(result.responseText);
-        }
-    });
-}
 
 /******************* END Assets *******************/
 

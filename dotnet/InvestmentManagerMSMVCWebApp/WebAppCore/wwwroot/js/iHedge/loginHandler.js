@@ -16,9 +16,11 @@
             //FB.getLoginStatus(function (status) { console.log(status); })
             if (loginHelper.getAuthToken() === "")
                 loginHelper.afterFBLogin();
-            else
+            else {
                 $("#authenticated").val("true");
-        }
+                loginHelper.checkAuthentication();
+            }
+        }        
 
         FB.Event.subscribe('auth.login', function (response) { loginHelper.afterFBLogin(); });
         FB.Event.subscribe('auth.logout', function (response) { loginHelper.afterFBLogout(); });
@@ -37,9 +39,20 @@ function LoginHelper() {
 
     var _this = this;
 
+    this.getUserKey = function () {
+        return $("#authProviderName").val() + $("#authProviderUserId").val();
+    };
+
     this.getAuthModel = function() {
         var authModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
         return authModel;
+    };
+
+    this.checkAuthentication = function () {
+        if ($("#authenticated").val() === "false")
+            $(".authorized").hide();
+        else
+            $(".authorized").show();
     };
 
     this.getAuthToken = function() {

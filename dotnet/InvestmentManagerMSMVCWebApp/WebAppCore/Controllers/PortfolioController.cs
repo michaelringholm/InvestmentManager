@@ -38,17 +38,17 @@ namespace InMaApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetPortfolioHeaders(AuthModel authModel)
+        public IActionResult GetPortfolios([FromBody] PortfolioModel model)
         {
-            var portfolioHeaders = dataService.GetPortfolioHeaders();
-            return new JsonResult(new { portfolioHeaders = portfolioHeaders });
+            var portfolios = dataService.GetPortfolios(model.UserKey);
+            return new JsonResult(new { portfolios = portfolios });
         }
 
         [HttpPost]
         public IActionResult GetDetails([FromBody] PortfolioDetailsModel portfolioDetailsModel)
         {
-            var portfolioHeaders = dataService.GetPortfolioHeaders();
-            return new JsonResult(new { portfolioHeaders = portfolioHeaders, portfolioId = portfolioDetailsModel.PortfolioId });
+            var portfolio = dataService.GetPortfolio(portfolioDetailsModel.UserKey, portfolioDetailsModel.PortfolioId);
+            return new JsonResult(new { portfolio = portfolio });
         }
 
 

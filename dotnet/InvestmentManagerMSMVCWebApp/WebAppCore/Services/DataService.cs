@@ -29,21 +29,19 @@ namespace WebAppCore.Services
             StoreDocument("{\"TableName\":\"Invest_Category\",\"Item\":{\"Name\":\"finance\",\"Title\":\"Finance\"}}");
         }
 
-        public List<Portfolio> GetPortfolios()
+        public List<Portfolio> GetPortfolios(String userKey)
         {
             //String json = Newtonsoft.Json.JsonConvert.SerializeObject(new { TableName = "Invest_Portfolio", FilterExpr = "UserKey = :userKey", ExprAttrVals = new { ":userKey" = "FB672079753"} } );
-            String json = @"{ ""TableName"":""Invest_Portfolio"", ""FilterExpr"":""UserKey = :userKey"", ""ExprAttrVals"":{ "":userKey"": ""FB672079753""} }";        
+            String json = @"{ ""TableName"":""Invest_Portfolio"", ""FilterExpr"":""UserKey = :userKey"", ""ExprAttrVals"":{ "":userKey"": """ + userKey + @"""} }";        
             var documents = GetDocuments(json);
             var portfolios = JsonConvert.DeserializeObject<List<Portfolio>>(documents.ToString());
             return portfolios;
         }
 
-        public List<PortfolioHeader> GetPortfolioHeaders()
-        {          
-            String json = @"{ ""TableName"":""Invest_Portfolio"", ""FilterExpr"":""UserKey = :userKey"", ""ExprAttrVals"":{ "":userKey"": ""FB672079753""} }";
-            var documents = GetDocuments(json);
-            var portfolios = JsonConvert.DeserializeObject<List<PortfolioHeader>>(documents.ToString());
-            return portfolios;
+        public Portfolio GetPortfolio(String userKey, String portfolioId)
+        {
+            var portfolio = GetPortfolios(userKey).FirstOrDefault<Portfolio>(p => p.Id == portfolioId);
+            return portfolio;
         }
 
         /* public List<PortfolioHeader> GetPortfolioHeadersOld()
@@ -70,6 +68,16 @@ namespace WebAppCore.Services
             var documents = GetDocuments(json);
             var assets = JsonConvert.DeserializeObject<List<Asset>>(documents.ToString());
             return assets;
+        }
+
+        public void BuyAsset(Asset asset)
+        {
+            StoreDocument("{\"TableName\":\"Invest_Category\",\"Item\":{\"Name\":\"finance\",\"Title\":\"Finance\"}}");
+        }
+
+        public void SellAsset(Asset asset)
+        {
+            StoreDocument("{\"TableName\":\"Invest_Category\",\"Item\":{\"Name\":\"finance\",\"Title\":\"Finance\"}}");
         }
     }
 }

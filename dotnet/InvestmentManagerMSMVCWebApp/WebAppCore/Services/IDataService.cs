@@ -6,9 +6,12 @@ namespace WebAppCore.Services
 {
     public interface IDataService
     {
-        List<PortfolioHeader> GetPortfolioHeaders();
+        List<Portfolio> GetPortfolios(String userKey);
+        Portfolio GetPortfolio(String userKey, String portfolioId);
         void StoreCategory();
         List<AssetCategory> GetAssetCategories();
         List<Asset> GetAssets(String assetCategoryTitle);
+        void BuyAsset(Asset asset);
+        void SellAsset(Asset asset);
     }
 }
