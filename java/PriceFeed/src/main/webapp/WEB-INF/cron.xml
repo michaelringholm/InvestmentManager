@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
   <cron>
-    <url>/tasks/summary</url>
-    <target>beta</target>
-    <description>Update asset price quotes</description>
-    <schedule>every 10 minutes</schedule>
+  	<target>price-engine</target>
+    <url>/update-symbols.ctl</url>
+    <description>Update asset symbols</description>
+    <schedule>every 2 minutes</schedule>
   </cron>
+  <cron>
+  	<target>price-engine</target>
+    <url>/update-all.ctl</url>
+    <description>Update asset quote prices</description>
+    <schedule>every 10 minutes</schedule>
+  </cron>  
 </cronentries>

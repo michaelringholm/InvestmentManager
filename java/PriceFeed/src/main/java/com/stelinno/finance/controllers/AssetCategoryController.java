@@ -12,8 +12,8 @@ public class AssetCategoryController {
 	@Autowired private DataService dataService;
 	
 	@RequestMapping("/update-asset-categories")
-	public String updateAllPrices() {
-		dataService.updateAssetCategories();
-		return "{\"message\":\"Asset categories was updated!\"}";
+	public String updateAssetCategories() {
+		int updatedAssets = dataService.updateAssetCategories();
+		return String.format("{\"message\":\"%d asset categories was updated!\"}", updatedAssets);
 	}		
 }

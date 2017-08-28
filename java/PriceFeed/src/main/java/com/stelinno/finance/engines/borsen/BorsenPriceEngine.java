@@ -27,18 +27,29 @@ public class BorsenPriceEngine implements PriceEngine {
 		List<Price> prices = new ArrayList<>();
 		try {
 			//doc = Jsoup.connect(priceSource).get();
-			doc = Jsoup.parse(httpHelper.getHtml(priceSource).payload.toString());
+			String html = httpHelper.getHtml(priceSource).payload.toString();
+			doc = Jsoup.parse(html);
 			Elements stocks = doc.select(".stock-live-updates");
 			for(Element stock : stocks) {
 				try {
 				String json = stock.attr("data-json");
 				String name = stock.select(".stock-name a").first().text().trim();
 				BorsenPrice borsenPrice = gson.fromJson(json, BorsenPrice.class);
+				borsenPrice.PRICE = formatDecimal(borsenPrice.PRICE);
+				borsenPrice.ASK = formatDecimal(borsenPrice.ASK);
+				borsenPrice.BID = formatDecimal(borsenPrice.BID);
+				borsenPrice.PERFORMANCE = formatDecimal(borsenPrice.PERFORMANCE);
+				borsenPrice.HIGH = formatDecimal(borsenPrice.HIGH);
+				borsenPrice.LOW = formatDecimal(borsenPrice.LOW);
+				borsenPrice.FIRST = formatDecimal(borsenPrice.FIRST);
+				borsenPrice.TOTAL_MONEY = formatDecimal(borsenPrice.TOTAL_MONEY);
+				borsenPrice.YDT = formatDecimal(borsenPrice.YDT);
+				borsenPrice.PERFORMANCE_PCT = formatDecimal(borsenPrice.PERFORMANCE_PCT);
 				borsenPrice.OFFICIAL_NAME_SECURITY = name;
 				borsenPrice.ISIN = borsenPrice.ISIN.trim();				
-				borsenPrice.SYMBOL = getSymbol(borsenPrice.ISIN);
-				if(borsenPrice.SYMBOL == null)
-					borsenPrice.SYMBOL = "MISSING_SYMBOL_" + borsenPrice.ISIN;
+				//borsenPrice.SYMBOL = getSymbol(borsenPrice.ISIN);
+				//if(borsenPrice.SYMBOL == null)
+					//borsenPrice.SYMBOL = "MISSING_SYMBOL_" + borsenPrice.ISIN;
 				prices.add(priceMapper.toPrice(borsenPrice));
 				}
 				catch (Exception e) {
@@ -53,7 +64,17 @@ public class BorsenPriceEngine implements PriceEngine {
 		return prices;
 	}
 	
-	private String getSymbol(String isin) {
+	private String formatDecimal(String decimalStr) {
+		if(decimalStr == null)
+			return null;
+		
+		String decimal = decimalStr.replaceAll("\\.", "");
+		decimal = decimal.replaceAll(",", "\\.");
+		return decimal;
+	}
+
+	@Override
+	public String getSymbol(String isin) {
 		String symbolUrl = "http://www.boerse-berlin.com/index.php/Shares?isin=" + isin;
 		Document doc = null;
 		doc = Jsoup.parse(httpHelper.getHtml(symbolUrl).payload.toString());

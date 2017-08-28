@@ -1,13 +1,11 @@
 package com.stelinno.http;
 
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.http.client.ClientProtocolException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.appengine.api.urlfetch.HTTPHeader;
 import com.google.appengine.api.urlfetch.HTTPMethod;
@@ -44,7 +42,7 @@ public class GoogleHTTPHelper implements HTTPHelper {
 				simpleHTTPResponse.statusCode = httpResp.getResponseCode();
 				simpleHTTPResponse.payload = content;
 				simpleHTTPResponse.reason = "";				
-				logger.log(Level.INFO, String.format("The http response from the server was %s", content));
+				logger.log(Level.INFO, String.format("The http response code from the server was %d", simpleHTTPResponse.statusCode));
 				doRetry = false;
 			} 
 			catch(java.net.SocketTimeoutException stex){
@@ -70,4 +68,34 @@ public class GoogleHTTPHelper implements HTTPHelper {
 		return simpleHTTPResponse;
 	}
 
+	public SimpleHTTPResponse postJson(String json, String targetUrl, Map<String, String> headers) {
+		SimpleHTTPResponse simpleHTTPResponse = new SimpleHTTPResponse();
+		
+		try {
+			URLFetchService urlFetch = URLFetchServiceFactory.getURLFetchService();
+			URL url = new URL(targetUrl);
+			HTTPRequest httpRequest = new HTTPRequest(url, HTTPMethod.POST);
+			httpRequest.addHeader(new HTTPHeader("X-Appengine-Inbound-Appid", ApiProxy.getCurrentEnvironment().getAppId()));
+			if(headers != null) {
+				Iterator<String> headerIter = headers.keySet().iterator();
+				while(headerIter.hasNext()) {
+					String key = headerIter.next();
+					httpRequest.addHeader(new HTTPHeader(key, headers.get(key)));
+				}
+			}
+			httpRequest.setPayload(json.getBytes());
+			httpRequest.setHeader(new HTTPHeader("Content-Type", "application/json; charset=UTF-8"));
+			HTTPResponse httpResp = urlFetch.fetch(httpRequest);
+			String content = new String(httpResp.getContent());
+			simpleHTTPResponse.statusCode = httpResp.getResponseCode();
+			simpleHTTPResponse.payload = content;
+			simpleHTTPResponse.reason = "";
+			
+			logger.log(Level.INFO, String.format("The http response from the server was %s", content));
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+
+		return simpleHTTPResponse;
+	}
 }

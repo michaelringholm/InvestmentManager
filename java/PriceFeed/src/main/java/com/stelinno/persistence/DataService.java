@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface DataService {
 	public List<Asset> getAssets();
+	public List<Asset> getIncompleteAssets(int count);
 	public void storeAsset(Asset asset);
-	public void updateAssetCategories();
+	public void storeAssetAsync(Asset asset);
+	public int updateAssetCategories();
 }

@@ -10,6 +10,11 @@ detailed instructions.
 
 [search-api-docs]: https://cloud.google.com/appengine/docs/java/search/
 
+#Deploying a CRON job, cron.yaml generated based on cron.xml
+cd \target\appengine-staging\WEB-INF\appengine-generated
+mvn appengine:deployCron
+or gcloud app deploy cron.yaml
+
 # Search Package API
 https://cloud.google.com/appengine/docs/standard/java/javadoc/com/google/appengine/api/search/package-summary
 

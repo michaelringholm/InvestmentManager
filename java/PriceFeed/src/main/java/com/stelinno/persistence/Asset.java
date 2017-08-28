@@ -1,8 +1,11 @@
 package com.stelinno.persistence;
 
+import java.util.Date;
+
 public class Asset
 {
-    public String Id;
+    public enum	StatusEnum { INCOMPLETE, COMPLETE }
+	public String Id;
     public String Symbol;
     public String Isin;
     public String Title;
@@ -12,6 +15,8 @@ public class Asset
     public String PreviousClose;        
     public String Volume;
     public String AssetCategoryTitle;
+	public StatusEnum AssetState;
+	public Date LastUpdate;
 
     //public String AnualVolatility;
     //private double avgVoltatility;

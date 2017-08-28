@@ -16,7 +16,8 @@ public class BorsenPriceMapper {
 		price.Performance = borsenPrice.PERFORMANCE;
 		price.PerformancePct = borsenPrice.PERFORMANCE_PCT;
 		price.Price = borsenPrice.PRICE;
-		price.Symbol = borsenPrice.SYMBOL.toUpperCase().trim();
+		if(borsenPrice.SYMBOL != null)
+			price.Symbol = borsenPrice.SYMBOL.toUpperCase().trim();
 		price.Volume = borsenPrice.VOLUME;
 		price.YTD = borsenPrice.YDT;
 		return price;
