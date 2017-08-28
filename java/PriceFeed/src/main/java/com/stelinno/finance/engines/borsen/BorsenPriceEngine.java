@@ -1,6 +1,5 @@
 package com.stelinno.finance.engines.borsen;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,57 +7,48 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.gson.Gson;
 import com.stelinno.finance.engines.PriceEngine;
 import com.stelinno.finance.entities.Price;
 import com.stelinno.finance.entities.borsen.BorsenPrice;
 import com.stelinno.finance.mappers.borsen.BorsenPriceMapper;
+import com.stelinno.http.HTTPHelper;
 
 public class BorsenPriceEngine implements PriceEngine {
-	private static final Gson gson = new Gson();
-	private static final BorsenPriceMapper priceMapper = new BorsenPriceMapper();
+	@Autowired private Gson gson;
+	@Autowired private BorsenPriceMapper priceMapper;
+	@Autowired private HTTPHelper httpHelper;
 	
 	public List<Price> getPrices(String priceSource) {	
 		System.out.println("Fetching prices from [" + priceSource + "]");
 		Document doc = null;
-		boolean giveUp = false;
-		int failCount = 0;
 		List<Price> prices = new ArrayList<>();
-		while(!giveUp) {
-			try {
-				doc = Jsoup.connect(priceSource).get();
-				giveUp = true;
-				Elements stocks = doc.select(".stock-live-updates");
-				for(Element stock : stocks) {
-					try {
-					String json = stock.attr("data-json");
-					String name = stock.select(".stock-name a").first().text().trim();
-					BorsenPrice borsenPrice = gson.fromJson(json, BorsenPrice.class);
-					borsenPrice.OFFICIAL_NAME_SECURITY = name;
-					borsenPrice.ISIN = borsenPrice.ISIN.trim();				
-					borsenPrice.SYMBOL = getSymbol(borsenPrice.ISIN);
-					if(borsenPrice.SYMBOL == null)
-						borsenPrice.SYMBOL = "MISSING_SYMBOL_" + borsenPrice.ISIN;
-					prices.add(priceMapper.toPrice(borsenPrice));
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
+		try {
+			//doc = Jsoup.connect(priceSource).get();
+			doc = Jsoup.parse(httpHelper.getHtml(priceSource).payload.toString());
+			Elements stocks = doc.select(".stock-live-updates");
+			for(Element stock : stocks) {
+				try {
+				String json = stock.attr("data-json");
+				String name = stock.select(".stock-name a").first().text().trim();
+				BorsenPrice borsenPrice = gson.fromJson(json, BorsenPrice.class);
+				borsenPrice.OFFICIAL_NAME_SECURITY = name;
+				borsenPrice.ISIN = borsenPrice.ISIN.trim();				
+				borsenPrice.SYMBOL = getSymbol(borsenPrice.ISIN);
+				if(borsenPrice.SYMBOL == null)
+					borsenPrice.SYMBOL = "MISSING_SYMBOL_" + borsenPrice.ISIN;
+				prices.add(priceMapper.toPrice(borsenPrice));
+				}
+				catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
-			catch(java.net.SocketTimeoutException timeoutEx) {
-				failCount++;
-				if(failCount>3) {
-					giveUp = true;
-					return null;
-				}
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-				giveUp = true;
-				return null;
-			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 		return prices;
 	}
@@ -66,26 +56,9 @@ public class BorsenPriceEngine implements PriceEngine {
 	private String getSymbol(String isin) {
 		String symbolUrl = "http://www.boerse-berlin.com/index.php/Shares?isin=" + isin;
 		Document doc = null;
-		boolean giveUp = false;
-		int failCount = 0;
-		while(!giveUp) {
-			try {
-				doc = Jsoup.connect(symbolUrl).get();
-				giveUp = true;
-			}
-			catch(java.net.SocketTimeoutException timeoutEx) {
-				failCount++;
-				if(failCount>3) {
-					giveUp = true;
-					return null;
-				}
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-				giveUp = true;
-				return null;
-			}
-		}
+		doc = Jsoup.parse(httpHelper.getHtml(symbolUrl).payload.toString());
+		//doc = Jsoup.connect(symbolUrl).get();			
+		
 		if(doc == null)
 			return null;
 		Elements symbolElements = doc.select(".ln_symbol span");
@@ -103,8 +76,9 @@ public class BorsenPriceEngine implements PriceEngine {
 		String symbolUrl = "http://www.boerse-berlin.com/index.php/Shares?isin=" + isin;
 		Document doc;
 		try {
-			doc = Jsoup.connect(symbolUrl).get();
-		} catch (IOException e) {
+			doc = Jsoup.parse(httpHelper.getHtml(symbolUrl).payload.toString());
+			//doc = Jsoup.connect(symbolUrl).get();
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}

@@ -8,11 +8,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.stelinno.finance.mappers.AssetMapper;
-import com.stelinno.finance.engines.borsen.BorsenPriceEngine;
 import com.stelinno.finance.entities.Price;
-import com.stelinno.persistence.aws.AWSDataService;
-import com.stelinno.persistence.aws.Asset;
-import com.stelinno.persistence.aws.DataService;
+import com.stelinno.persistence.Asset;
+import com.stelinno.persistence.DataService;
 
 public class PriceUpdater {
 	@Autowired private PriceEngine priceEngine;

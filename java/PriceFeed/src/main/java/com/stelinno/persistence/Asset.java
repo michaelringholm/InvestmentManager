@@ -1,4 +1,4 @@
-package com.stelinno.persistence.aws;
+package com.stelinno.persistence;
 
 public class Asset
 {

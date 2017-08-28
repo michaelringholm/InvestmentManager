@@ -3,18 +3,21 @@ package com.stelinno.persistence.aws;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.DefaultBHttpClientConnectionFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.stelinno.persistence.Asset;
+import com.stelinno.persistence.AssetCategoryMapping;
+import com.stelinno.persistence.DataService;
 
 public class AWSDataService implements DataService {
 	private static final Gson gson = new Gson();
@@ -22,6 +25,32 @@ public class AWSDataService implements DataService {
 	public void storeAsset(Asset asset) {
 		storeDocument("{\"TableName\":\"Invest_Asset\",\"Item\":" + gson.toJson(asset) + "}");
 	}
+	
+	@Override
+	public void updateAssetCategories() {
+		Map<String, AssetCategoryMapping> assetCategoryMap = new HashMap<>();
+        List<AssetCategoryMapping> assetCategoryMappings = getAssetCategoryMap();
+        if(assetCategoryMappings != null) {
+	        for(AssetCategoryMapping assetCategoryMapping : assetCategoryMappings)
+	        	assetCategoryMap.put(assetCategoryMapping.Isin, assetCategoryMapping);
+	        List<Asset> assets = getAssets();
+	        for(Asset asset : assets) {
+	        	if(assetCategoryMap.containsKey(asset.Isin)) {
+	        		asset.AssetCategoryTitle = assetCategoryMap.get(asset.Isin).AssetCategoryTitle;
+	        		storeAsset(asset);
+	        	}
+	        }
+        }
+	}
+	
+    private List<AssetCategoryMapping> getAssetCategoryMap()
+    {
+        String json = "{ \"TableName\":\"Invest_AssetCategoryMap\" }";
+        String jsonDocuments = getDocuments(json);
+        Type listType = new TypeToken<ArrayList<AssetCategoryMapping>>(){}.getType();
+        List<AssetCategoryMapping> assetCategoryMappings = new Gson().fromJson(jsonDocuments, listType);
+        return assetCategoryMappings;
+    }	
 	
     public List<Asset> getAssets()
     {
@@ -66,4 +95,5 @@ public class AWSDataService implements DataService {
 		//new AWSDataService().StoreAsset(asset);
 		new AWSDataService().getAssets();
 	}
+
 }

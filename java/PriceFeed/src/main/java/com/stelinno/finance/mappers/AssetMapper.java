@@ -1,7 +1,7 @@
 package com.stelinno.finance.mappers;
 
 import com.stelinno.finance.entities.Price;
-import com.stelinno.persistence.aws.Asset;
+import com.stelinno.persistence.Asset;
 
 public class AssetMapper {
 
