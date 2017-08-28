@@ -11,7 +11,7 @@ namespace WebAppCore.Services
         void StoreCategory();
         List<AssetCategory> GetAssetCategories();
         List<Asset> GetAssets(String assetCategoryTitle);
-        void BuyAsset(Asset asset);
-        void SellAsset(Asset asset);
+        void BuyAsset(String userKey, String portfolioId, Int16 quantity, Asset asset);
+        void SellAsset(String userKey, String portfolioId, Int16 quantity, Asset asset);
     }
 }

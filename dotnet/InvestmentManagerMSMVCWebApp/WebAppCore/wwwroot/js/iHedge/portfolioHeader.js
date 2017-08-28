@@ -45,7 +45,7 @@ function PortfolioHeader() {
                 $(".portfolio").click(function () {
                     var portfolioId = $(this).attr("data-portfolio-id");
                     ShowPortfolioSecurityList(portfolioId);
-                    UpdatePortfolioHeader(portfolioId);
+                    //UpdatePortfolioHeader(portfolioId);
                 });
                 $(".newPortfolio").click(function () {
                     ShowNewPortfolioDialog();
@@ -136,7 +136,7 @@ function PortfolioHeader() {
             data: { login: $("#login").val(), portfolioId: portfolioId },
             traditional: true,
             success: function (result) {
-                $("#portfolioId").val(result.PortfolioId);
+                //$("#portfolioId").val(result.PortfolioId);
                 $("#portfolioTitleHeader").html(result.PortfolioTitle);
                 $("#marketValueHeader").html(result.MarketValue);
                 $("#cashHeader").html(result.Cash);

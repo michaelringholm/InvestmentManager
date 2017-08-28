@@ -10,3 +10,5 @@ Remember to whitelist IPs and Domains from where you will host/run this app
 
 # This is a MVC.NET Core Web App 
 https://docs.microsoft.com/en-us/aspnet/core/security/authentication/social/index
+
+http://investment-manager.azurewebsites.local:62018/

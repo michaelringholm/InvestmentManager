@@ -39,7 +39,7 @@ function StockMarket() {
                     assetCategoryWidget.appendTo("#assetCategories");
                 }
 
-                $(".assetCategory").click(function () { ShowAssetCategory($("portfolioId").val(), $(this).attr("data-asset-category-title")); });
+                $(".assetCategory").click(function () { ShowAssetCategory($(this).attr("data-asset-category-title")); });
             },
             error: function (err1, err2, err3) {
                 ShowError(err1.responseText);

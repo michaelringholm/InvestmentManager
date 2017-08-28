@@ -1,11 +1,11 @@
 ﻿$(function () {
-    var portfolioId = $("#portfolioId").val();
     var portfolioDetails = new PortfolioDetails();
-    portfolioDetails.populateDetails(portfolioId);
+    portfolioDetails.populateDetails(GetSelectedPortfolioId());
 });
 
 function PortfolioDetails() {
     var _this = this;
+    var util = new Util();
 
     this.populateDetails = function (portfolioId) {        
         var authModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
@@ -31,34 +31,36 @@ function PortfolioDetails() {
                 //$("#div1").html(result);
                 var portfolio = result.portfolio;
 
-                if (portfolio.portfolioItems) {
-                    for (var portfolioItemIndex = 0; portfolioItemIndex < portfolio.portfolioItems.length; portfolioItemIndex++) {
-                        var portfolioItem = portfolio.portfolioItems[portfolioItemIndex];
-                        var portfolioItemWidget = $("#portfolioItemTemplate").clone();
-                        $(portfolioItemWidget).removeAttr("id");
-                        //$(portfolioItemWidget).attr("data-portfolio-id", portfolio.id);
-                        //$(portfolioItemWidget).attr("data-portfolio-title", portfolio.name);
-                        $(portfolioItemWidget).find(".title").text("[N/A]");
-                        $(portfolioItemWidget).find(".symbol").text(portfolioItem.assetSymbol);
-                        $(portfolioItemWidget).find(".position").text(portfolioItem.position);
-                        $(portfolioItemWidget).find(".purchaseQuote").text(portfolioItem.purchaseQuote);
-                        $(portfolioItemWidget).find(".purchaseAmount").text(portfolioItem.position * portfolioItem.purchaseQuote);
-                        $(portfolioItemWidget).find(".marketValue").text(portfolioItem.position * portfolioItem.purchaseQuote);
-                        $(portfolioItemWidget).find(".change").text("-5"); //<!-- <%=InMaApp.DisplayHelper.FormatMoney((security.position * security.quote)-security.purchaseAmount)%> -->
-                        $(portfolioItemWidget).show();
-                        portfolioItemWidget.appendTo("#portfolioItems");
+                if (portfolio.trades) {
+                    for (var tradeIndex = 0; tradeIndex < portfolio.trades.length; tradeIndex++) {
+                        var trade = portfolio.trades[tradeIndex];
+                        var tradeWidget = $("#tradeTemplate").clone();
+                        $(tradeWidget).removeAttr("id");
+                        //$(tradeWidget).attr("data-portfolio-id", portfolio.id);
+                        $(tradeWidget).attr("data-asset-symbol", trade.assetSymbol);
+                        $(tradeWidget).attr("data-asset-quote", trade.purchaseQuote); // Should be live quote
+                        $(tradeWidget).attr("data-asset-img-src", trade.assetSymbol);
+                        $(tradeWidget).find(".title").text("[N/A]");
+                        $(tradeWidget).find(".assetSymbol").text(trade.assetSymbol);
+                        $(tradeWidget).find(".quantity").text(trade.quantity);
+                        $(tradeWidget).find(".purchaseQuote").text(trade.purchaseQuote);
+                        $(tradeWidget).find(".purchaseAmount").text(trade.quantity * trade.purchaseQuote);
+                        $(tradeWidget).find(".marketValue").text(trade.quantity * trade.purchaseQuote);
+                        $(tradeWidget).find(".change").text("-5"); //<!-- <%=InMaApp.DisplayHelper.FormatMoney((security.position * security.quote)-security.purchaseAmount)%> -->
+                        $(tradeWidget).show();
+                        tradeWidget.appendTo("#trades");
                     }
                 }
 
-                /*$(".subListItem").hide();
-                $(".portfolioItemSummaryItem").click(function (e) { $(".subListItem[data-asset-symbol=\"" + $(e.currentTarget).attr("data-asset-symbol") + "\"]").toggle(); });
-                $(".portfolioItem").on("swiperight", function () { ShowBuySellDialog(this, "BUY", true, ShowPortfolioSecurityList); });
-                $(".portfolioItem").on("swipeleft", function () { ShowBuySellDialog(this, "SELL", true, ShowPortfolioSecurityList); });
-                $(".portfolioItem").draggable(
+                $(".subListItem").hide();
+                $(".tradeSummaryItem").click(function (e) { $(".subListItem[data-asset-symbol=\"" + $(e.currentTarget).attr("data-asset-symbol") + "\"]").toggle(); });
+                $(".trade").on("swiperight", function () { util.showBuySellDialog(this, "BUY", true, ShowPortfolioSecurityList); });
+                $(".trade").on("swipeleft", function () { util.showBuySellDialog(this, "SELL", true, ShowPortfolioSecurityList); });
+                $(".trade").draggable(
                     {
                         cursor: "move",
                         cursorAt: { top: 38, left: 40 },
-                        helper: function (event) { return DrawDraggableSecurity(this); },
+                        helper: function (event) { return _this.drawDraggableSecurity(this); },
                         zIndex: 10000,
                         containment: 'document',
                         appendTo: "body",
@@ -71,7 +73,7 @@ function PortfolioDetails() {
                         drop: function (event, ui) {
                             //BuySecurity(ui.draggable);
                             $(this).removeClass("dropZoneHover"); $(this).addClass("dropZone"); $(this).stop(true, true); $(this).effect("pulsate", { times: 1 }, 1);
-                            ShowBuySellDialog(ui.draggable, "BUY", true, ShowPortfolioSecurityList);
+                            util.showBuySellDialog(ui.draggable, "BUY", true, ShowPortfolioSecurityList);
                         }
                     });
                 $("#dzSellSecurity").droppable(
@@ -81,7 +83,7 @@ function PortfolioDetails() {
                         drop: function (event, ui) {
                             $(this).removeClass("dropZoneHover"); $(this).addClass("dropZone"); $(this).stop(true, true); $(this).effect("pulsate", { times: 1 }, 1);
                             //SellSecurity(ui.draggable);
-                            ShowBuySellDialog(ui.draggable, "SELL", true, ShowPortfolioSecurityList);
+                            util.showBuySellDialog(ui.draggable, "SELL", true, ShowPortfolioSecurityList);
                         }
                     });
                 $("#miShowToDo").droppable(
@@ -90,9 +92,9 @@ function PortfolioDetails() {
                         drop: function (event, ui) {
                             alert("Add to ToDo [" + $(ui.draggable).attr("data-asset-symbol") + "]");
                         }
-                    });*/
+                    });
                 
-                $(".portfolioItemEmptyList").click(function () { ShowStockMarket($("#portfolioId").val()); });
+                $(".tradeEmptyList").click(function () { ShowStockMarket(GetSelectedPortfolioId()); });
             },
             error: function (result) {
                 ShowError(result.responseText);
@@ -124,7 +126,7 @@ function PortfolioDetails() {
             data: { login: $("#login").val(), portfolioId: portfolioId },
             traditional: true,
             success: function (result) {
-                $("#portfolioId").val(result.PortfolioId);
+                //$("#portfolioId").val(result.PortfolioId);
                 $("#portfolioTitleHeader").html(result.PortfolioTitle);
                 $("#marketValueHeader").html(result.MarketValue);
                 $("#cashHeader").html(result.Cash);

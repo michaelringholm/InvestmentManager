@@ -13,19 +13,32 @@ namespace WebAppCore.Services
     {
         // Create Token object with token string + generatedTime
         public static Dictionary<String,String> authTokenDic = new Dictionary<String,String>();
+        public static Dictionary<String, String> userDic = new Dictionary<String, String>();
+
+        public static String GetUserKeyByToken(String authToken)
+        {
+            // Reverse lookup
+            var userKey = userDic[authToken];
+            return userKey;
+        }
 
         public static String GetAuthToken(String authProvider, String providerSpecificUserId)
         {
             var key = BuildKey(authProvider, providerSpecificUserId);
             if (!authTokenDic.ContainsKey(key))
-                authTokenDic.Add(key, Guid.NewGuid().ToString());
-            
+            {
+                var authToken = Guid.NewGuid().ToString();
+                authTokenDic.Add(key, authToken);
+                userDic.Add(authToken, key);
+            }
             return authTokenDic.GetValueOrDefault(key);
         }
 
         internal static void InvalidateUser(AuthModel logoutModel)
         {
             var key = BuildKey(logoutModel.authProvider, logoutModel.fbUserId);
+            var authToken = authTokenDic[key];
+            userDic.Remove(authToken);
             authTokenDic.Remove(key);
         }
 

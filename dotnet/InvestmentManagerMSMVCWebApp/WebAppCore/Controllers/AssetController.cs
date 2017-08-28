@@ -19,14 +19,16 @@ namespace WebAppCore.Controllers
         [HttpPost]
         public IActionResult Buy([FromBody] AssetModel assetModel)
         {
-            dataService.BuyAsset(assetModel.Asset);
-            return new JsonResult(new {  });
+            var userKey = AuthService.GetUserKeyByToken(assetModel.AuthToken);
+            dataService.BuyAsset(userKey, assetModel.PortfolioId, assetModel.Quantity, assetModel.Asset);
+            return new JsonResult(new { authToken = assetModel.AuthToken, portfolioId = assetModel.PortfolioId, symbol= assetModel.Asset.Symbol, userKey=userKey });
         }
 
         [HttpPost]
         public IActionResult Sell([FromBody] AssetModel assetModel)
         {
-            dataService.SellAsset(assetModel.Asset);
+            var userKey = AuthService.GetUserKeyByToken(assetModel.AuthToken);
+            dataService.SellAsset(userKey, assetModel.PortfolioId, assetModel.Quantity, assetModel.Asset);
             return new JsonResult(new {  });
         }
     }

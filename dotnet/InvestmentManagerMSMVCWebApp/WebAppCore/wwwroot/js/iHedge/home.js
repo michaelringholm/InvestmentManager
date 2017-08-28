@@ -123,8 +123,8 @@ function ShowStockMarket(portfolioId) {
     NavigateWithAuth("/StockMarket/ShowMarket", "&portfolioId=" + portfolioId);
 }
 
-function ShowAssetCategory(portfolioId, assetCategoryTitle) {
-    NavigateWithAuth("/AssetCategory/ShowAssets", "&portfolioId=" + portfolioId + "&assetCategoryTitle=" + assetCategoryTitle);
+function ShowAssetCategory(assetCategoryTitle) {
+    NavigateWithAuth("/AssetCategory/ShowAssets", "&portfolioId=" + GetSelectedPortfolioId() + "&assetCategoryTitle=" + assetCategoryTitle);
 }
 
 /********************** END NEW *******************/
@@ -246,7 +246,7 @@ function FormatMoney(money) {
 }
 
 function GetSelectedPortfolioId() {
-    return $("#portfolioId").val();
+    return $("#hfPortfolioId").val();
 }
 /******************* END General *********************/
 

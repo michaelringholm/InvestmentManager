@@ -31,36 +31,22 @@ changeColor = "#b24031";
 }
 %>-->
 
-<div class="bodyTopSection">
-    <input id="portfolioId" type="hidden" value="@ViewData["PortfolioId"]" />
-    <img alt="Portfolio" src="/images/Pie-Chart-icon128.png" style="position: absolute;" />
-    <!--<div>TEST0</div>
-    <div style="margin-left: 12px; height: 136px;">
-        <div id="portfolioTitle" style="font-size: 24pt; line-height: 36px; margin-top: 6px; text-shadow: 2px 2px #1c1c1c;" placeholder="Portfolio title">Title</div>
-        <div style="">
-            <div class="normalCaption" style="line-height: 14px; margin-top: 10px;">Profit/Loss</div>
-            <div id="profitLoss" style="font-size: 12pt; line-height: 14px; color:red">-1000</div>
-            <div class="normalCaption" style="line-height: 14px; margin-top: 8px;">Market value</div>
-            <div id="marketValue" style="font-size: 12pt; line-height: 14px;">50000</div>
-        </div>
-        <div style="height: 84px; line-height: 84px;">
-            <div style="color: red; font-size: 38pt; font-weight: bold;" placeholder="-5"></div>
-        </div>
+<div class="bodyTopSection" style="position: relative;">
+    <img alt="Portfolio" style="position: absolute; left: 0px;" src="/images/Pie-Chart-icon128.png" />
+    <div id="portfolioTitle" style="position: absolute; font-size: 24pt; top: 10px; left: 130px; text-shadow: 2px 2px #1c1c1c;">Title</div>
+    <div style="position: absolute; left: 200px; color: red; font-size: 38pt; font-weight: bold;">-5</div>
+    <div class="normalCaption" style="position: absolute; left: 130px; top: 50px;">Profit/Loss</div>
+    <div id="profitLoss" style="position: absolute; left: 130px; top: 64px; font-size: 12pt; color:red">-1000</div>
+    <div class="normalCaption" style="position: absolute; left: 130px; top: 84px;">Market value</div>
+    <div id="marketValue" style="position: absolute; left: 130px; top: 98px; font-size: 12pt;">50000</div>
+    <div id="dzBuySecurity" class="dropZone" style="position: absolute; right: 220px; height: 116px;">
+        <div style="font-size: 10pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 180px; font-style: italic;">Drop here to buy</div>
     </div>
-    <div>TEST1</div>
-    <div id="dzSellSecurity" class="dropZone" style="height: 116px;">
-        <div style="font-size: 10pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 180px; font-style: italic;">
-            Drop here to sell
-        </div>
+    <div id="dzSellSecurity" class="dropZone" style="position: absolute; right: 10px; height: 116px;">
+        <div style="font-size: 10pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 180px; font-style: italic;">Drop here to sell</div>
     </div>
-    <div>TEST2</div>
-    <div id="dzBuySecurity" class="dropZone" style="height: 116px;">
-        <div style="font-size: 10pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 180px; font-style: italic;">
-            Drop here to buy
-        </div>
-    </div>-->
 </div>
-<div style="border: solid 1px; position:relative;" class="tableHeader">
+<div style="position:relative;" class="tableHeader">
     <div style="position: absolute; left: 44px;">Title</div>
     <div style="position: absolute; left: 220px;">Symbol</div>
     <div style="position: absolute; left: 420px;text-align: right;">Qnt.</div>
@@ -70,11 +56,10 @@ changeColor = "#b24031";
     <div style="position: absolute; left: 820px;text-align: right;">Profit/Loss</div>
 </div>
     <!--<%if(Model.Portfolio.securitiesSummed == null || Model.Portfolio.securitiesSummed.Length == 0) { %>-->
-<div id="portfolioItems"></div>
-<div>TEST5</div>
-<div title="Clicking here will take you to the stock market" class="portfolioItemEmptyList emptyList" style="position: relative; height: 80px; line-height: 80px;">
-    <img alt="" style="position: absolute; width: 60px;" src="/images/stock-market-icon72.png" />
-    <div style="position: absolute;">Add stocks to your portfolio by visiting the <span style="text-decoration: underline; font-weight: bold;">stock market!</span></div>
+<div id="trades"></div>
+<div title="Clicking here will take you to the stock market" class="tradeEmptyList emptyList" style="position: relative; height: 80px; line-height: 80px;">
+    <img alt="" style="position: absolute; left: 20px; top: 0px;" src="/images/stock-market-icon72.png" />
+    <div style="position: absolute; left: 100px; top: 0px;">Add stocks to your portfolio by visiting the <span style="text-decoration: underline; font-weight: bold;">stock market!</span></div>
 </div>
     <!--<%} %>-->
 
@@ -84,11 +69,11 @@ changeColor = "#b24031";
     {%>
         <%String imgSrc = InMaApp.DisplayHelper.GetImgSrc(security.categoryTitle);%>-->
 
-<div id="portfolioItemTemplate" class="portfolioItem portfolioItemSummaryItem" style="position: relative; height: 50px; font-weight: bold;" data-asset-symbol="" data-asset-quote="" data-asset-title="" data-asset-quantity="" data-asset-img-src="/images/categories/default.png" data-asset-category-title="">
-    <!--<img class="assetCategoryIcon" title="categoryTitle" alt="" src="/images/categories/default.png" style="position:absolute; width: 32px; height: 32px;" />    -->
+<div id="tradeTemplate" class="trade tradeSummaryItem" style="position: relative; margin-left: 20px; cursor: pointer; height: 50px; font-weight: bold;" data-asset-symbol="" data-asset-quote="" data-asset-title="" data-asset-quantity="" data-asset-img-src="/images/categories/default.png" data-asset-category-title="">
+    <img class="assetCategoryIcon" title="categoryTitle" alt="" src="~/images/categories/unknown-icon128.png" style="position:absolute; left: 0px; width: 32px; height: 32px;" />
     <div class="title" style="position:absolute; left: 44px;"></div>
-    <div class="symbol" style="position:absolute; left: 220px;"></div>
-    <div class="position" style="position:absolute; left: 420px;text-align: right;"></div>
+    <div class="assetSymbol" style="position:absolute; left: 220px;"></div>
+    <div class="quantity" style="position:absolute; left: 420px;text-align: right;"></div>
     <div class="purchaseQuote" style="position:absolute; left: 520px;text-align: right;"></div>
     <div class="purchaseAmount" style="position:absolute; left: 620px; text-align: right;"></div>
     <div class="marketValue" style="position:absolute; left: 720px; text-align: right;"></div>
@@ -101,7 +86,7 @@ changeColor = "#b24031";
 <!--<%foreach (var security in Model.Portfolio.securities.Where(s => s.symbol == Model.Symbol))
 {%>
 <%String imgSrc = InMaApp.DisplayHelper.GetImgSrc(security.categoryTitle);%>-->
-<div id="portfolioItemSubListTemplate" class="portfolioItem subListItem" data-asset-symbol="" data-asset-quote="" data-asset-title="" data-asset-quantity="" data-asset-img-src="/images/categories/default.png" data-asset-category-title="">
+<div id="tradeSubListTemplate" class="trade subListItem" data-asset-symbol="" data-asset-quote="" data-asset-title="" data-asset-quantity="" data-asset-img-src="/images/categories/default.png" data-asset-category-title="">
     <div style="margin-left: 4px; margin-top: 4px;">
         <div style="width: 32px;">&nbsp;</div>
     </div>

@@ -27,6 +27,7 @@ namespace WebAppCore
             services.AddMvc();
             services.AddAuthorization(options => options.AddPolicy("InvestAuthTokenPolicy", policy => policy.Requirements.Add(new LoginProviderAuthTokenRequirement())));
             services.AddSingleton<IAuthorizationHandler, InvestmentManagerAuthorizationHandler>();
+            services.AddSingleton<IPriceService, BorsenPriceService>();
             services.AddSingleton<IDataService, DataService>();
         }
 

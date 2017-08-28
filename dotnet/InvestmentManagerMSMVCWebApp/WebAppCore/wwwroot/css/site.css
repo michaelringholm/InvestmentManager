@@ -165,7 +165,9 @@ legend {
 
 input[type="text"] {
     width: 200px;
-    border: 1px solid #CCC;
+    border: 0px;
+    border-bottom: solid 1px grey;
+    background-color: rgba(49, 49, 49, 0.89);
 }
 
 input[type="password"] {
@@ -494,6 +496,7 @@ div#title {
 
 .tableHeader {
     height: 40px;
+    margin: 8px 20px 2px 20px;
     line-height: 40px;
     font-size: 10pt;
     text-transform: uppercase;
@@ -510,7 +513,7 @@ div#title {
 
 .bodyTopSection {
     height: 136px;
-    line-height: 136px;
+    /*line-height: 136px;*/
     width: 958px;
     border-bottom: solid 2px #1c1c1c;
     margin: 8px 20px 2px 20px;
@@ -565,10 +568,10 @@ img {
     display: none;
 }
 
-#portfolioItemTemplate {
+#tradeTemplate {
     display: none;
 }
 
-#portfolioItemSubListTemplate {
+#tradeSubListTemplate {
     display: none;
 }

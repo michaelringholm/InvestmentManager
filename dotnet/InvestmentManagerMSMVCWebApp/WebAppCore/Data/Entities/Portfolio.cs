@@ -11,7 +11,7 @@ namespace WebAppCore.Data.Entities
         public  String UserKey{ get; set; }
         public String Cash { get; set; }
         public String Title { get; set; }
-        public List<PortfolioItem> PortfolioItems { get; set; }
+        public List<Trade> Trades { get; set; }
         /*private PortfolioHeader portfolioHeaderField;
             private Security[] securitiesField;
             private Security[] securitiesSummedField;*/

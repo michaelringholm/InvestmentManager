@@ -9,6 +9,7 @@ namespace WebAppCore.Data.Entities
     {
         public String Id { get; set; }
         public String Symbol { get; set; }
+        public String Isin { get; set; }
         public String Title { get; set; }
         public String Quote { get; set; }
         public String MarketValue { get; set; }

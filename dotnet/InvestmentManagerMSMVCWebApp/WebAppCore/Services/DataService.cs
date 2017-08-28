@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -12,6 +13,12 @@ namespace WebAppCore.Services
 {
     public class DataService : IDataService
     {
+        private readonly IPriceService priceService;
+        public DataService(IPriceService priceService)
+        {
+            this.priceService = priceService;
+        }
+
         private void StoreDocument(String jsonString)
         {
             var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
@@ -27,6 +34,12 @@ namespace WebAppCore.Services
         public void StoreCategory()
         {
             StoreDocument("{\"TableName\":\"Invest_Category\",\"Item\":{\"Name\":\"finance\",\"Title\":\"Finance\"}}");
+        }
+
+        public void StorePortfolio(Portfolio portfolio)
+        {
+            var jsonItem = JsonConvert.SerializeObject(portfolio);
+            StoreDocument("{\"TableName\":\"Invest_Portfolio\",\"Item\":" + jsonItem + "}");
         }
 
         public List<Portfolio> GetPortfolios(String userKey)
@@ -70,14 +83,26 @@ namespace WebAppCore.Services
             return assets;
         }
 
-        public void BuyAsset(Asset asset)
+        public void BuyAsset(String userKey, String portfolioId, Int16 quantity, Asset asset)
         {
-            StoreDocument("{\"TableName\":\"Invest_Category\",\"Item\":{\"Name\":\"finance\",\"Title\":\"Finance\"}}");
+            if (quantity < 1)
+                throw new Exception("Quantity  must be more than 1!");
+            var portfolio = GetPortfolio(userKey, portfolioId);
+            var liveQuote = priceService.GetLiveQuote(asset.Isin);
+            if (portfolio.Trades == null)
+                portfolio.Trades = new List<Trade>();
+            portfolio.Trades.Add(new Trade { AssetSymbol = asset.Symbol, AssetIsin = asset.Isin, PortfolioId = portfolioId, Quantity = quantity, PurchaseDate = DateTime.Now.ToString("ddMMyyyy:HHmmSS"), PurchaseQuote = liveQuote.ToString(CultureInfo.GetCultureInfo("en-US")) });
+            StorePortfolio(portfolio);
         }
 
-        public void SellAsset(Asset asset)
+        public void SellAsset(String userKey, String portfolioId, Int16 quantity, Asset asset)
         {
-            StoreDocument("{\"TableName\":\"Invest_Category\",\"Item\":{\"Name\":\"finance\",\"Title\":\"Finance\"}}");
+            if (quantity < 1)
+                throw new Exception("Quantity to sell, must be more than 1!");
+            var portfolio = GetPortfolio(userKey, portfolioId);
+            var liveQuote = priceService.GetLiveQuote(asset.Isin);
+            portfolio.Trades.Add(new Trade { AssetSymbol = asset.Symbol, AssetIsin = asset.Isin, PortfolioId = portfolioId, Quantity = (Int16)(quantity*-1), PurchaseDate = DateTime.Now.ToString("ddMMyyyy:HHmmSS"), PurchaseQuote = liveQuote.ToString(CultureInfo.GetCultureInfo("en-US")) });
+            StorePortfolio(portfolio);
         }
     }
 }

@@ -1,16 +1,17 @@
-﻿$(function () {
+﻿$(function () {    
     var assetCategory = new AssetCategory();
     assetCategory.populateAssetCategory($("#hfPortfolioId").val(), $("#hfAssetCategoryTitle").val());
 });
 
 function AssetCategory() {
     var _this = this;
+    var util = new Util();
 
     this.populateAssetCategory = function (portfolioId, assetCategoryTitle) {
         var authModel = new LoginHelper().getAuthModel();
         var model = { portfolioId: portfolioId, assetCategoryTitle: assetCategoryTitle };
         $("#assetCategoryImg").attr("src", _this.titleToImgSrc(assetCategoryTitle));
-        $("#title").text(assetCategoryTitle);
+        $("#assetCategoryTitle").text(assetCategoryTitle);
         $.ajax({
             type: "POST",
             url: "/AssetCategory/GetAssets",
@@ -34,6 +35,9 @@ function AssetCategory() {
                     $(assetWidget).removeAttr("id");
                     $(assetWidget).attr("data-asset-id", asset.id);
                     $(assetWidget).attr("data-asset-title", asset.title);
+                    $(assetWidget).attr("data-asset-symbol", asset.symbol);
+                    $(assetWidget).attr("data-asset-quote", asset.quote);
+                    $(assetWidget).attr("data-asset-isin", asset.isin);
                     $(assetWidget).find(".assetTitle").text(asset.title);
                     $(assetWidget).find(".assetSymbol").text(asset.symbol);
                     $(assetWidget).find(".assetChange").text(asset.change);
@@ -44,8 +48,8 @@ function AssetCategory() {
                 }
 
 
-                $(".asset").dblclick(function () { _this.showBuySellDialog(this, "BUY", true, ShowPortfolioSecurityList); });
-                $(".asset").on("swiperight", function () { _this.showBuySellDialog(this, "BUY", true, ShowPortfolioSecurityList); });
+                $(".asset").dblclick(function () { util.showBuySellDialog(this, "BUY", true, ShowPortfolioSecurityList); });
+                $(".asset").on("swiperight", function () { util.showBuySellDialog(this, "BUY", true, ShowPortfolioSecurityList); });
                 $(".asset").draggable(
                     {
                         cursor: "move",
@@ -63,7 +67,7 @@ function AssetCategory() {
                         drop: function (event, ui) {
                             //BuySecurity(ui.draggable);
                             $(this).removeClass("dropZoneHover"); $(this).addClass("dropZone"); $(this).stop(true, true); $(this).effect("pulsate", { times: 1 }, 1);
-                            _this.showBuySellDialog(ui.draggable, "BUY", true, ShowPortfolioSecurityList);
+                            util.showBuySellDialog(ui.draggable, "BUY", true, ShowPortfolioSecurityList);
                         }
                     });
                 /*$("#dzSellSecurity").droppable(
@@ -73,7 +77,7 @@ function AssetCategory() {
                      drop: function (event, ui) {
                          $(this).removeClass("dropZoneHover"); $(this).addClass("dropZone"); $(this).stop(true, true); $(this).effect("pulsate", { times: 1 }, 1);
                          //SellSecurity(ui.draggable);
-                         ShowBuySellDialog(ui.draggable, "SELL", true, ShowPortfolioSecurityList);
+                         util.ShowBuySellDialog(ui.draggable, "SELL", true, ShowPortfolioSecurityList);
                      }
                  });*/
                 $("#miShowToDo").droppable(
@@ -112,83 +116,6 @@ function AssetCategory() {
             return "/images/categories/unknown-icon128.png";
     };
 
-    this.showBuySellDialog = function (asset, buySellCode, instantBuySell, fnCallOnSuccess) {
-        var symbol = $(asset).attr("data-asset-symbol");
-        var quote = $(asset).attr("data-asset-quote");
-        var title = $(asset).attr("data-asset-title");
-        var categoryTitle = $(asset).attr("data-asset-category-title");
-        //var imgSrc = $(asset).find("#draggableAssetImgSrc").val();
-        //var categoryTitle = $("#assetCategoryTitle").html();
-
-        $("#buySellDialog").dialog({ title: "Buy/Sell" });
-        $("#buySellRG").buttonset();
-        $("#nowToDoRG").buttonset();
-        $("#btnConfirmBuySell").button().click(function () { _this.buySellAsset(symbol, quote, fnCallOnSuccess); });
-        $("#btnCancelBuySell").button().click(function () { $("#buySellDialog").dialog("close"); });
-        $("#btnOk").button().click(function () { $("#buySellDialog").dialog("close"); });
-        $("#buySellDialog .bottomArea .beforeConfirm").show();
-        $("#buySellDialog .bottomArea .afterConfirm").hide();
-        $("#buySellDialog").dialog("open");
-    };
-
-    this.buySellAsset = function (symbol, quote, fnCallOnSuccess) {
-        var buySellIndicatorId = $("#buySellDialog #buySellRG :radio:checked").attr("id");
-        var statusIndicatorId = $("#buySellDialog #nowToDoRG :radio:checked").attr("id");
-        var quantity = $("#buySellDialog #tbQuantity").val();
-        var status = "";
-
-        if (statusIndicatorId === "btnBuySellDlgNow")
-            status = "Confirmed";
-        else if (statusIndicatorId === "btnBuySellDlgToDo")
-            status = "NotConfirmed";
-
-        if (buySellIndicatorId === "btnBuySellDlgBuy")
-            _this.buyAsset(symbol, quote, quantity, status, fnCallOnSuccess);
-        else if (buySellIndicatorId === "btnBuySellDlgSell")
-            _this.sellAsset(symbol, quote, quantity, status, fnCallOnSuccess);
-    };
-
-    this.buyAsset = function(symbol, quote, quantity, status, fnCallOnSuccess) {
-        $.ajax({
-            type: "POST",
-            url: "/Asset/Buy",
-            //contentType: 'application/json',
-            dataType: 'json',
-            data: { login: $("#login").val(), portfolioId: GetSelectedPortfolioId(), symbol: symbol, quote: quote, quantity: quantity, status: status },
-            traditional: true,
-            success: function (result) {
-                UpdatePortfolioHeader(GetSelectedPortfolioId());
-                if (fnCallOnSuccess !== null)
-                    fnCallOnSuccess(GetSelectedPortfolioId());
-
-                $("#buySellDialog .bottomArea .beforeConfirm").hide();
-                $("#buySellDialog .bottomArea .afterConfirm").show();
-            },
-            error: function (result) {
-                ShowError(result.responseText);
-            }
-        });
-    }
-
-    this.sellAsset = function(symbol, quote, quantity, status, fnCallOnSuccess) {
-        $.ajax({
-            type: "POST",
-            url: "/Asset/Sell",
-            //contentType: 'application/json',
-            dataType: 'json',
-            data: { login: $("#login").val(), portfolioId: GetSelectedPortfolioId(), symbol: symbol, quote: quote, quantity: quantity, status: status },
-            traditional: true,
-            success: function (result) {
-                UpdatePortfolioHeader(GetSelectedPortfolioId());
-                if (fnCallOnSuccess !== null)
-                    fnCallOnSuccess(GetSelectedPortfolioId());
-
-                $("#buySellDialog .bottomArea").html('<div style="margin-top: 14px; color: green;">Success!</div>');
-            },
-            error: function (result) {
-                ShowError(result.responseText);
-            }
-        });
-    }
+    
 
 }
