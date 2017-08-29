@@ -83,6 +83,29 @@ namespace WebAppCore.Services
             return assets;
         }
 
+        private Dictionary<String, Asset> _assetDic = null;
+        private Dictionary<String, Asset> getAssetCache()
+        {
+            if (_assetDic == null)
+            {
+                String json = @"{ ""TableName"":""Invest_Asset"" }";
+                var documents = GetDocuments(json);
+                var assets = JsonConvert.DeserializeObject<List<Asset>>(documents.ToString());
+                _assetDic = assets.ToDictionary(d => d.Isin);
+            }
+            return _assetDic;
+        }
+
+        public List<Asset> GetAssets()
+        {
+            return getAssetCache().Values.ToList<Asset>();
+        }
+
+        public Asset GetAsset(String isin)
+        {
+            return getAssetCache()[isin];
+        }
+
         public void BuyAsset(String userKey, String portfolioId, Int16 quantity, Asset asset)
         {
             if (quantity < 1)

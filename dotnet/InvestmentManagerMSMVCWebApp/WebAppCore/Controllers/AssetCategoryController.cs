@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebAppCore.Services;
 using WebAppCore.Models.AssetCategory;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAppCore.Controllers
 {
+    [Authorize(Policy = "InvestAuthTokenPolicy")]
     public class AssetCategoryController : Controller
     {
         private readonly IDataService dataService;

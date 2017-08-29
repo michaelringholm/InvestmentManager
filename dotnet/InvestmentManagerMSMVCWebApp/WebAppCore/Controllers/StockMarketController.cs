@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebAppCore.Services;
 using WebAppCore.Models.StockMarket;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAppCore.Controllers
 {
+    [Authorize(Policy = "InvestAuthTokenPolicy")]
     public class StockMarketController : Controller
     {
         private readonly IDataService dataService;

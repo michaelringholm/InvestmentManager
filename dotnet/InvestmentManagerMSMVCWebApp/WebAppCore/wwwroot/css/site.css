@@ -560,6 +560,11 @@ img {
     border: 0;
 }
 
+#trades {
+    font-size: 12pt;
+}
+
+/* Templates */
 #assetCategoryTemplate {
     display: none;
 }

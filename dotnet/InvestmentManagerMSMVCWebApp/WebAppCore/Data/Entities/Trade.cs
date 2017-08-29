@@ -16,7 +16,7 @@ namespace WebAppCore.Data.Entities
         public String PurchaseQuote { get; set; }        
         public String PurchaseDate { get; set; }
         public String Status { get; set; }
-
+        public Object MetaData { get; set; }
         //public String PurchaseAmount { get; set; } // Calculated (PurchaseQuote*Position)
     }
 }

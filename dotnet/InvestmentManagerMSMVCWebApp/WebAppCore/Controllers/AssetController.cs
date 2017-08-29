@@ -5,15 +5,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebAppCore.Services;
 using WebAppCore.Models.Asset;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAppCore.Controllers
 {
+    [Authorize(Policy = "InvestAuthTokenPolicy")]
     public class AssetController : Controller
     {
         private readonly IDataService dataService;
-        public AssetController(IDataService dataService)
+        private readonly IPriceService priceService;
+        public AssetController(IDataService dataService, IPriceService priceService)
         {
             this.dataService = dataService;
+            this.priceService = priceService;
         }
 
         [HttpPost]
@@ -30,6 +34,13 @@ namespace WebAppCore.Controllers
             var userKey = AuthService.GetUserKeyByToken(assetModel.AuthToken);
             dataService.SellAsset(userKey, assetModel.PortfolioId, assetModel.Quantity, assetModel.Asset);
             return new JsonResult(new {  });
+        }
+
+        [HttpPost]
+        public IActionResult LatestQuote([FromBody] QuoteModel model)
+        {
+            var quote = priceService.GetLiveQuote(model.Isin);
+            return new JsonResult(new { isin=model.Isin, quote=quote});
         }
     }
 }

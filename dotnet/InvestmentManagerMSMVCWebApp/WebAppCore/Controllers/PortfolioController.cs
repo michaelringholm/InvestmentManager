@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using WebAppCore.Services;
 using WebAppCore.Models.Account;
 using WebAppCore.Models.Portfolio;
+using System.Linq;
+using System.Globalization;
+using System.Collections.Generic;
+using WebAppCore.Data.Entities;
 
 namespace InMaApp.Controllers
 {
@@ -48,23 +52,18 @@ namespace InMaApp.Controllers
         public IActionResult GetDetails([FromBody] PortfolioDetailsModel portfolioDetailsModel)
         {
             var portfolio = dataService.GetPortfolio(portfolioDetailsModel.UserKey, portfolioDetailsModel.PortfolioId);
+            var assets = new List<Asset>();
+            foreach (var trade in portfolio.Trades) 
+                trade.MetaData = dataService.GetAsset(trade.AssetIsin);
+
+            var culture = CultureInfo.GetCultureInfo("en-US");
+            var totalPurchaseAmount = portfolio.Trades.Sum(t => ( (Convert.ToDecimal(t.PurchaseQuote, culture)) * (Convert.ToDecimal(t.Quantity, culture)) ) );
+            var portfolioMarketValue = portfolio.Trades.Sum(t => ((Convert.ToDecimal(((Asset)t.MetaData).Quote, culture)) * (Convert.ToDecimal(t.Quantity, culture))));
+            
+            portfolio.MetaData = new { totalPurchaseAmount=totalPurchaseAmount, portfolioMarketValue=portfolioMarketValue };
             return new JsonResult(new { portfolio = portfolio });
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
         [HttpPost]
         public JsonResult UpdatePortfolioHeader(string login, int portfolioId)
         {

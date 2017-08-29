@@ -34,11 +34,11 @@ changeColor = "#b24031";
 <div class="bodyTopSection" style="position: relative;">
     <img alt="Portfolio" style="position: absolute; left: 0px;" src="/images/Pie-Chart-icon128.png" />
     <div id="portfolioTitle" style="position: absolute; font-size: 24pt; top: 10px; left: 130px; text-shadow: 2px 2px #1c1c1c;">Title</div>
-    <div style="position: absolute; left: 200px; color: red; font-size: 38pt; font-weight: bold;">-5</div>
+    <div id="portfolioChangePct" style="position: absolute; left: 220px; top:30px; color: red; font-size: 38pt; font-weight: bold;">N/A</div>
     <div class="normalCaption" style="position: absolute; left: 130px; top: 50px;">Profit/Loss</div>
-    <div id="profitLoss" style="position: absolute; left: 130px; top: 64px; font-size: 12pt; color:red">-1000</div>
+    <div id="profitLoss" style="position: absolute; left: 130px; top: 64px; font-size: 12pt; color:red">N/A</div>
     <div class="normalCaption" style="position: absolute; left: 130px; top: 84px;">Market value</div>
-    <div id="marketValue" style="position: absolute; left: 130px; top: 98px; font-size: 12pt;">50000</div>
+    <div id="marketValue" style="position: absolute; left: 130px; top: 98px; font-size: 12pt;">N/A</div>
     <div id="dzBuySecurity" class="dropZone" style="position: absolute; right: 220px; height: 116px;">
         <div style="font-size: 10pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 180px; font-style: italic;">Drop here to buy</div>
     </div>
@@ -48,11 +48,11 @@ changeColor = "#b24031";
 </div>
 <div style="position:relative;" class="tableHeader">
     <div style="position: absolute; left: 44px;">Title</div>
-    <div style="position: absolute; left: 220px;">Symbol</div>
-    <div style="position: absolute; left: 420px;text-align: right;">Qnt.</div>
-    <div style="position: absolute; left: 520px;text-align: right;">Quote</div>
-    <div style="position: absolute; left: 620px;text-align: right;">Purch. Amount</div>
-    <div style="position: absolute; left: 720px;text-align: right;">Market Val.</div>
+    <div style="position: absolute; left: 260px;">Symbol</div>
+    <div style="position: absolute; left: 340px;text-align: right;">Qnt.</div>
+    <div style="position: absolute; left: 440px;text-align: right;">Quote</div>
+    <div style="position: absolute; left: 540px;text-align: right;">Purch. Amount</div>
+    <div style="position: absolute; left: 700px;text-align: right;">Market Val.</div>
     <div style="position: absolute; left: 820px;text-align: right;">Profit/Loss</div>
 </div>
     <!--<%if(Model.Portfolio.securitiesSummed == null || Model.Portfolio.securitiesSummed.Length == 0) { %>-->
@@ -72,11 +72,11 @@ changeColor = "#b24031";
 <div id="tradeTemplate" class="trade tradeSummaryItem" style="position: relative; margin-left: 20px; cursor: pointer; height: 50px; font-weight: bold;" data-asset-symbol="" data-asset-quote="" data-asset-title="" data-asset-quantity="" data-asset-img-src="/images/categories/default.png" data-asset-category-title="">
     <img class="assetCategoryIcon" title="categoryTitle" alt="" src="~/images/categories/unknown-icon128.png" style="position:absolute; left: 0px; width: 32px; height: 32px;" />
     <div class="title" style="position:absolute; left: 44px;"></div>
-    <div class="assetSymbol" style="position:absolute; left: 220px;"></div>
-    <div class="quantity" style="position:absolute; left: 420px;text-align: right;"></div>
-    <div class="purchaseQuote" style="position:absolute; left: 520px;text-align: right;"></div>
-    <div class="purchaseAmount" style="position:absolute; left: 620px; text-align: right;"></div>
-    <div class="marketValue" style="position:absolute; left: 720px; text-align: right;"></div>
+    <div class="assetSymbol" style="position:absolute; left: 260px;"></div>
+    <div class="quantity" style="position:absolute; left: 340px;text-align: right;"></div>
+    <div class="purchaseQuote" style="position:absolute; left: 440px;text-align: right;"></div>
+    <div class="purchaseAmount" style="position:absolute; left: 540px; text-align: right;"></div>
+    <div class="marketValue" style="position:absolute; left: 700px; text-align: right;"></div>
     <div class="change" style="position:absolute; left: 820px; text-align: right;"></div>
 </div>
 

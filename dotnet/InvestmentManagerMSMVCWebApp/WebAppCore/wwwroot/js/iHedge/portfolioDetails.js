@@ -30,23 +30,35 @@ function PortfolioDetails() {
             success: function (result) {
                 //$("#div1").html(result);
                 var portfolio = result.portfolio;
+                $("#portfolioTitle").text(portfolio.title);
+                var marketValue = util.formatDecimal(portfolio.metaData.portfolioMarketValue);
+                $("#marketValue").text(marketValue);
+                var profitLoss = util.formatDecimal(portfolio.metaData.portfolioMarketValue - portfolio.metaData.totalPurchaseAmount);
+                $("#profitLoss").text(profitLoss);
+                $("#portfolioChangePct").text(util.formatDecimal((profitLoss / marketValue) * 100));
+                util.adjustTextColor($("#profitLoss"), "");
+                util.adjustTextColor($("#portfolioChangePct"), "%");
 
                 if (portfolio.trades) {
                     for (var tradeIndex = 0; tradeIndex < portfolio.trades.length; tradeIndex++) {
                         var trade = portfolio.trades[tradeIndex];
+                        var metaData = trade.metaData;
                         var tradeWidget = $("#tradeTemplate").clone();
                         $(tradeWidget).removeAttr("id");
                         //$(tradeWidget).attr("data-portfolio-id", portfolio.id);
                         $(tradeWidget).attr("data-asset-symbol", trade.assetSymbol);
                         $(tradeWidget).attr("data-asset-quote", trade.purchaseQuote); // Should be live quote
-                        $(tradeWidget).attr("data-asset-img-src", trade.assetSymbol);
-                        $(tradeWidget).find(".title").text("[N/A]");
+                        var tradeImgSrc = util.titleToImgSrc(trade.metaData.assetCategoryTitle);
+                        $(tradeWidget).attr("data-asset-img-src", tradeImgSrc);
+                        $(tradeWidget).find(".assetCategoryIcon").attr("src", tradeImgSrc);
+                        $(tradeWidget).find(".title").text(util.shortenText(metaData.title));
                         $(tradeWidget).find(".assetSymbol").text(trade.assetSymbol);
                         $(tradeWidget).find(".quantity").text(trade.quantity);
                         $(tradeWidget).find(".purchaseQuote").text(trade.purchaseQuote);
                         $(tradeWidget).find(".purchaseAmount").text(trade.quantity * trade.purchaseQuote);
-                        $(tradeWidget).find(".marketValue").text(trade.quantity * trade.purchaseQuote);
-                        $(tradeWidget).find(".change").text("-5"); //<!-- <%=InMaApp.DisplayHelper.FormatMoney((security.position * security.quote)-security.purchaseAmount)%> -->
+                        $(tradeWidget).find(".marketValue").text(trade.quantity * metaData.quote);
+                        $(tradeWidget).find(".change").text(util.formatDecimal(metaData.quote - trade.purchaseQuote));
+                        util.adjustTextColor($(tradeWidget).find(".change"), "");
                         $(tradeWidget).show();
                         tradeWidget.appendTo("#trades");
                     }
@@ -100,14 +112,6 @@ function PortfolioDetails() {
                 ShowError(result.responseText);
             }
         });
-    };
-
-    this.shortenText = function (title) {
-        //<!-- <%=InMaApp.DisplayHelper.ShortenText(security.title, 20) %> -->
-    };
-
-    this.formatMoney = function (moneyStr) {        
-        //<!-- <%=InMaApp.DisplayHelper.FormatDouble(security.quote) %> (<%=InMaApp.DisplayHelper.FormatDouble(Math.Round(security.quote - security.purchaceQuote, 2)) %>) -->
     };
 
     this.drawDraggableSecurity = function (securityDiv) {
