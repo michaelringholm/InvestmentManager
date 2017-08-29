@@ -60,25 +60,16 @@
     
     <!-- Templates -->
     <!-- Portfolio Header Template -->
-    <div id="portfolioTemplate" class="portfolio" data-portfolio-id="" data-portfolio-title="">
-        <div style="margin-left: 8px; margin-top: 10px; float: left;">
-            <img alt="portfolioTitle" src="/images/Pie-Chart-icon128.png" />
-        </div>
+    <div id="portfolioTemplate" style="position: relative;" class="portfolio" data-portfolio-id="" data-portfolio-title="">
+        <img style="position: absolute; left: 14px; top: 14px;" alt="portfolioTitle" src="/images/Pie-Chart-icon128.png" />
         <!--<%if(portfolio.portfolioHeader.tournamentId > 0) {%>-->
-        <div style="margin-left: -44px; margin-top: 80px; margin-right: -24px; float: left;">
-            <img style="width: 64px; height: 64px;" alt="portfolioTitle" src="/images/Trophy-Gold-icon72.png" />
-        </div>
-        <!--<%} %>-->
-        <div style="float: left; margin-top: 24px; margin-left: 6px;">
-            <div style="font-size: 10pt; color: #ffffff; font-weight: bold; text-transform:uppercase;">Cash</div>
-            <div class="portfolioCash" style="margin-top: -6px;">100000</div>
-            <div style="font-size: 10pt; color: #ffffff; font-weight: bold; text-transform:uppercase; margin-top: 12px;">Market value</div>
-            <div class="portfolioMarketValue" style="margin-top: -6px;">10000000</div>
-            <div class="profitLossChange" style="color: blue; font-size: 20pt; font-weight: bold;">500</div>
-        </div>
-        <div style="clear: both;">
-        </div>
-        <div class="portfolioTitle" style="text-align: center; margin-top: 8px;">[Template]</div>
+        <img style="position: absolute; bottom: 28px; left: 14px; width: 64px; height: 64px;" alt="portfolioTitle" src="/images/Trophy-Gold-icon72.png" />
+        <div style="position: absolute; top: 24px; left: 150px; font-size: 10pt; color: #ffffff; font-weight: bold; text-transform:uppercase;">Cash</div>
+        <div class="portfolioCash" style="position: absolute; top: 34px; left: 150px;">000000</div>
+        <div style="position: absolute; left: 150px; top: 66px; font-size: 10pt; color: #ffffff; font-weight: bold; text-transform:uppercase;">Market value</div>
+        <div class="portfolioMarketValue" style="position: absolute; left: 150px; top: 76px;">00000000</div>
+        <div class="profitLossChange" style="position: absolute; left: 150px; top: 96px; color: blue; font-size: 20pt; font-weight: bold;">000</div>
+        <div class="portfolioTitle" style="position: absolute; text-align: center; bottom: 10px; left: 0px; width: 280px;">[Template]</div>
     </div>
     <!-- End of Portfolio Header Template -->
 

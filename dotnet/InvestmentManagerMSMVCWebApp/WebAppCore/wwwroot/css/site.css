@@ -565,6 +565,10 @@ img {
 }
 
 /* Templates */
+#portfolioTemplate {
+    display: none;
+}
+
 #assetCategoryTemplate {
     display: none;
 }
@@ -577,6 +581,6 @@ img {
     display: none;
 }
 
-#tradeSubListTemplate {
+#subTradeTemplate {
     display: none;
 }

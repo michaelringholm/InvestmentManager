@@ -59,8 +59,20 @@ namespace InMaApp.Controllers
             var culture = CultureInfo.GetCultureInfo("en-US");
             var totalPurchaseAmount = portfolio.Trades.Sum(t => ( (Convert.ToDecimal(t.PurchaseQuote, culture)) * (Convert.ToDecimal(t.Quantity, culture)) ) );
             var portfolioMarketValue = portfolio.Trades.Sum(t => ((Convert.ToDecimal(((Asset)t.MetaData).Quote, culture)) * (Convert.ToDecimal(t.Quantity, culture))));
-            
-            portfolio.MetaData = new { totalPurchaseAmount=totalPurchaseAmount, portfolioMarketValue=portfolioMarketValue };
+            var summedTrades = portfolio.Trades.GroupBy(t => t.AssetIsin)
+                .Select(tr => new SummedTrade {
+                    PurchaseQuote = tr.Average(t3 => Convert.ToDecimal(t3.PurchaseQuote, culture)).ToString(culture),
+                    AssetIsin = tr.First().AssetIsin,
+                    AssetSymbol = tr.First().AssetSymbol,
+                    MetaData = tr.First().MetaData,
+                    PortfolioId = tr.First().PortfolioId,
+                    PurchaseDate = tr.Last().PurchaseDate,
+                    Quantity = Convert.ToInt16(tr.Sum(t4 => t4.Quantity)),
+                    Status = tr.First().Status,
+                    PurchaseAmount = tr.Sum(t5 => Convert.ToDecimal(t5.PurchaseQuote, culture) * t5.Quantity).ToString(culture)
+                }).ToList();
+
+            portfolio.MetaData = new { totalPurchaseAmount=totalPurchaseAmount, portfolioMarketValue=portfolioMarketValue, summedTrades=summedTrades };
             return new JsonResult(new { portfolio = portfolio });
         }
         

@@ -5,6 +5,7 @@
 
 function PortfolioHeader() {
     var _this = this;
+    var util = new Util();
 
     this.populateList = function () {
         var authModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
@@ -38,6 +39,7 @@ function PortfolioHeader() {
                     $(portfolioWidget).find(".portfolioCash").text(portfolio.cash);
                     $(portfolioWidget).find(".portfolioMarketValue").text(portfolio.marketValue);
                     $(portfolioWidget).find(".portfolioTitle").text(portfolio.title);
+                    $(portfolioWidget).find(".profitLossChange");
                     $(portfolioWidget).show();
                     portfolioWidget.appendTo("#portfolios");
                 }

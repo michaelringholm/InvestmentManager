@@ -55,22 +55,29 @@ changeColor = "#b24031";
     <div style="position: absolute; left: 700px;text-align: right;">Market Val.</div>
     <div style="position: absolute; left: 820px;text-align: right;">Profit/Loss</div>
 </div>
-    <!--<%if(Model.Portfolio.securitiesSummed == null || Model.Portfolio.securitiesSummed.Length == 0) { %>-->
-<div id="trades"></div>
+
+<div id="trades" style="position:relative;"></div>
 <div title="Clicking here will take you to the stock market" class="tradeEmptyList emptyList" style="position: relative; height: 80px; line-height: 80px;">
     <img alt="" style="position: absolute; left: 20px; top: 0px;" src="/images/stock-market-icon72.png" />
     <div style="position: absolute; left: 100px; top: 0px;">Add stocks to your portfolio by visiting the <span style="text-decoration: underline; font-weight: bold;">stock market!</span></div>
 </div>
-    <!--<%} %>-->
-
 
 <!-- Templates -->
-<!--<%foreach (var security in Model.Portfolio.securitiesSummed)
-    {%>
-        <%String imgSrc = InMaApp.DisplayHelper.GetImgSrc(security.categoryTitle);%>-->
+<div id="tradeTemplate" class="trade tradeSummaryItem" style="position: relative; margin-left: 20px; cursor: pointer; min-height: 48px; font-weight: bold; " data-asset-symbol="" data-asset-quote="" data-asset-title="" data-asset-quantity="" data-asset-img-src="/images/categories/default.png" data-asset-category-title="">
+    <div style="height: 30px;">
+        <img class="assetCategoryIcon" title="categoryTitle" alt="" src="~/images/categories/unknown-icon128.png" style="position:absolute; left: 0px; width: 32px; height: 32px;" />
+        <div class="title" style="position:absolute; left: 44px;"></div>
+        <div class="assetSymbol" style="position:absolute; left: 260px;"></div>
+        <div class="quantity" style="position:absolute; left: 340px;text-align: right;"></div>
+        <div class="purchaseQuote" style="position:absolute; left: 440px;text-align: right;"></div>
+        <div class="purchaseAmount" style="position:absolute; left: 540px; text-align: right;"></div>
+        <div class="marketValue" style="position:absolute; left: 700px; text-align: right;"></div>
+        <div class="change" style="position:absolute; left: 820px; text-align: right;"></div>
+    </div>
+</div>
 
-<div id="tradeTemplate" class="trade tradeSummaryItem" style="position: relative; margin-left: 20px; cursor: pointer; height: 50px; font-weight: bold;" data-asset-symbol="" data-asset-quote="" data-asset-title="" data-asset-quantity="" data-asset-img-src="/images/categories/default.png" data-asset-category-title="">
-    <img class="assetCategoryIcon" title="categoryTitle" alt="" src="~/images/categories/unknown-icon128.png" style="position:absolute; left: 0px; width: 32px; height: 32px;" />
+<div id="subTradeTemplate" class="trade subTradeItem" style="position: relative; font-weight: normal; cursor: pointer;  min-height: 30px;" data-asset-symbol="" data-asset-quote="" data-asset-title="" data-asset-quantity="" data-asset-img-src="/images/categories/default.png" data-asset-category-title="">
+    <!--<img class="assetCategoryIcon" title="categoryTitle" alt="" src="~/images/categories/unknown-icon128.png" style="position:absolute; left: 0px; width: 32px; height: 32px;" /> -->
     <div class="title" style="position:absolute; left: 44px;"></div>
     <div class="assetSymbol" style="position:absolute; left: 260px;"></div>
     <div class="quantity" style="position:absolute; left: 340px;text-align: right;"></div>
@@ -79,36 +86,5 @@ changeColor = "#b24031";
     <div class="marketValue" style="position:absolute; left: 700px; text-align: right;"></div>
     <div class="change" style="position:absolute; left: 820px; text-align: right;"></div>
 </div>
-
-
-<!-- Sub List -->
-<!--<%Html.RenderPartial("PortfolioSecuritySubListControl", new InMaApp.Models.PortfolioSubListModel { Portfolio = Model.Portfolio, AssetID = security.id, Symbol = security.symbol });  %>-->
-<!--<%foreach (var security in Model.Portfolio.securities.Where(s => s.symbol == Model.Symbol))
-{%>
-<%String imgSrc = InMaApp.DisplayHelper.GetImgSrc(security.categoryTitle);%>-->
-<div id="tradeSubListTemplate" class="trade subListItem" data-asset-symbol="" data-asset-quote="" data-asset-title="" data-asset-quantity="" data-asset-img-src="/images/categories/default.png" data-asset-category-title="">
-    <div style="margin-left: 4px; margin-top: 4px;">
-        <div style="width: 32px;">&nbsp;</div>
-    </div>
-    <div style="margin-left: 8px; width: 170px;"><!-- <%=InMaApp.DisplayHelper.ShortenText(security.title, 20)%>--></div>
-    <div style="margin-left: 20px; width: 80px;"><!-- <%=security.symbol%> --></div>
-    <div style="margin-left: 20px; width: 44px; text-align: right;"><!-- <%=security.position%>--></div>
-    <div style="margin-left: 20px; width: 104px; text-align: right;">
-        <!-- <%=InMaApp.DisplayHelper.FormatDouble(security.quote)%> (<%=InMaApp.DisplayHelper.FormatDouble(Math.Round(security.quote-security.purchaceQuote,2))%>) -->
-    </div>
-    <div style="margin-left: 20px; width: 110px; text-align: right;">
-        <!-- <%=InMaApp.DisplayHelper.FormatMoney(security.purchaseAmount)%> -->
-    </div>
-    <div style="margin-left: 20px; width: 110px; text-align: right;">
-        <!-- <%=InMaApp.DisplayHelper.FormatMoney(security.position * security.quote)%> -->
-    </div>
-    <div style="margin-left: 20px; width: 110px; text-align: right;">
-        <!-- <%=InMaApp.DisplayHelper.FormatMoney((security.position * security.quote)-security.purchaseAmount)%> -->
-    </div>
-</div>
-<!--<%} %>-->
-<!-- End of Sub List -->
-<!--<%} %>-->
-
 <!-- End of Templates -->
 

@@ -39,20 +39,17 @@
     <!-- End FB Login -->
 
     <div class="container body-content">
+        <div class="hiddenFields">
+            <input id="login" type="hidden" value="<%=InMaApp.ContextManager.Current.LoginId %>" />
+            <input id="authenticated" type="hidden" value="false" />
+            <input id="hfPortfolioId" type="hidden" value="@ViewData["PortfolioId"]" />
+            <input id="investAuthToken" type="hidden" value="@ViewData["InvestAuthToken"]" />
+            <input id="authProviderUserId" type="hidden" value="@ViewData["AuthProviderUserId"]" />
+            <input id="authProviderName" type="hidden" value="@ViewData["AuthProviderName"]" />
+        </div>
+        <div id="errorDiv"></div>
+        <div id="statusDiv"></div>
         @RenderBody()
-
-        <input id="login" type="hidden" value="<%=InMaApp.ContextManager.Current.LoginId %>" />
-        <input id="authenticated" type="hidden" value="false" />
-        <input id="hfPortfolioId" type="hidden" value="@ViewData["PortfolioId"]" />
-        <div id="errorDiv">
-        </div>
-        <div id="statusDiv">
-        </div>
-        <div id="generalDialog"></div>
-        <input id="investAuthToken" type="hidden" value="@ViewData["InvestAuthToken"]" />
-        <input id="authProviderUserId" type="hidden" value="@ViewData["AuthProviderUserId"]" />
-        <input id="authProviderName" type="hidden" value="@ViewData["AuthProviderName"]" />
-        
 
         <footer>
             <div id="footer">
@@ -91,6 +88,7 @@
     </div>
 
     <!-- Dialogs -->
+    <div id="generalDialog"></div>
     <!-- <%String imgSrc = InMaApp.DisplayHelper.GetImgSrc(Model.CategoryTitle);%> -->
     <div id="buySellDialog" style="display:none;">
         <div style="float: left; width: 100px;">
