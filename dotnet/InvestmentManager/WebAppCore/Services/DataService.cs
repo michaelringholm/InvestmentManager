@@ -135,5 +135,14 @@ namespace WebAppCore.Services
             var tournaments = JsonConvert.DeserializeObject<List<Tournament>>(documents.ToString());
             return tournaments;
         }
+
+        public Tournament GetTournament(String tournamentId)
+        {
+            String json = @"{ ""TableName"":""Invest_Tournament"", ""FilterExpr"":""Id = :id"", ""ExprAttrVals"":{ "":id"": """ + tournamentId + @"""} }";
+            //String json = @"{ ""TableName"":""Invest_Tournament"" }";
+            var documents = GetDocuments(json);
+            var tournaments = JsonConvert.DeserializeObject<List<Tournament>>(documents.ToString());
+            return tournaments[0];
+        }
     }
 }

@@ -29,6 +29,17 @@ namespace WebAppCore.Controllers
             return View("TournamentOverview");
         }
 
+        public IActionResult ShowTournament(String tournamentId)
+        {
+            var authModel = AuthService.GetLoginInfo(HttpContext.Request.Query);
+            ViewData["InvestAuthToken"] = authModel.investAuthToken;
+            ViewData["AuthProviderUserId"] = authModel.fbUserId;
+            ViewData["AuthProviderName"] = authModel.authProvider;
+            ViewData["TournamentId"] = tournamentId;
+
+            return View("Tournament");
+        }
+
         [HttpPost]
         public IActionResult GetTournaments([FromBody] TournamentOverviewModel model)
         {
@@ -36,6 +47,16 @@ namespace WebAppCore.Controllers
             foreach (var tournament in tournaments)
                 addMetaData(tournament, model.UserKey);
             return new JsonResult(new { tournaments = tournaments });
+        }
+
+
+        [HttpPost]
+        public IActionResult GetTournament([FromBody] TournamentModel model)
+        {
+            if(String.IsNullOrEmpty(model.TournamentId))
+                return new JsonResult(new { });
+            var tournament = dataService.GetTournament(model.TournamentId);
+            return new JsonResult(new { tournament = tournament });
         }
 
         private void addMetaData(Tournament tournament, String userKey)

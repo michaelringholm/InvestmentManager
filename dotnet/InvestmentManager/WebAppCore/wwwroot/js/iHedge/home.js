@@ -65,26 +65,6 @@ function ShowTournamentParticipants(tournamentId) {
     });
 }
 
-function EnterTournament(tournamentId) {
-    $.ajax({
-        type: "POST",
-        url: "/Tournament/Enter",
-        //contentType: 'application/json',
-        dataType: 'json',
-        cache: false,
-        data: { login: $("#login").val(), tournamentId: tournamentId },
-        traditional: true,
-        success: function (result) {
-            if (result.SignedUp)
-                ShowTournamentParticipants(tournamentId);
-            else
-                ShowTournamentList();
-        },
-        error: function (result) {
-            ShowError(result.responseText);
-        }
-    });
-}
 /*************** End Tournaments *******************/
 
 
@@ -109,6 +89,10 @@ function ShowAssetCategory(assetCategoryTitle) {
 
 function ShowTournamentOverview() {
     NavigateWithAuth("/Tournament/ShowTournamentOverview");
+}
+
+function ShowTournament(tournamentId) {
+    NavigateWithAuth("/Tournament/ShowTournament", "&tournamentId=" + tournamentId);
 }
 /********************** END NEW *******************/
 

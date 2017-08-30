@@ -469,7 +469,6 @@ div#title {
     font-size: 12pt;
     width: 958px;
     border-bottom: solid 2px #1c1c1c;
-    float: left;
     margin: 4px 20px 4px 20px;
     cursor: pointer;
     background-color: #313131;
@@ -584,5 +583,9 @@ img {
 }
 
 #tournamentTemplate {
+    display: none;
+}
+
+#participantTemplate {
     display: none;
 }

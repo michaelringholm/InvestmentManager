@@ -50,7 +50,7 @@ function TournamentOverview() {
                     tournamentWidget.appendTo("#tournaments");
                 }
 
-                $(".tournament").click(function (e) { EnterTournament($(e.currentTarget).attr("data-tournament-id")); });
+                $(".tournament").click(function (e) { ShowTournament($(e.currentTarget).attr("data-tournament-id")); });
             },
             error: function (err1, err2, err3) {
                 ShowError(err1.responseText);
