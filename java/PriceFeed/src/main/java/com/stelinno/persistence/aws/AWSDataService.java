@@ -86,7 +86,10 @@ public class AWSDataService implements DataService {
         String jsonDocuments = getDocuments(json);
         Type listType = new TypeToken<ArrayList<Asset>>(){}.getType();
         List<Asset> assets = new Gson().fromJson(jsonDocuments, listType);
-        return assets.subList(0, limit);
+        if(assets != null && assets.size()>=limit)
+        	return assets.subList(0, limit);
+        else
+        	return assets;
     }
 
 	private void storeDocument(String jsonString) {
