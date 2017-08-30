@@ -1,0 +1,22 @@
+﻿@section Scripts
+{
+    <script src="@Url.Content("~/js/iHedge/stockMarket.js")"></script>
+}
+@{
+    ViewData["Title"] = "Stock Market";
+}
+
+<h2>Stock Market</h2>
+<div id="assetCategories" style="margin-left: 46px; margin-top: 12px;"></div>
+
+<!-- Templates -->
+<div id="assetCategoryTemplate" class="assetCategory" data-asset-category-id="" data-asset-category-title="">
+    <div style="margin-left: 34px; margin-top: 10px;">
+        <img class="assetCategoryIcon" alt="" src="~/images/categories/unknown-icon128.png" />
+    </div>
+    <div class="assetCategoryTitle" style="width: 198px; text-align: center;">
+    </div>
+</div>
+<!-- End Templates -->
+
+<input id="portfolioId" type="hidden" value="@ViewData["PortfolioId"]" />

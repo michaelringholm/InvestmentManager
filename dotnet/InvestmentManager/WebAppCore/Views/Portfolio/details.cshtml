@@ -1,0 +1,90 @@
+﻿@section Scripts
+    {
+    <script src="@Url.Content("~/js/iHedge/portfolioDetails.js")"></script>
+}
+@{
+    ViewData["Title"] = "Portfolio Details";
+}
+<!-- <% var marketValue = Model.Portfolio.securitiesSummed.Sum(s => s.quote * s.position);
+var profitLoss = marketValue - Model.Portfolio.securitiesSummed.Sum(s => s.purchaseAmount);
+var profitLossChange = (profitLoss*100)/marketValue;
+if(marketValue == 0)
+profitLossChange = 0;
+
+String changePrefix = "";
+String changeColor = "";
+
+if (profitLoss == 0)
+{
+changePrefix = "";
+changeColor = "#3482B0";
+}
+else if (profitLoss > 0)
+{
+changePrefix = "+";
+changeColor = "#4e9b41";
+}
+else
+{
+changePrefix = "";
+changeColor = "#b24031";
+}
+%>-->
+
+<div class="bodyTopSection" style="position: relative;">
+    <img alt="Portfolio" style="position: absolute; left: 0px;" src="/images/Pie-Chart-icon128.png" />
+    <div id="portfolioTitle" style="position: absolute; font-size: 24pt; top: 10px; left: 130px; text-shadow: 2px 2px #1c1c1c;">Title</div>
+    <div id="portfolioChangePct" style="position: absolute; left: 220px; top:30px; color: red; font-size: 38pt; font-weight: bold;">N/A</div>
+    <div class="normalCaption" style="position: absolute; left: 130px; top: 50px;">Profit/Loss</div>
+    <div id="profitLoss" style="position: absolute; left: 130px; top: 64px; font-size: 12pt; color:red">N/A</div>
+    <div class="normalCaption" style="position: absolute; left: 130px; top: 84px;">Market value</div>
+    <div id="marketValue" style="position: absolute; left: 130px; top: 98px; font-size: 12pt;">N/A</div>
+    <div id="dzBuySecurity" class="dropZone" style="position: absolute; right: 220px; height: 116px;">
+        <div style="font-size: 10pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 180px; font-style: italic;">Drop here to buy</div>
+    </div>
+    <div id="dzSellSecurity" class="dropZone" style="position: absolute; right: 10px; height: 116px;">
+        <div style="font-size: 10pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 180px; font-style: italic;">Drop here to sell</div>
+    </div>
+</div>
+<div style="position:relative;" class="tableHeader">
+    <div style="position: absolute; left: 44px;">Title</div>
+    <div style="position: absolute; left: 260px;">Symbol</div>
+    <div style="position: absolute; left: 340px;text-align: right;">Qnt.</div>
+    <div style="position: absolute; left: 440px;text-align: right;">Quote</div>
+    <div style="position: absolute; left: 540px;text-align: right;">Purch. Amount</div>
+    <div style="position: absolute; left: 700px;text-align: right;">Market Val.</div>
+    <div style="position: absolute; left: 820px;text-align: right;">Profit/Loss</div>
+</div>
+
+<div id="trades" style="position:relative;"></div>
+<div title="Clicking here will take you to the stock market" class="tradeEmptyList emptyList" style="position: relative; height: 80px; line-height: 80px;">
+    <img alt="" style="position: absolute; left: 20px; top: 0px;" src="/images/stock-market-icon72.png" />
+    <div style="position: absolute; left: 100px; top: 0px;">Add stocks to your portfolio by visiting the <span style="text-decoration: underline; font-weight: bold;">stock market!</span></div>
+</div>
+
+<!-- Templates -->
+<div id="tradeTemplate" class="trade tradeSummaryItem" style="position: relative; margin-left: 20px; cursor: pointer; min-height: 48px; font-weight: bold; " data-asset-symbol="" data-asset-quote="" data-asset-title="" data-asset-quantity="" data-asset-img-src="/images/categories/default.png" data-asset-category-title="">
+    <div style="height: 30px;">
+        <img class="assetCategoryIcon" title="categoryTitle" alt="" src="~/images/categories/unknown-icon128.png" style="position:absolute; left: 0px; width: 32px; height: 32px;" />
+        <div class="title" style="position:absolute; left: 44px;"></div>
+        <div class="assetSymbol" style="position:absolute; left: 260px;"></div>
+        <div class="quantity" style="position:absolute; left: 340px;text-align: right;"></div>
+        <div class="purchaseQuote" style="position:absolute; left: 440px;text-align: right;"></div>
+        <div class="purchaseAmount" style="position:absolute; left: 540px; text-align: right;"></div>
+        <div class="marketValue" style="position:absolute; left: 700px; text-align: right;"></div>
+        <div class="change" style="position:absolute; left: 820px; text-align: right;"></div>
+    </div>
+</div>
+
+<div id="subTradeTemplate" class="trade subTradeItem" style="position: relative; font-weight: normal; cursor: pointer;  min-height: 30px;" data-asset-symbol="" data-asset-quote="" data-asset-title="" data-asset-quantity="" data-asset-img-src="/images/categories/default.png" data-asset-category-title="">
+    <!--<img class="assetCategoryIcon" title="categoryTitle" alt="" src="~/images/categories/unknown-icon128.png" style="position:absolute; left: 0px; width: 32px; height: 32px;" /> -->
+    <div class="title" style="position:absolute; left: 44px;"></div>
+    <div class="assetSymbol" style="position:absolute; left: 260px;"></div>
+    <div class="quantity" style="position:absolute; left: 340px;text-align: right;"></div>
+    <div class="purchaseQuote" style="position:absolute; left: 440px;text-align: right;"></div>
+    <div class="purchaseAmount" style="position:absolute; left: 540px; text-align: right;"></div>
+    <div class="marketValue" style="position:absolute; left: 700px; text-align: right;"></div>
+    <div class="change" style="position:absolute; left: 820px; text-align: right;"></div>
+</div>
+<!-- End of Templates -->
+

@@ -1,0 +1,46 @@
+﻿@section Scripts
+    {
+    <script src="@Url.Content("~/js/iHedge/tournamentOverview.js")"></script>
+}
+@{ ViewData["Title"] = "Tournaments"; }
+
+<div id="tournaments">
+    <div class="newTournament" style="position:relative; display: inline-block;">
+        <div style="margin-left: 84px; margin-top: 10px; float: left;">
+            <img alt="" src="/images/Trophy-Gold-icon128.png" />
+        </div>
+        <div style="margin-top: 60px; margin-left: -80px; float: left;">
+            <img class="addIconLarge" alt="" src="/images/Actions-list-add-icon72.png" style="" />
+        </div>
+        <div style="margin-top: 6px; margin-left: -10px; float: right;">
+            <img alt="" title="This feature is not yet unlocked" src="/images/Lock-icon48.png" style="" />
+        </div>
+        <div style="float: left; margin-top: 24px; margin-left: 6px;">
+            <div style="font-size: 10pt; color: #ffffff; font-weight: bold; text-transform: uppercase;"></div>
+            <div></div>
+            <div style="font-size: 10pt; color: #ffffff; font-weight: bold; text-transform: uppercase; margin-top: 12px;"></div>
+            <div></div>
+        </div>
+        <div style="clear: both;"></div>
+        <div style="font-size: 10pt; color: #ffffff; font-weight: bold; text-transform: uppercase; margin-top: -6px; text-align: center; float: left; text-decoration: underline; width: 278px;"></div>
+        <div style="clear: both;"></div>
+        <div style="text-align: center; margin-top: 8px; font-size: 10pt; color: #ffffff; font-weight: bold; text-transform: uppercase; text-decoration: underline;">
+            Click to create a new tournament
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+</div>
+
+<!-- Templates -->
+<div id="tournamentTemplate" class="tournament" style="position:relative;" data-tournament-id="tournamentId" data-tournament-title="tournamentTitle">
+    <img alt="tournamentTitle" style="position: absolute; left: 10px; top: 20px;" src="/images/Trophy-Gold-icon128.png" />
+    <div class="tournamentTitle" style="position: absolute; left: 100px; top: 22px;text-align: center;"></div>
+    <div class="rankElement" style="position: absolute; left: 100px; top: 60px; font-size: 10pt; color: #ffffff; font-weight: bold; text-transform: uppercase;">Rank</div>
+    <div class="rankElement tournamentRank" style="position: absolute; left: 100px; top: 70px;">0</div>
+    <div class="startDateElement" style="position: absolute; left: 100px; top: 60px; font-size: 10pt; color: #ffffff; font-weight: bold; text-transform: uppercase;">Starts</div>
+    <div class="startDateElement tournamentStartDate" style="position: absolute; left: 100px; top: 70px; "></div>
+    <div style="position: absolute; left: 100px; top: 100px; font-size: 10pt; color: #ffffff; font-weight: bold; text-transform: uppercase;">Ends</div>
+    <div class="tournamentEndDate" style="position: absolute; left: 100px; top: 110px;"></div>
+    <div class="participating" style="position: absolute; left: 60px; bottom: 6px; font-size: 10pt; color: #ffffff; font-weight: bold; text-transform: uppercase; ">(Currently participating)</div>
+    <div class="notParticipating" style="position: absolute; left: 50px; bottom: 6px; font-size: 10pt; color: #ffffff; font-weight: bold; text-transform: uppercase;">(Click tournament to join)</div>    
+</div>
