@@ -56,7 +56,8 @@ namespace WebAppCore.Controllers
             if(String.IsNullOrEmpty(model.TournamentId))
                 return new JsonResult(new { });
             var tournament = dataService.GetTournament(model.TournamentId);
-            return new JsonResult(new { tournament = tournament });
+            var participants = dataService.GetParticipants(model.TournamentId);
+            return new JsonResult(new { tournament = tournament, participants = participants });
         }
 
         private void addMetaData(Tournament tournament, String userKey)
@@ -64,7 +65,13 @@ namespace WebAppCore.Controllers
             if (tournament.Participants == null)
                 tournament.MetaData = new { singedUp = false };
             else
-                tournament.MetaData = new { singedUp = (tournament.Participants.FirstOrDefault(p => p == userKey) != null) };
+            {
+                var portfolio = dataService.GetPortfolioByTournamentId(userKey, tournament.Id);
+                if(portfolio != null && portfolio.MetaData != null)
+                    tournament.MetaData = new { singedUp = (tournament.Participants.FirstOrDefault(p => p == userKey) != null), portfolioMetaData = portfolio.MetaData };
+                else
+                    tournament.MetaData = new { singedUp = (tournament.Participants.FirstOrDefault(p => p == userKey) != null) };
+            }
         }
     }
 }

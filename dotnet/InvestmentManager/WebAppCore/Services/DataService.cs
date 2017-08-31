@@ -47,13 +47,108 @@ namespace WebAppCore.Services
             String json = @"{ ""TableName"":""Invest_Portfolio"", ""FilterExpr"":""UserKey = :userKey"", ""ExprAttrVals"":{ "":userKey"": """ + userKey + @"""} }";        
             var documents = GetDocuments(json);
             var portfolios = JsonConvert.DeserializeObject<List<Portfolio>>(documents.ToString());
+            foreach (var portfolio in portfolios)
+                addPortfolioMetaData(portfolio);
             return portfolios;
+        }
+
+        private CultureInfo culture = CultureInfo.GetCultureInfo("en-US");
+        private void addPortfolioMetaData(Portfolio portfolio)
+        {
+            if (portfolio.Trades != null)
+            {
+                foreach (var trade in portfolio.Trades)
+                    trade.MetaData = GetAsset(trade.AssetIsin);
+
+                
+                var totalPurchaseAmount = portfolio.Trades.Sum(t => ((Convert.ToDecimal(t.PurchaseQuote, culture)) * (Convert.ToDecimal(t.Quantity, culture))));
+                var portfolioMarketValue = portfolio.Trades.Sum(t => ((Convert.ToDecimal(((Asset)t.MetaData).Quote, culture)) * (Convert.ToDecimal(t.Quantity, culture))));
+                var summedTrades = portfolio.Trades.GroupBy(t => t.AssetIsin)
+                    .Select(tr => new SummedTrade
+                    {
+                        PurchaseQuote = tr.Average(t3 => Convert.ToDecimal(t3.PurchaseQuote, culture)).ToString(culture),
+                        AssetIsin = tr.First().AssetIsin,
+                        AssetSymbol = tr.First().AssetSymbol,
+                        MetaData = tr.First().MetaData,
+                        PortfolioId = tr.First().PortfolioId,
+                        PurchaseDate = tr.Last().PurchaseDate,
+                        Quantity = Convert.ToInt16(tr.Sum(t4 => t4.Quantity)),
+                        Status = tr.First().Status,
+                        PurchaseAmount = tr.Sum(t5 => Convert.ToDecimal(t5.PurchaseQuote, culture) * t5.Quantity).ToString(culture)
+                    }).ToList();
+
+                portfolio.MetaData = new PortfolioMetaData { totalPurchaseAmount = totalPurchaseAmount, portfolioMarketValue = portfolioMarketValue, summedTrades = summedTrades };
+            }
         }
 
         public Portfolio GetPortfolio(String userKey, String portfolioId)
         {
             var portfolio = GetPortfolios(userKey).FirstOrDefault<Portfolio>(p => p.Id == portfolioId);
             return portfolio;
+        }
+
+        public Portfolio GetPortfolioByTournamentId(string userKey, string tournamentId)
+        {
+            var portfolio = GetPortfolios(userKey).FirstOrDefault<Portfolio>(p => p.TournamentId == tournamentId);
+            if (portfolio == null)
+                return null;
+            ((PortfolioMetaData)portfolio.MetaData).rank = GetTournamentRank(tournamentId, portfolio.Id);
+            return portfolio;
+        }
+
+        private int GetTournamentRank(String tournamentId, String portfolioId)
+        {
+            String json = @"{ ""TableName"":""Invest_Portfolio"", ""FilterExpr"":""TournamentId = :tournamentId"", ""ExprAttrVals"":{ "":tournamentId"": """ + tournamentId + @"""} }";
+            var documents = GetDocuments(json);
+            var portfolios = JsonConvert.DeserializeObject<List<Portfolio>>(documents.ToString());
+            var sortedPortfolios = new SortedDictionary<Decimal, Portfolio>();
+            foreach (var portfolio in portfolios)
+            {
+                addPortfolioMetaData(portfolio);
+                sortedPortfolios.Add((((PortfolioMetaData)portfolio.MetaData).portfolioMarketValue + Convert.ToDecimal(portfolio.Cash, culture)), portfolio);
+            }
+
+            var rank = 0;
+            foreach (var portfolio in sortedPortfolios)
+                ((PortfolioMetaData)portfolio.Value.MetaData).rank = ++rank;
+
+            return ((PortfolioMetaData)portfolios.FirstOrDefault(p=>p.Id == portfolioId).MetaData).rank;
+        }
+
+        public List<Participant> GetParticipants(string tournamentId)
+        {
+            String json = @"{ ""TableName"":""Invest_Portfolio"", ""FilterExpr"":""TournamentId = :tournamentId"", ""ExprAttrVals"":{ "":tournamentId"": """ + tournamentId + @"""} }";
+            var documents = GetDocuments(json);
+            var portfolios = JsonConvert.DeserializeObject<List<Portfolio>>(documents.ToString());
+            var sortedPortfolios = new SortedDictionary<Decimal, Portfolio>();
+            foreach (var portfolio in portfolios)
+            {
+                addPortfolioMetaData(portfolio);
+                sortedPortfolios.Add((((PortfolioMetaData)portfolio.MetaData).portfolioMarketValue + Convert.ToDecimal(portfolio.Cash, culture)), portfolio);
+            }
+
+            var rank = 0;
+            foreach (var portfolio in sortedPortfolios)
+                ((PortfolioMetaData)portfolio.Value.MetaData).rank = ++rank;
+
+            var participants = new List<Participant>();
+            var leader = sortedPortfolios[sortedPortfolios.Max(p => p.Key)];
+            var leaderTotalValue = ((PortfolioMetaData)leader.MetaData).portfolioMarketValue + Convert.ToDecimal(leader.Cash, culture);
+            foreach (var portfolio in portfolios)
+            {
+                var portfolioMetaData = (PortfolioMetaData)portfolio.MetaData;
+                participants.Add(new Participant
+                {
+                    Cash = Convert.ToDecimal(portfolio.Cash, culture),
+                    MarketValue = portfolioMetaData.portfolioMarketValue,
+                    PurchaseAmount = portfolioMetaData.totalPurchaseAmount,
+                    Rank = portfolioMetaData.rank,
+                    BehindLeader = leaderTotalValue - Convert.ToDecimal(portfolio.Cash, culture) - portfolioMetaData.portfolioMarketValue,
+                    FullName = portfolio.UserKey
+                });
+            }
+
+            return participants;
         }
 
         /* public List<PortfolioHeader> GetPortfolioHeadersOld()

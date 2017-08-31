@@ -4,26 +4,14 @@
 }
 @{ ViewData["Title"] = "Tournament"; }
 
-<div id="tournament" data-tournament-id="@ViewData["TournamentId"]" class="bodyTopSection">
-    <div style="float: left;">
-        <img alt="" src="/images/Trophy-Gold-icon128.png" />
-    </div>
-    <div style="float: left; margin-left: 12px; height: 136px;">
-        <div id="tournamentTitle" style="font-size: 24pt; line-height: 36px; margin-top: 6px; text-shadow: 2px 2px #1c1c1c;"></div>
-        <div style="float: left;">
-            <div class="normalCaption" style="line-height: 14px; margin-top: 10px;">Start date</div>
-            <div id="tournamentStartDate" style="font-size: 12pt; line-height: 14px;"></div>
-            <div class="normalCaption" style="line-height: 14px; margin-top: 8px;">End date</div>
-            <div id="tournamentEndDate" style="font-size: 12pt; line-height: 14px;"></div>
-        </div>
-        <div style="float: left; height: 84px; line-height: 84px; margin-left: 18px;">
-            <div style="font-size: 38pt; font-weight: bold;"></div>
-        </div>
-        <div style="clear: both;"></div>
-    </div>
-    <div style="clear: both;"></div>
+<div id="tournament" data-tournament-id="@ViewData["TournamentId"]" class="bodyTopSection" style="position:relative;">
+    <img style="position: absolute; left: 20px;top:4px;"alt="Trophy" src="/images/Trophy-Gold-icon128.png" />    
+    <div id="tournamentTitle" style="position: absolute; font-size: 24pt; top: 4px; left: 130px; text-shadow: 2px 2px #1c1c1c;"></div>
+    <div class="normalCaption" style="position: absolute; left: 130px; top: 50px;">Start date</div>
+    <div id="tournamentStartDate" style="position: absolute; left: 130px; top: 63px; font-size: 12pt;"></div>
+    <div class="normalCaption" style="position: absolute; left: 130px; top: 86px;">End date</div>
+    <div id="tournamentEndDate" style="position: absolute; left: 130px; top:99px; font-size: 12pt;"></div>
 </div>
-<div style="clear: both;"></div>
 <div style="" class="tableHeader">
     <div style="float: left; margin-left: 44px; width: 170px;">FullName</div>
     <div style="float: left; margin-left: 20px; width: 40px; text-align: right;">Rank</div>
@@ -34,22 +22,12 @@
 </div>
 <div style="clear: both;"></div>
 <div id="participants">
-    <!--<%foreach (var participant in Model.Participants)
-    {%>
-    <%String imgSrc = "Office-Customer-Male-Light-icon32.png";
-    if(participant.gender == "Female")
-    imgSrc = "Office-Customer-Female-Light-icon32.png";
-    %>-->
-  
-    <!--<%} %>
-    <%if (Model.Participants == null || Model.Participants.Count == 0)
-    { %>-->
-    <div title="Clicking here will enable you to invite your friends, family and colleagues" class="securityEmptyList emptyList" style="height: 80px; line-height: 80px;">
-        <div style="float: left; margin-top: 10px; margin-left: 240px;"><img alt="" style="width: 60px;" src="/images/Office-Customer-Female-Light-icon72.png" /></div>
-        <div style="float: left; margin-left: 24px;">Add more users by inviting them <span style="text-decoration: underline; font-weight: bold;">here!</span></div>
-    </div>
-    <div style="clear: both;"></div>
-    <!--<%} %>-->
+    <!-- imgSrc = "Office-Customer-Male-Light-icon32.png";
+    if(participant.gender == "Female") imgSrc = "Office-Customer-Female-Light-icon32.png"; -->
+</div>
+<div title="Invite friends, family and colleagues" class="addParticipants emptyList" style="height: 80px; line-height: 80px; position: relative">
+    <img alt="" style="position:absolute; width: 60px; left: 280px;top:8px;" src="/images/Office-Customer-Female-Light-icon72.png" />
+    <div style="position:absolute;left: 360px;">Invite your friends to this tournament <span style="text-decoration: underline; font-weight: bold;">here!</span></div>
 </div>
 
 <!-- Templates -->
@@ -57,11 +35,11 @@
     <div style="float: left; margin-left: 4px; margin-top: 4px;">
         <img title="participantFullName" alt="" src="/images/imgSrc" style="width: 32px; height: 32px;" />
     </div>
-    <div style="float: left; margin-left: 8px; width: 170px;">participantFullName</div>
-    <div style="float: left; margin-left: 20px; width: 40px; text-align: right;">participantRank</div>
-    <div style="float: left; margin-left: 20px; width: 124px; text-align: right;">participantTotalValue</div>
-    <div style="float: left; margin-left: 20px; width: 124px; text-align: right;">participantCash</div>
-    <div style="float: left; margin-left: 20px; width: 124px; text-align: right;">participantMarketValue</div>
-    <div style="float: left; margin-left: 20px; width: 124px; text-align: right;">participantTotalValue - LeadingTotalValue</div>
+    <div class="participantFullName" style="float: left; margin-left: 8px; width: 170px;"></div>
+    <div class="participantRank" style="float: left; margin-left: 20px; width: 40px; text-align: right;"></div>
+    <div class="participantTotalValue" style="float: left; margin-left: 20px; width: 124px; text-align: right;"></div>
+    <div class="participantCash" style="float: left; margin-left: 20px; width: 124px; text-align: right;"></div>
+    <div class="participantMarketValue" style="float: left; margin-left: 20px; width: 124px; text-align: right;"></div>
+    <div class="participantBehindLeader" style="float: left; margin-left: 20px; width: 124px; text-align: right;"></div>
     <div style="clear: both;"></div>
 </div>  

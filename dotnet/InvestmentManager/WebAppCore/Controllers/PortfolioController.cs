@@ -44,39 +44,9 @@ namespace InMaApp.Controllers
         [HttpPost]
         public IActionResult GetPortfolios([FromBody] PortfolioModel model)
         {
-            var portfolios = dataService.GetPortfolios(model.UserKey);
-            foreach(var portfolio in portfolios)
-                addPortfolioMetaData(portfolio);
+            var portfolios = dataService.GetPortfolios(model.UserKey);            
             return new JsonResult(new { portfolios = portfolios });
-        }
-
-        private void addPortfolioMetaData(Portfolio portfolio)
-        {
-            if (portfolio.Trades != null)
-            {
-                foreach (var trade in portfolio.Trades)
-                    trade.MetaData = dataService.GetAsset(trade.AssetIsin);
-
-                var culture = CultureInfo.GetCultureInfo("en-US");
-                var totalPurchaseAmount = portfolio.Trades.Sum(t => ((Convert.ToDecimal(t.PurchaseQuote, culture)) * (Convert.ToDecimal(t.Quantity, culture))));
-                var portfolioMarketValue = portfolio.Trades.Sum(t => ((Convert.ToDecimal(((Asset)t.MetaData).Quote, culture)) * (Convert.ToDecimal(t.Quantity, culture))));
-                var summedTrades = portfolio.Trades.GroupBy(t => t.AssetIsin)
-                    .Select(tr => new SummedTrade
-                    {
-                        PurchaseQuote = tr.Average(t3 => Convert.ToDecimal(t3.PurchaseQuote, culture)).ToString(culture),
-                        AssetIsin = tr.First().AssetIsin,
-                        AssetSymbol = tr.First().AssetSymbol,
-                        MetaData = tr.First().MetaData,
-                        PortfolioId = tr.First().PortfolioId,
-                        PurchaseDate = tr.Last().PurchaseDate,
-                        Quantity = Convert.ToInt16(tr.Sum(t4 => t4.Quantity)),
-                        Status = tr.First().Status,
-                        PurchaseAmount = tr.Sum(t5 => Convert.ToDecimal(t5.PurchaseQuote, culture) * t5.Quantity).ToString(culture)
-                    }).ToList();
-
-                portfolio.MetaData = new { totalPurchaseAmount = totalPurchaseAmount, portfolioMarketValue = portfolioMarketValue, summedTrades = summedTrades };
-            }
-        }
+        }        
 
         [HttpPost]
         public IActionResult GetDetails([FromBody] PortfolioDetailsModel portfolioDetailsModel)

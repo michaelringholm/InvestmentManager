@@ -117,9 +117,9 @@ function PortfolioDetails() {
             $(tradeWidget).find(".quantity").text(trade.quantity);
             $(tradeWidget).find(".purchaseQuote").text(trade.purchaseQuote);
             var tradePurchaseAmount = trade.quantity * trade.purchaseQuote;
-            $(tradeWidget).find(".purchaseAmount").text(tradePurchaseAmount);
+            $(tradeWidget).find(".purchaseAmount").text(util.formatDecimal(tradePurchaseAmount));
             var tradeMarketValue = trade.quantity * metaData.quote;
-            $(tradeWidget).find(".marketValue").text(tradeMarketValue);
+            $(tradeWidget).find(".marketValue").text(util.formatDecimal(tradeMarketValue));
             $(tradeWidget).find(".change").text(util.formatDecimal(tradeMarketValue - tradePurchaseAmount));
             util.adjustTextColor($(tradeWidget).find(".change"), "");
             $(tradeWidget).show();
@@ -145,9 +145,9 @@ function PortfolioDetails() {
             $(tradeWidget).find(".quantity").text(trade.quantity);
             $(tradeWidget).find(".purchaseQuote").text(trade.purchaseQuote);
             var tradePurchaseAmount = trade.quantity * trade.purchaseQuote;
-            $(tradeWidget).find(".purchaseAmount").text(tradePurchaseAmount);
+            $(tradeWidget).find(".purchaseAmount").text(util.formatDecimal(tradePurchaseAmount));
             var tradeMarketValue = trade.quantity * metaData.quote;
-            $(tradeWidget).find(".marketValue").text(tradeMarketValue);
+            $(tradeWidget).find(".marketValue").text(util.formatDecimal(tradeMarketValue));
             $(tradeWidget).find(".change").text(util.formatDecimal(tradeMarketValue - tradePurchaseAmount));
             util.adjustTextColor($(tradeWidget).find(".change"), "");
             $(tradeWidget).show();

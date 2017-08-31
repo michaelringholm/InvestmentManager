@@ -51,7 +51,7 @@ function PortfolioHeader() {
                     //UpdatePortfolioHeader(portfolioId);
                 });
                 $(".newPortfolio").click(function () {
-                    ShowNewPortfolioDialog();
+                    _this.ShowNewPortfolioDialog();
                 });
             },
             error: function (result) {
@@ -155,40 +155,25 @@ function PortfolioHeader() {
         });
     }
 
-    function ShowNewPortfolioDialog() {
-        //alert("Add new portfolio");    
-
-        $.ajax({
-            type: "get",
-            url: "/Portfolio/ShowNewPortfolioDialog",
-            contentType: "html",
-            data: "portfolioId=" + GetSelectedPortfolioId(),
-            beforeSend: function () {
-                ShowAjaxLoader();
-            },
-            complete: function () { HideAjaxLoader(); },
-            success: function (result) {
-                $("#generalDialog").html(result);
-                $("#generalDialog #tbPortfolioTitle").watermark("Title");
-                $("#generalDialog #tbPortfolioTitle").bind("keyup", function (e) { $("#generalDialog #divPortfolioTitle").html($("#generalDialog #tbPortfolioTitle").val()); });
-                //$(this).val( $(this).val().replace(/[^a-z]/g,'') ); }
-                $("#generalDialog").dialog({ title: "Create portfolio" });
-                $("#btnCreatePortfolioDone").button().click(function () { CreatePortfolio(); });
-                $("#btnCreatePortfolioCancel").button().click(function () { $("#generalDialog").dialog("close"); });
-                $("#generalDialog #btnOk").button().click(function () { $("#generalDialog").dialog("close"); });
-                $("#generalDialog .bottomArea .beforeConfirm").show();
-                $("#generalDialog .bottomArea .afterConfirm").hide();
-                $("#generalDialog").dialog("open");
-            },
-            error: function (result) {
-                ShowError(result.responseText);
-            }
+    this.ShowNewPortfolioDialog = function () {
+        $("#newPortfolioDialog #tbPortfolioTitle").bind("keyup", function (e) {
+            $("#newPortfolioDialog .portfolioTitle").text($("#newPortfolioDialog #tbPortfolioTitle").val());
         });
-    }
+        //$(this).val( $(this).val().replace(/[^a-z]/g,'') ); }
+        $("#newPortfolioDialog").dialog({ title: "New portfolio", width: "300px" });
+        $("#btnCreatePortfolioDone").button().click(function () { CreatePortfolio(); });
+        $("#btnCreatePortfolioCancel").button().click(function () { $("#newPortfolioDialog").dialog("close"); });
+        $("#newPortfolioDialog #btnOk").button().click(function () { $("#newPortfolioDialog").dialog("close"); });
+        $("#newPortfolioDialog .bottomArea .beforeConfirm").show();
+        $("#newPortfolioDialog .bottomArea .afterConfirm").hide();
+
+        if (!$("#newPortfolioDialog").dialog("isOpen"))
+            $("#newPortfolioDialog").dialog("open");
+    };
 
     function CreatePortfolio() {
-        var title = $("#generalDialog #tbPortfolioTitle").val();
-        var startCash = $("#generalDialog #tbPortfolioStartCash").val();
+        var title = $("#newPortfolioDialog #tbPortfolioTitle").val();
+        var startCash = $("#newPortfolioDialog #tbPortfolioStartCash").val();
         $.ajax({
             type: "POST",
             url: "/Portfolio/CreatePortfolio",
@@ -197,8 +182,8 @@ function PortfolioHeader() {
             data: { login: $("#login").val(), title: title, startCash: startCash },
             traditional: true,
             success: function (result) {
-                $("#generalDialog .bottomArea .beforeConfirm").hide();
-                $("#generalDialog .bottomArea .afterConfirm").show();
+                $("#newPortfolioDialog .bottomArea .beforeConfirm").hide();
+                $("#newPortfolioDialog .bottomArea .afterConfirm").show();
                 ShowPortfolioList();
             },
             error: function (result) {

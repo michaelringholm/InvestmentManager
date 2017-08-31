@@ -37,6 +37,7 @@ function TournamentOverview() {
                     $(tournamentWidget).find(".tournamentStartDate").text(tournament.startDate);
                     $(tournamentWidget).find(".tournamentEndDate").text(tournament.endDate);
                     if (metaData.singedUp) {
+                        $(tournamentWidget).find(".tournamentRank").text(tournament.metaData.portfolioMetaData.rank);
                         $(tournamentWidget).find(".startDateElement").hide();
                         $(tournamentWidget).find(".notParticipating").hide();
                     }

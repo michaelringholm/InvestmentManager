@@ -17,5 +17,7 @@ namespace WebAppCore.Services
         void SellAsset(String userKey, String portfolioId, Int16 quantity, Asset asset);
         List<Tournament> GetTournaments(String userKey);
         Tournament GetTournament(string tournamentId);
+        Portfolio GetPortfolioByTournamentId(string userKey, string tournamentId);
+        List<Participant> GetParticipants(string tournamentId);
     }
 }

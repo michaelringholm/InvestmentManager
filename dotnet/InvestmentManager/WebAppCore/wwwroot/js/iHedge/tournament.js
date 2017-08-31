@@ -32,28 +32,19 @@ function Tournament() {
                 $("#tournamentStartDate").text(tournament.startDate);
                 $("#tournamentEndDate").text(tournament.endDate);
 
-
-                var participants = tournament.participants;
+                var participants = result.participants;
 
                 for (var participantIndex = 0; participantIndex < participants.length; participantIndex++) {
                     var participant = participants[participantIndex];
                     var metaData = participant.metaData;
                     var participantWidget = $("#participantTemplate").clone();
                     $(participantWidget).removeAttr("id");
-                    $(participantWidget).attr("data-tournament-id", participant.id);
-                    $(participantWidget).attr("data-tournament-title", participant.title);
-                    $(participantWidget).find(".tournamentTitle").text(participant.title);
-                    $(participantWidget).find(".tournamentStartDate").text(participant.startDate);
-                    $(participantWidget).find(".tournamentEndDate").text(participant.endDate);
-                    /*if (metaData.singedUp) {
-                        $(tournamentWidget).find(".startDateElement").hide();
-                        $(tournamentWidget).find(".notParticipating").hide();
-                    }
-                    else {
-                        $(tournamentWidget).find(".rankElement").hide();
-                        $(tournamentWidget).find(".participating").hide();
-                    }*/
-
+                    $(participantWidget).find(".participantFullName").text(participant.fullName);
+                    $(participantWidget).find(".participantRank").text(participant.rank);
+                    $(participantWidget).find(".participantTotalValue").text(participant.purchaseAmount + participant.cash);
+                    $(participantWidget).find(".participantCash").text(participant.cash);
+                    $(participantWidget).find(".participantMarketValue").text(participant.marketValue);
+                    $(participantWidget).find(".participantBehindLeader").text(participant.behindLeader);
                     $(participantWidget).css("display", "inline-block");
                     $(participantWidget).show();
                     participantWidget.appendTo("#participants");
