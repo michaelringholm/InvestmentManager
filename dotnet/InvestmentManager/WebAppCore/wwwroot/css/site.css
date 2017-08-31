@@ -153,9 +153,9 @@ fieldset {
     border: 1px solid #CCC;
 }
 
-    fieldset p {
-        margin: 2px 12px 10px 10px;
-    }
+fieldset p {
+    margin: 2px 12px 10px 10px;
+}
 
 legend {
     font-size: 1.1em;
@@ -168,6 +168,14 @@ input[type="text"] {
     border: 0px;
     border-bottom: solid 1px grey;
     background-color: rgba(49, 49, 49, 0.89);
+}
+
+input[type="text"].modernTextBox {
+        width: 200px;
+        border: 0px;
+        border-bottom: solid 1px grey;
+        border-top: none;
+        background-color: rgba(49, 49, 49, 0.10);
 }
 
 input[type="password"] {

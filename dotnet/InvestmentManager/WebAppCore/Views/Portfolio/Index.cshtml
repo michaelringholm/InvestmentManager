@@ -6,25 +6,23 @@
 
 <h2>Portfolios</h2>
 <div style="margin-left: 46px; margin-top: 12px;">
-    <div id="portfolios">
-        <div class="newPortfolio">
-            <div style="margin-left: 64px; margin-top: 10px; float: left;">
-                <img alt="" src="/images/Pie-Chart-icon128.png" />
-            </div>
-            <div style="margin-top: 60px; margin-left: -50px; float: left;">
-                <img class="addIconLarge" alt="" src="/images/Actions-list-add-icon72.png" style="" />
-            </div>
-            <div style="float: left; margin-top: 24px; margin-left: 6px;">
-                <div style="font-size: 10pt; color: #ffffff; font-weight: bold; text-transform:uppercase;"></div>
-                <div></div>
-                <div style="font-size: 10pt; color: #ffffff; font-weight: bold; text-transform:uppercase; margin-top: 12px; text-decoration: underline;"></div>
-                <div></div>
-            </div>
-            <div style="clear: both;">
-            </div>
-            <div style="text-align: center; margin-top: 8px; font-size: 10pt; color: #ffffff; font-weight: bold; text-transform:uppercase; text-decoration: underline;">
-                Click to add a new portfolio
-            </div>
+    <div id="portfolios"></div>
+    <div class="newPortfolio">
+        <div style="margin-left: 64px; margin-top: 10px; float: left;">
+            <img alt="" src="/images/Pie-Chart-icon128.png" />
+        </div>
+        <div style="margin-top: 60px; margin-left: -50px; float: left;">
+            <img class="addIconLarge" alt="" src="/images/Actions-list-add-icon72.png" style="" />
+        </div>
+        <div style="float: left; margin-top: 24px; margin-left: 6px;">
+            <div style="font-size: 10pt; color: #ffffff; font-weight: bold; text-transform:uppercase;"></div>
+            <div></div>
+            <div style="font-size: 10pt; color: #ffffff; font-weight: bold; text-transform:uppercase; margin-top: 12px; text-decoration: underline;"></div>
+            <div></div>
+        </div>
+        <div style="clear: both;"></div>
+        <div style="text-align: center; margin-top: 8px; font-size: 10pt; color: #ffffff; font-weight: bold; text-transform:uppercase; text-decoration: underline;">
+            Click to add a new portfolio
         </div>
     </div>
 </div>
@@ -48,22 +46,22 @@
 
 <!-- New Portfolio Dialog -->
 <div id="newPortfolioDialog" style="display: none; width: 280px; position: relative;">
-    <img alt="" style="position: absolute; left:0px;top:0px; width: 72px; height: 72px;" src="/images/Pie-Chart-icon72.png" />
-    <div class="portfolioTitle" style="position: absolute; left:100px;top:10px; font-weight: bold;">Title</div>
-    <div class="portfolioStartCash" style="position: absolute; left:100px;top:23px;">100000</div>
+    <img alt="" style="position: absolute; left:4px;top:4px; width: 72px; height: 72px;" src="/images/Pie-Chart-icon72.png" />
+    <div class="portfolioTitle" style="position: absolute; left:100px;top:10px; font-weight: bold; font-size: 13pt;">Title</div>
+    <div class="portfolioStartCash" style="position: absolute; left:100px;top:32px; font-size: 13pt;">100000</div>
     <div style="position: absolute; left:10px;top:90px;">Title</div>
-    <input id="tbPortfolioTitle" type="text" style="position: absolute; left:100px;top:103px; text-align: right;" placeholder="Title" />    
-    <div style="position: absolute; left:10px;top:110px;">Start cash</div>
-    <input id="tbPortfolioStartCash" type="text" style="position: absolute; left:100px;top:123px; width: 120px; text-align: right;" placeholder="100000" />
+    <input id="tbPortfolioTitle" type="text" class="modernTextBox" style="position: absolute; left:100px;top:90px; width: 160px; text-align: left;" placeholder="Title" />    
+    <div style="position: absolute; left:10px;top:120px;" >Start cash</div>
+    <input id="tbPortfolioStartCash" type="text" class="modernTextBox" style="position: absolute; left:100px;top:120px; width: 160px; text-align: right;" placeholder="100000" />
     <div class="bottomArea">
         <div class="beforeConfirm">
             <div id="btnCreatePortfolioDone" style="position: absolute; bottom: 4px; left: 10px;">Confirm</div>
-            <div id="btnCreatePortfolioCancel" style="position: absolute; bottom: 4px; left: 60px;">Cancel</div>
+            <div id="btnCreatePortfolioCancel" style="position: absolute; bottom: 4px; left: 110px;">Cancel</div>
         </div>
         <div class="afterConfirm">
-            <div id="btnOk" style="">
-                <div style="position: absolute; bottom: 4px; left: 10px;">Done</div>
-                <img style="position: absolute; bottom: 4px; left: 50px; width: 16px; height: 16px;" src="/images/Actions-dialog-ok-apply-icon32.png" alt="" />
+            <div id="btnOk" style="position: absolute; bottom: 4px; left: 10px; width: 80px; height: 30px;">
+                <div style="position: absolute; bottom: 7px; left: 10px;">Done</div>
+                <img style="position: absolute; bottom: 6px; left: 50px; width: 16px; height: 16px;" src="/images/Actions-dialog-ok-apply-icon32.png" alt="" />
             </div>
         </div>
     </div>

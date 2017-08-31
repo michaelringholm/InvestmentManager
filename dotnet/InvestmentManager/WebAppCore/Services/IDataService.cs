@@ -19,5 +19,6 @@ namespace WebAppCore.Services
         Tournament GetTournament(string tournamentId);
         Portfolio GetPortfolioByTournamentId(string userKey, string tournamentId);
         List<Participant> GetParticipants(string tournamentId);
+        void StorePortfolio(Portfolio portfolio);
     }
 }

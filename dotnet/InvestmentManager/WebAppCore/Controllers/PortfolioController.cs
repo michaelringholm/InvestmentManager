@@ -75,26 +75,12 @@ namespace InMaApp.Controllers
             portfolio.MetaData = new { totalPurchaseAmount=totalPurchaseAmount, portfolioMarketValue=portfolioMarketValue, summedTrades=summedTrades };
             return new JsonResult(new { portfolio = portfolio });
         }
-        
-        [HttpPost]
-        public JsonResult UpdatePortfolioHeader(string login, int portfolioId)
-        {
-            /*var ws = new InMaApp.InMaJavaWS.InvestmentManagerInterfaceClient();
-            var portfolioHeader = ws.getPortfolioHeader(login, portfolioId);*/
-
-
-            //return Json(new { PortfolioId = portfolioHeader.id, PortfolioTitle = portfolioHeader.title, MarketValue = DisplayHelper.FormatMoney(portfolioHeader.marketValue), Cash = DisplayHelper.FormatMoney(portfolioHeader.cash), Rank = portfolioHeader.rank });
-            return Json(new { message = "data missing" });
-        }
-
 
         [HttpPost]
-        public JsonResult CreatePortfolio(string login, string title, string startCash)
+        public JsonResult CreatePortfolio([FromBody] NewPortfolioModel model)
         {
-            /*var dStartCash = Double.Parse(startCash, CultureInfo.InvariantCulture);
-            var ws = new InMaApp.InMaJavaWS.InvestmentManagerInterfaceClient();
-            ws.createPortfolio(login, title, dStartCash);*/
-
+            var startCash = Decimal.Parse(model.StartCash, CultureInfo.GetCultureInfo("en-US"));
+            dataService.StorePortfolio(new Portfolio { Title=model.Title, UserKey=model.UserKey, Cash=model.StartCash });
             return Json(new { Success = true });
         }
         

@@ -26,6 +26,7 @@ function PortfolioHeader() {
             beforeSend: function () { ShowAjaxLoader(); },
             complete: function () { HideAjaxLoader(); },
             success: function (result) {
+                $("#portfolios").empty();
                 var portfolios = result.portfolios;
                 for (var portfolioIndex = 0; portfolioIndex < portfolios.length; portfolioIndex++) {
                     var portfolio = portfolios[portfolioIndex];
@@ -123,12 +124,14 @@ function PortfolioHeader() {
         });
     };
 
+    //DEPRECATED
     function DrawDraggableSecurity(securityDiv) {
         var imgSrc = $(securityDiv).attr("data-asset-img-src");
         // TODO - A smaller picture should be used for load performance reasons
         return '<div data-asset-symbol="' + $(securityDiv).attr("data-asset-symbol") + '" data-asset-quote="' + $(securityDiv).attr("data-asset-quote") + '" class="draggableAsset" style=""><img src="' + imgSrc + '" style="width: 32px; height: 32px; margin-left: 10px;" /><div class="caption" style="margin-left: 10px; margin-top: 4px;">Symbol</div><div style="margin-left: 10px; margin-top: 0px;">' + $(securityDiv).attr("data-asset-symbol") + '</div></div>';
     }
 
+    //DEPRECATED
     function UpdatePortfolioHeader(portfolioId) {
         $.ajax({
             type: "POST",
@@ -157,11 +160,14 @@ function PortfolioHeader() {
 
     this.ShowNewPortfolioDialog = function () {
         $("#newPortfolioDialog #tbPortfolioTitle").bind("keyup", function (e) {
-            $("#newPortfolioDialog .portfolioTitle").text($("#newPortfolioDialog #tbPortfolioTitle").val());
+            $("#newPortfolioDialog .portfolioTitle").text($(this).val());
+        });
+        $("#newPortfolioDialog #tbPortfolioStartCash").bind("keyup", function (e) {
+            $("#newPortfolioDialog .portfolioStartCash").text($(this).val());
         });
         //$(this).val( $(this).val().replace(/[^a-z]/g,'') ); }
-        $("#newPortfolioDialog").dialog({ title: "New portfolio", width: "300px" });
-        $("#btnCreatePortfolioDone").button().click(function () { CreatePortfolio(); });
+        $("#newPortfolioDialog").dialog({ title: "New portfolio", width: 320, height: 240 });
+        $("#btnCreatePortfolioDone").button().click(function () { _this.CreatePortfolio(); });
         $("#btnCreatePortfolioCancel").button().click(function () { $("#newPortfolioDialog").dialog("close"); });
         $("#newPortfolioDialog #btnOk").button().click(function () { $("#newPortfolioDialog").dialog("close"); });
         $("#newPortfolioDialog .bottomArea .beforeConfirm").show();
@@ -171,25 +177,30 @@ function PortfolioHeader() {
             $("#newPortfolioDialog").dialog("open");
     };
 
-    function CreatePortfolio() {
-        var title = $("#newPortfolioDialog #tbPortfolioTitle").val();
-        var startCash = $("#newPortfolioDialog #tbPortfolioStartCash").val();
+    this.CreatePortfolio = function () {
+        var authModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
+        var model = { userKey: new LoginHelper().getUserKey(), title: $("#newPortfolioDialog #tbPortfolioTitle").val(), startCash: $("#newPortfolioDialog #tbPortfolioStartCash").val() };
+
         $.ajax({
             type: "POST",
             url: "/Portfolio/CreatePortfolio",
-            //contentType: 'application/json',
+            contentType: "application/json",
             dataType: 'json',
-            data: { login: $("#login").val(), title: title, startCash: startCash },
-            traditional: true,
+            data: JSON.stringify(model),
+            headers: {
+                'X-Auth-Provider': authModel.authProvider,
+                'X-Auth-UserId': authModel.fbUserId,
+                'X-Auth-Token': authModel.investAuthToken
+            },
             success: function (result) {
                 $("#newPortfolioDialog .bottomArea .beforeConfirm").hide();
                 $("#newPortfolioDialog .bottomArea .afterConfirm").show();
-                ShowPortfolioList();
+                _this.populateList();
             },
-            error: function (result) {
-                ShowError(result.responseText);
+            error: function (err1, err2, err3) {
+                ShowError(err1.responseText);
             }
         });
-    }
+    };
 
 }
