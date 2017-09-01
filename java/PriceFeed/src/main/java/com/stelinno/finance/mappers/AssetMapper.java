@@ -17,6 +17,7 @@ public class AssetMapper {
 		asset.Change = price.Performance;
 		asset.LastUpdate = new Date();
 		asset.AssetState = Asset.StatusEnum.INCOMPLETE;
+		asset.PriceUrl = price.PriceUrl;
 		return asset;
 	}
 

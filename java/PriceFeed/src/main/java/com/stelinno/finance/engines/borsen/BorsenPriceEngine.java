@@ -34,6 +34,7 @@ public class BorsenPriceEngine implements PriceEngine {
 				try {
 				String json = stock.attr("data-json");
 				String name = stock.select(".stock-name a").first().text().trim();
+				String href = "https://borsen.dk" + stock.select(".stock-name a").first().attr("href").trim();
 				BorsenPrice borsenPrice = gson.fromJson(json, BorsenPrice.class);
 				borsenPrice.PRICE = formatDecimal(borsenPrice.PRICE);
 				borsenPrice.ASK = formatDecimal(borsenPrice.ASK);
@@ -47,6 +48,7 @@ public class BorsenPriceEngine implements PriceEngine {
 				borsenPrice.PERFORMANCE_PCT = formatDecimal(borsenPrice.PERFORMANCE_PCT);
 				borsenPrice.OFFICIAL_NAME_SECURITY = name;
 				borsenPrice.ISIN = borsenPrice.ISIN.trim();				
+				borsenPrice.HREF = href;
 				//borsenPrice.SYMBOL = getSymbol(borsenPrice.ISIN);
 				//if(borsenPrice.SYMBOL == null)
 					//borsenPrice.SYMBOL = "MISSING_SYMBOL_" + borsenPrice.ISIN;
@@ -115,6 +117,38 @@ public class BorsenPriceEngine implements PriceEngine {
 		price.Price = priceStr;
 		return price;
 	}		
+	
+	@Override
+	public Price getPriceByLink(String priceUrl) {
+		Document doc;
+		try {
+			doc = Jsoup.parse(httpHelper.getHtml(priceUrl).payload.toString());
+			//doc = Jsoup.connect(symbolUrl).get();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		Price price = new Price();
+		
+		//Elements symbolElements = doc.select(".stock-table tr:first td:first span:nth(1)");
+		Element symbolElement = doc.select(".stock-table tr").first().select("td").first().select("span").get(1);
+		if(symbolElement == null)
+			return null;
+		String priceStr = symbolElement.text().trim();		
+		price.Price = formatDecimal(priceStr);
+		
+		symbolElement = doc.select(".isin").first();
+		if(symbolElement != null) {
+			String symbolAndIsin = symbolElement.text().trim();
+			int start = symbolAndIsin.indexOf("ISIN:");
+			String symbol = symbolAndIsin.substring(0, start).replace("(", "").replace(")", "").trim();
+			String isin = symbolAndIsin.substring(start+5).trim();
+			price.Isin = isin;
+			price.Symbol = symbol;
+		}
+		
+		return price;
+	}	
 	
 	public static void main(String[] args) {
 		// https://borsen.dk/services/frontend/getModule.php?moduleId=54570&page=1&tab=kurs&sortColumn=OFFICIAL_NAME_SECURITY&direction=asc

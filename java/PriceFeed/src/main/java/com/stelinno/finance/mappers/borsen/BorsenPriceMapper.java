@@ -20,6 +20,7 @@ public class BorsenPriceMapper {
 			price.Symbol = borsenPrice.SYMBOL.toUpperCase().trim();
 		price.Volume = borsenPrice.VOLUME;
 		price.YTD = borsenPrice.YDT;
+		price.PriceUrl = borsenPrice.HREF;
 		return price;
 	}
 

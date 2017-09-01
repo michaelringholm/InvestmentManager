@@ -23,6 +23,11 @@ public class PriceEngineController {
 		return priceEngine.getPriceByISIN(isin);
 	}
 	
+	@RequestMapping("/get-by-link")
+	public Price getPriceByLink(String link) {
+		return priceEngine.getPriceByLink(link);
+	}	
+	
 	@RequestMapping("/get-by-source")
 	public List<Price> getPricesBySource(String priceSource) {
 		return priceEngine.getPrices(priceSource);

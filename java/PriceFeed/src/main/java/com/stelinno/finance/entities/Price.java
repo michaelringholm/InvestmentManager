@@ -12,5 +12,6 @@ public class Price {
 	public String Ask;
 	public String High;
 	public String Low;
-	public String YTD;	
+	public String YTD;
+	public String PriceUrl;	
 }

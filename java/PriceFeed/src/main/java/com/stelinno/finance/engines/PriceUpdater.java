@@ -51,6 +51,7 @@ public class PriceUpdater {
 				asset.Quote = price.Price;
 				asset.Change = price.Performance;
 				asset.Volume = price.Volume;
+				asset.PriceUrl = price.PriceUrl;
 				asset.LastUpdate = new Date();
 			}
 			//dataService.storeAssetAsync(asset);

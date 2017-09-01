@@ -21,4 +21,5 @@ public class BorsenPrice {
 	public String YDT;
 	public String DATETIME_START_AVAILABLE_HISTORY;
 	public String SYMBOL;// This comes from somewhere else
+	public String HREF;
 }

@@ -17,6 +17,7 @@ public class Asset
     public String AssetCategoryTitle;
 	public StatusEnum AssetState;
 	public Date LastUpdate;
+	public String PriceUrl;
 
     //public String AnualVolatility;
     //private double avgVoltatility;
