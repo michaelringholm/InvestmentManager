@@ -15,11 +15,14 @@
             $("#nowToDoControlGroup").controlgroup();
             $("#buySellDialog .bottomArea .beforeConfirm").show();
             $("#buySellDialog .bottomArea .afterConfirm").hide();
-            $("#buySellDialog").dialog({ title: "Buy/Sell", width: 330, height: 360, autoOpen: false });            
-        };
-
-        this.hello = function () {
-            console.log("Hello World!");
+            $("#buySellDialog").dialog({
+                title: "Buy/Sell", width: 330, height: 360, autoOpen: false, open: function (event, ui)
+                {
+                    $("#buySellDialog .bottomArea .beforeConfirm").show();
+                    $("#buySellDialog .bottomArea .afterConfirm").hide();
+                    $("#tbQuantity").focus();
+                }
+            });            
         };
 
         this.showBuySellDialog = function (asset, buySellCode, instantBuySell, fnCallOnSuccess) {
@@ -37,6 +40,8 @@
             $("#buySellDialog .assetIcon").attr("src", _this.titleToImgSrc(categoryTitle));
             if (buySellCode == "BUY") $("#btnBuySellDlgBuy").prop("checked", true); else $("#btnBuySellDlgSell").prop("checked", true);
             if (instantBuySell) $("#btnBuySellDlgToDo").prop("checked", true); else $("#btnBuySellDlgNow").prop("checked", true);
+            $("#buySellControlGroup").controlgroup("refresh");
+            $("#nowToDoControlGroup").controlgroup("refresh");            
 
             if (!$("#buySellDialog").dialog("isOpen"))
                 $("#buySellDialog").dialog("open");
