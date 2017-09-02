@@ -13,7 +13,9 @@ namespace WebAppCore.Data.Entities
         public String EndDate { get; set; }
         public String StartCash { get; set; }
         public List<String> Participants { get; set; }
-        public Object MetaData { get; set; }
+        [NonSerialized]
+        private Object _metaData;
+        public Object MetaData { get { return _metaData; } set { _metaData = value; } }
         //signed up
     }
 }

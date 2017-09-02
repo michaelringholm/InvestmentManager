@@ -5,7 +5,19 @@
 
 function PortfolioHeader() {
     var _this = this;
-    var util = new Util();
+    var util = UtilFactory.getInstance();
+    
+    this.constructor = function () {
+        $("#newPortfolioDialog #tbPortfolioTitle").bind("keyup", function (e) {
+            $("#newPortfolioDialog .portfolioTitle").text($(this).val());
+        });
+        $("#newPortfolioDialog #tbPortfolioStartCash").bind("keyup", function (e) {
+            $("#newPortfolioDialog .portfolioStartCash").text($(this).val());
+        });
+        $("#btnCreatePortfolioDone").button().click(function () { _this.CreatePortfolio(); });
+        $("#btnCreatePortfolioCancel").button().click(function () { $("#newPortfolioDialog").dialog("close"); });
+        $("#newPortfolioDialog #btnOk").button().click(function () { $("#newPortfolioDialog").dialog("close"); });
+    };
 
     this.populateList = function () {
         var authModel = { authProvider: $("#authProviderName").val(), fbUserId: $("#authProviderUserId").val(), investAuthToken: $("#investAuthToken").val() };
@@ -40,7 +52,7 @@ function PortfolioHeader() {
                         $(portfolioWidget).find(".portfolioMarketValue").text(portfolio.metaData.portfolioMarketValue);
                         $(portfolioWidget).find(".profitLoss").text(util.formatDecimal(portfolio.metaData.portfolioMarketValue - portfolio.metaData.totalPurchaseAmount));
                     }
-                    util.adjustTextColor($(portfolioWidget).find(".portfolioMarketValue"),"");
+                    //util.adjustTextColor($(portfolioWidget).find(".portfolioMarketValue"),"");
                     util.adjustTextColor($(portfolioWidget).find(".profitLoss"),"");
                     $(portfolioWidget).show();
                     portfolioWidget.appendTo("#portfolios");
@@ -159,17 +171,8 @@ function PortfolioHeader() {
     }
 
     this.ShowNewPortfolioDialog = function () {
-        $("#newPortfolioDialog #tbPortfolioTitle").bind("keyup", function (e) {
-            $("#newPortfolioDialog .portfolioTitle").text($(this).val());
-        });
-        $("#newPortfolioDialog #tbPortfolioStartCash").bind("keyup", function (e) {
-            $("#newPortfolioDialog .portfolioStartCash").text($(this).val());
-        });
         //$(this).val( $(this).val().replace(/[^a-z]/g,'') ); }
         $("#newPortfolioDialog").dialog({ title: "New portfolio", width: 320, height: 240 });
-        $("#btnCreatePortfolioDone").button().click(function () { _this.CreatePortfolio(); });
-        $("#btnCreatePortfolioCancel").button().click(function () { $("#newPortfolioDialog").dialog("close"); });
-        $("#newPortfolioDialog #btnOk").button().click(function () { $("#newPortfolioDialog").dialog("close"); });
         $("#newPortfolioDialog .bottomArea .beforeConfirm").show();
         $("#newPortfolioDialog .bottomArea .afterConfirm").hide();
 
@@ -203,4 +206,5 @@ function PortfolioHeader() {
         });
     };
 
+    _this.constructor();
 }

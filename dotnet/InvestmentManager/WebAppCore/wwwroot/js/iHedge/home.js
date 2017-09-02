@@ -1,5 +1,5 @@
 ﻿$(function () {
-    $.support.cors = true;
+    //$.support.cors = true;
     $("#errorDiv").dialog({ autoOpen: false, width: "700px", modal: true });
     $("#statusDiv").dialog({ autoOpen: false, width: "200px", modal: true, draggable: false, resizable: false });
     $("#generalDialog").dialog({ autoOpen: false, width: "500px", modal: true, draggable: false, resizable: false });    

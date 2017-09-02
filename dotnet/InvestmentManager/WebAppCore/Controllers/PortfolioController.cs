@@ -27,7 +27,7 @@ namespace InMaApp.Controllers
             ViewData["AuthProviderUserId"] = authModel.fbUserId;
             ViewData["AuthProviderName"] = authModel.authProvider;
 
-            return View("index");
+            return View("PortfolioOverview");
         }
 
         public IActionResult ShowDetails(String portfolioId)
@@ -38,7 +38,7 @@ namespace InMaApp.Controllers
             ViewData["AuthProviderName"] = authModel.authProvider;
             ViewData["PortfolioId"] = portfolioId;
 
-            return View("details");
+            return View("Portfolio");
         }
 
         [HttpPost]
@@ -52,27 +52,32 @@ namespace InMaApp.Controllers
         public IActionResult GetDetails([FromBody] PortfolioDetailsModel portfolioDetailsModel)
         {
             var portfolio = dataService.GetPortfolio(portfolioDetailsModel.UserKey, portfolioDetailsModel.PortfolioId);
-            var assets = new List<Asset>();
-            foreach (var trade in portfolio.Trades) 
-                trade.MetaData = dataService.GetAsset(trade.AssetIsin);
+            if(portfolio == null)
+                return new JsonResult(new { success=false, message="Portfolio not found"});
+            if (portfolio.Trades != null) { 
+                foreach (var trade in portfolio.Trades) 
+                    trade.MetaData = dataService.GetAsset(trade.AssetIsin);
 
-            var culture = CultureInfo.GetCultureInfo("en-US");
-            var totalPurchaseAmount = portfolio.Trades.Sum(t => ( (Convert.ToDecimal(t.PurchaseQuote, culture)) * (Convert.ToDecimal(t.Quantity, culture)) ) );
-            var portfolioMarketValue = portfolio.Trades.Sum(t => ((Convert.ToDecimal(((Asset)t.MetaData).Quote, culture)) * (Convert.ToDecimal(t.Quantity, culture))));
-            var summedTrades = portfolio.Trades.GroupBy(t => t.AssetIsin)
-                .Select(tr => new SummedTrade {
-                    PurchaseQuote = tr.Average(t3 => Convert.ToDecimal(t3.PurchaseQuote, culture)).ToString(culture),
-                    AssetIsin = tr.First().AssetIsin,
-                    AssetSymbol = tr.First().AssetSymbol,
-                    MetaData = tr.First().MetaData,
-                    PortfolioId = tr.First().PortfolioId,
-                    PurchaseDate = tr.Last().PurchaseDate,
-                    Quantity = Convert.ToInt16(tr.Sum(t4 => t4.Quantity)),
-                    Status = tr.First().Status,
-                    PurchaseAmount = tr.Sum(t5 => Convert.ToDecimal(t5.PurchaseQuote, culture) * t5.Quantity).ToString(culture)
-                }).ToList();
+                var culture = CultureInfo.GetCultureInfo("en-US");
+                var totalPurchaseAmount = portfolio.Trades.Sum(t => ( (Convert.ToDecimal(t.PurchaseQuote, culture)) * (Convert.ToDecimal(t.Quantity, culture)) ) );
+                var portfolioMarketValue = portfolio.Trades.Sum(t => ((Convert.ToDecimal(((Asset)t.MetaData).Quote, culture)) * (Convert.ToDecimal(t.Quantity, culture))));
+                var summedTrades = portfolio.Trades.GroupBy(t => t.AssetIsin)
+                    .Select(tr => new SummedTrade {
+                        PurchaseQuote = tr.Average(t3 => Convert.ToDecimal(t3.PurchaseQuote, culture)).ToString(culture),
+                        AssetIsin = tr.First().AssetIsin,
+                        AssetSymbol = tr.First().AssetSymbol,
+                        MetaData = tr.First().MetaData,
+                        PortfolioId = tr.First().PortfolioId,
+                        PurchaseDate = tr.Last().PurchaseDate,
+                        Quantity = Convert.ToInt16(tr.Sum(t4 => t4.Quantity)),
+                        Status = tr.First().Status,
+                        PurchaseAmount = tr.Sum(t5 => Convert.ToDecimal(t5.PurchaseQuote, culture) * t5.Quantity).ToString(culture)
+                    }).ToList();
 
-            portfolio.MetaData = new { totalPurchaseAmount=totalPurchaseAmount, portfolioMarketValue=portfolioMarketValue, summedTrades=summedTrades };
+                portfolio.MetaData = new { totalPurchaseAmount=totalPurchaseAmount, portfolioMarketValue=portfolioMarketValue, summedTrades=summedTrades };
+            }
+            else
+                portfolio.MetaData = new { totalPurchaseAmount = 0, portfolioMarketValue = 0 };
             return new JsonResult(new { portfolio = portfolio });
         }
 

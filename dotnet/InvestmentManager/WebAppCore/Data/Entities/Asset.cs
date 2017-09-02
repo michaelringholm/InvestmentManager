@@ -17,6 +17,7 @@ namespace WebAppCore.Data.Entities
         public String PreviousClose { get; set; }        
         public String Volume { get; set; }
         public String AssetCategoryTitle { get; set; }
+        public String PriceUrl { get; set; }
 
         //public String AnualVolatility { get; set; }
         //private double avgVoltatility;

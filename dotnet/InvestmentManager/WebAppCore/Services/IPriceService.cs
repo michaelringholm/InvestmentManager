@@ -8,5 +8,6 @@ namespace WebAppCore.Services
     public interface IPriceService
     {
         Double GetLiveQuote(String ISIN);
+        Double GetLiveQuoteByPriceUrl(String priceUrl);
     }
 }

@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -14,9 +13,11 @@ namespace WebAppCore.Services
     public class DataService : IDataService
     {
         private readonly IPriceService priceService;
-        public DataService(IPriceService priceService)
+        private readonly IJsonSerializer jsonSerializer;
+        public DataService(IPriceService priceService, IJsonSerializer jsonSerializer)
         {
             this.priceService = priceService;
+            this.jsonSerializer = jsonSerializer;
         }
 
         private void StoreDocument(String jsonString)
@@ -38,7 +39,7 @@ namespace WebAppCore.Services
 
         public void StorePortfolio(Portfolio portfolio)
         {
-            var jsonItem = JsonConvert.SerializeObject(portfolio);
+            var jsonItem = jsonSerializer.ToJson(portfolio);
             StoreDocument("{\"TableName\":\"Invest_Portfolio\",\"Item\":" + jsonItem + "}");
         }
 
@@ -46,7 +47,7 @@ namespace WebAppCore.Services
         {
             String json = @"{ ""TableName"":""Invest_Portfolio"", ""FilterExpr"":""UserKey = :userKey"", ""ExprAttrVals"":{ "":userKey"": """ + userKey + @"""} }";        
             var documents = GetDocuments(json);
-            var portfolios = JsonConvert.DeserializeObject<List<Portfolio>>(documents.ToString());
+            var portfolios = jsonSerializer.FromJson<List<Portfolio>>(documents.ToString());
             foreach (var portfolio in portfolios)
                 addPortfolioMetaData(portfolio);
             return portfolios;
@@ -100,7 +101,7 @@ namespace WebAppCore.Services
         {
             String json = @"{ ""TableName"":""Invest_Portfolio"", ""FilterExpr"":""TournamentId = :tournamentId"", ""ExprAttrVals"":{ "":tournamentId"": """ + tournamentId + @"""} }";
             var documents = GetDocuments(json);
-            var portfolios = JsonConvert.DeserializeObject<List<Portfolio>>(documents.ToString());
+            var portfolios = jsonSerializer.FromJson<List<Portfolio>>(documents.ToString());
             var sortedPortfolios = new SortedDictionary<Decimal, Portfolio>();
             foreach (var portfolio in portfolios)
             {
@@ -119,7 +120,7 @@ namespace WebAppCore.Services
         {
             String json = @"{ ""TableName"":""Invest_Portfolio"", ""FilterExpr"":""TournamentId = :tournamentId"", ""ExprAttrVals"":{ "":tournamentId"": """ + tournamentId + @"""} }";
             var documents = GetDocuments(json);
-            var portfolios = JsonConvert.DeserializeObject<List<Portfolio>>(documents.ToString());
+            var portfolios = jsonSerializer.FromJson<List<Portfolio>>(documents.ToString());
             var sortedPortfolios = new SortedDictionary<Decimal, Portfolio>();
             foreach (var portfolio in portfolios)
             {
@@ -165,7 +166,7 @@ namespace WebAppCore.Services
         {
             String json = @"{ ""TableName"":""Invest_AssetCategory"" }";
             var documents = GetDocuments(json);
-            var assetCategories = JsonConvert.DeserializeObject<List<AssetCategory>>(documents.ToString());
+            var assetCategories = jsonSerializer.FromJson<List<AssetCategory>>(documents.ToString());
             return assetCategories;
         }
 
@@ -173,7 +174,7 @@ namespace WebAppCore.Services
         {
             String json = @"{ ""TableName"":""Invest_Asset"", ""FilterExpr"":""AssetCategoryTitle = :assetCategoryTitle"", ""ExprAttrVals"":{ "":assetCategoryTitle"": """ + assetCategoryTitle + @"""} }";
             var documents = GetDocuments(json);
-            var assets = JsonConvert.DeserializeObject<List<Asset>>(documents.ToString());
+            var assets = jsonSerializer.FromJson<List<Asset>>(documents.ToString());
             return assets;
         }
 
@@ -184,7 +185,7 @@ namespace WebAppCore.Services
             {
                 String json = @"{ ""TableName"":""Invest_Asset"" }";
                 var documents = GetDocuments(json);
-                var assets = JsonConvert.DeserializeObject<List<Asset>>(documents.ToString());
+                var assets = jsonSerializer.FromJson<List<Asset>>(documents.ToString());
                 _assetDic = assets.ToDictionary(d => d.Isin);
             }
             return _assetDic;
@@ -205,7 +206,13 @@ namespace WebAppCore.Services
             if (quantity < 1)
                 throw new Exception("Quantity  must be more than 1!");
             var portfolio = GetPortfolio(userKey, portfolioId);
-            var liveQuote = priceService.GetLiveQuote(asset.Isin);
+            //var liveQuote = priceService.GetLiveQuote(asset.Isin);
+            // Asset not complete, obtain from data source
+            var priceUrl = GetAsset(asset.Isin).PriceUrl;
+            var liveQuote = priceService.GetLiveQuoteByPriceUrl(priceUrl);
+            var sellAmount = liveQuote * quantity;
+            var newCashValue = (Convert.ToDecimal(portfolio.Cash, culture)) + Convert.ToDecimal(sellAmount);
+            portfolio.Cash = newCashValue.ToString(culture);
             if (portfolio.Trades == null)
                 portfolio.Trades = new List<Trade>();
             portfolio.Trades.Add(new Trade { AssetSymbol = asset.Symbol, AssetIsin = asset.Isin, PortfolioId = portfolioId, Quantity = quantity, PurchaseDate = DateTime.Now.ToString("ddMMyyyy:HHmmSS"), PurchaseQuote = liveQuote.ToString(CultureInfo.GetCultureInfo("en-US")) });
@@ -217,7 +224,12 @@ namespace WebAppCore.Services
             if (quantity < 1)
                 throw new Exception("Quantity to sell, must be more than 1!");
             var portfolio = GetPortfolio(userKey, portfolioId);
-            var liveQuote = priceService.GetLiveQuote(asset.Isin);
+            // Asset not complete, obtain from data source
+            var priceUrl = GetAsset(asset.Isin).PriceUrl;
+            var liveQuote = priceService.GetLiveQuoteByPriceUrl(priceUrl);
+            var purchaseAmount = liveQuote * quantity;
+            var newCashValue = (Convert.ToDecimal(portfolio.Cash, culture)) - Convert.ToDecimal(purchaseAmount);
+            portfolio.Cash = newCashValue.ToString(culture);
             portfolio.Trades.Add(new Trade { AssetSymbol = asset.Symbol, AssetIsin = asset.Isin, PortfolioId = portfolioId, Quantity = (Int16)(quantity*-1), PurchaseDate = DateTime.Now.ToString("ddMMyyyy:HHmmSS"), PurchaseQuote = liveQuote.ToString(CultureInfo.GetCultureInfo("en-US")) });
             StorePortfolio(portfolio);
         }
@@ -227,7 +239,7 @@ namespace WebAppCore.Services
             //String json = @"{ ""TableName"":""Invest_Tournament"", ""FilterExpr"":""UserKey = :userKey"", ""ExprAttrVals"":{ "":userKey"": """ + userKey + @"""} }";
             String json = @"{ ""TableName"":""Invest_Tournament"" }";
             var documents = GetDocuments(json);
-            var tournaments = JsonConvert.DeserializeObject<List<Tournament>>(documents.ToString());
+            var tournaments = jsonSerializer.FromJson<List<Tournament>>(documents.ToString());
             return tournaments;
         }
 
@@ -236,7 +248,7 @@ namespace WebAppCore.Services
             String json = @"{ ""TableName"":""Invest_Tournament"", ""FilterExpr"":""Id = :id"", ""ExprAttrVals"":{ "":id"": """ + tournamentId + @"""} }";
             //String json = @"{ ""TableName"":""Invest_Tournament"" }";
             var documents = GetDocuments(json);
-            var tournaments = JsonConvert.DeserializeObject<List<Tournament>>(documents.ToString());
+            var tournaments = jsonSerializer.FromJson<List<Tournament>>(documents.ToString());
             return tournaments[0];
         }
     }

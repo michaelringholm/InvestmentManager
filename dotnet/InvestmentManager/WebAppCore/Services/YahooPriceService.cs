@@ -9,7 +9,12 @@ namespace WebAppCore.Services
     {
         public Double GetLiveQuote(String symbol)
         {
-            return 22.15;
+            throw new NotImplementedException();
+        }
+
+        public Double GetLiveQuoteByPriceUrl(string priceUrl)
+        {
+            throw new NotImplementedException();
         }
     }
 }

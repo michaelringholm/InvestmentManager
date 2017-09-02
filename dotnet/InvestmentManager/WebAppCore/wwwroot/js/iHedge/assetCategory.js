@@ -5,7 +5,7 @@
 
 function AssetCategory() {
     var _this = this;
-    var util = new Util();
+    var util = UtilFactory.getInstance();
 
     this.populateAssetCategory = function (portfolioId, assetCategoryTitle) {
         var authModel = new LoginHelper().getAuthModel();
@@ -38,6 +38,7 @@ function AssetCategory() {
                     $(assetWidget).attr("data-asset-symbol", asset.symbol);
                     $(assetWidget).attr("data-asset-quote", asset.quote);
                     $(assetWidget).attr("data-asset-isin", asset.isin);
+                    $(assetWidget).attr("data-asset-category-title", asset.assetCategoryTitle);
                     $(assetWidget).find(".assetTitle").text(util.shortenText(asset.title, 29));
                     $(assetWidget).find(".assetSymbol").text(asset.symbol);
                     $(assetWidget).find(".assetChange").text(asset.change);
@@ -57,7 +58,7 @@ function AssetCategory() {
                     {
                         cursor: "move",
                         cursorAt: { top: 38, left: 40 },
-                        helper: function (event) { return _this.drawDraggableAsset(this); },
+                        helper: function (event) { return UtilFactory.getInstance().drawDraggableAsset(this); },
                         zIndex: 10000,
                         containment: 'document',
                         appendTo: "body",
@@ -99,7 +100,7 @@ function AssetCategory() {
     };
 
     this.drawDraggableAsset = function (assetDiv) {
-        var imgSrc = $("#assetCategoryImg").attr("src");
+        var imgSrc = util.titleToImgSrc($(assetDiv).attr("data-asset-category-title"));
         // TODO - A smaller picture should be used for load performance reasons
         return '<div data-asset-symbol="' + $(assetDiv).attr("data-asset-symbol") + '" data-asset-quote="' + $(assetDiv).attr("data-asset-quote") + '" class="draggableAsset" style=""><img src="' + imgSrc + '" style="width: 32px; height: 32px; margin-left: 10px;" /><div class="caption" style="margin-left: 10px; margin-top: 4px;">Symbol</div><div style="margin-left: 10px; margin-top: 0px;">' + $(assetDiv).attr("data-asset-symbol") + '</div></div>';
     };

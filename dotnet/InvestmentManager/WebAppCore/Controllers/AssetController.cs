@@ -39,7 +39,8 @@ namespace WebAppCore.Controllers
         [HttpPost]
         public IActionResult LatestQuote([FromBody] QuoteModel model)
         {
-            var quote = priceService.GetLiveQuote(model.Isin);
+            var asset = dataService.GetAsset(model.Isin);
+            var quote = priceService.GetLiveQuoteByPriceUrl(asset.PriceUrl);
             return new JsonResult(new { isin=model.Isin, quote=quote});
         }
     }
