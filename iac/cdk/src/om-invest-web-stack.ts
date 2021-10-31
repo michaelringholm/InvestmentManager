@@ -1,10 +1,13 @@
 import * as CloudFront from '@aws-cdk/aws-cloudfront';
-import { CloudFrontWebDistribution, OriginAccessIdentity } from '@aws-cdk/aws-cloudfront';
-import { Distribution, IDistribution } from '@aws-cdk/aws-cloudfront/lib/distribution';
+import { CloudFrontWebDistribution, OriginAccessIdentity, ViewerCertificate } from '@aws-cdk/aws-cloudfront';
+import { Distribution, IDistribution, SecurityPolicyProtocol, SSLMethod } from '@aws-cdk/aws-cloudfront/lib/distribution';
 import { IRole, Role, ServicePrincipal } from '@aws-cdk/aws-iam';
-import { BlockPublicAccess, Bucket, IBucket } from '@aws-cdk/aws-s3/lib/bucket';
+import { BucketDeployment } from '@aws-cdk/aws-s3-deployment/lib/bucket-deployment';
+import { Source } from '@aws-cdk/aws-s3-deployment/lib/source';
+import { BlockPublicAccess, Bucket, BucketEncryption, IBucket } from '@aws-cdk/aws-s3/lib/bucket';
 import * as Core from '@aws-cdk/core';
-import { Tags } from '@aws-cdk/core';
+import { RemovalPolicy, Tags } from '@aws-cdk/core';
+import { Certificate } from 'crypto';
 import { MetaData } from './meta-data';
 
 export class OMInvestWebStack extends Core.Stack {
@@ -12,21 +15,38 @@ export class OMInvestWebStack extends Core.Stack {
     super(scope, id, props);
     var bucket = this.defineWebBucket();
     var cdn = this.defineCDN(bucket);
+    this.defineDeployment(bucket, cdn);
+  }
+
+  private defineDeployment(bucket: IBucket, cdn: CloudFront.IDistribution) {
+    new BucketDeployment(this, 'DeployWebsite', {
+      sources: [Source.asset('../../src/static/')],
+      destinationBucket: bucket,
+      distribution: cdn,
+      //distributionPaths: ['/images/*.png']
+    });
   }
 
   private defineCDN(bucket:IBucket):IDistribution {
-    var oai = new OriginAccessIdentity(this, MetaData.PREFIX+"oai");
+    var oai = new OriginAccessIdentity(this, MetaData.PREFIX+"oai", {comment:MetaData.PREFIX+"oai"});
+    bucket.grantRead(oai);
+    //const certificate = Certificate.fromCertificateArn(this, 'Certificate', arn);
+    //var viewerCertificate = ViewerCertificate.fromAcmCertificate(certificate, {aliases: []});
     var distribution = new CloudFrontWebDistribution(this, MetaData.PREFIX+"cdn", {       
       originConfigs: [
       {
         s3OriginSource: {
           s3BucketSource: bucket,
-          originAccessIdentity: oai          
-        },
+          originAccessIdentity: oai
+        },      
         behaviors : [ {isDefaultBehavior: true}],        
-      }]
+      }],
+      /*viewerCertificate:  {        
+        aliases: ["om-invest.sundgaar.people.aws.dev"],
+        props: {acmCertificateArn:usethevariable,minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_1_2016,sslSupportMethod:SSLMethod.SNI}
+      }*/
     });
-        
+            
     Tags.of(distribution).add(MetaData.NAME, MetaData.PREFIX+"cdn");
     return distribution;
   }
@@ -35,9 +55,14 @@ export class OMInvestWebStack extends Core.Stack {
     var bucket = new Bucket(this, MetaData.PREFIX+"s3-web", { 
       bucketName: MetaData.PREFIX+"s3-web",
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      versioned: false
+      encryption: BucketEncryption.S3_MANAGED,
+      versioned: false,
+      publicReadAccess: false,
+      removalPolicy: RemovalPolicy.DESTROY,
+      websiteIndexDocument: 'index.html',
+      autoDeleteObjects: true
     });
-    
+        
     Tags.of(bucket).add(MetaData.NAME, MetaData.PREFIX+"s3-web");
     return bucket;
   }

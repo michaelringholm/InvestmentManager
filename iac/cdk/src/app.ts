@@ -7,6 +7,7 @@ import { MetaData } from './meta-data';
 //var region = process.env["CDK_DEFAULT_REGION"]
 var region = "eu-north-1";
 var props = {env: {account: process.env["CDK_DEFAULT_ACCOUNT"], region: region } };
+var acmCertificateArn = process.env["ACM_CERTIFICATE_ARN"];
 logDebug("Using account="+process.env["CDK_DEFAULT_ACCOUNT"]);
 logDebug("Using region="+region);
 const app = new CDK.App();

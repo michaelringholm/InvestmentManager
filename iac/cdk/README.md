@@ -36,3 +36,9 @@ sudo yum install stress -y
 sudo stress --cpu 4 -v --timeout 500s
 top
 ```
+
+## Other resources and blogs
+https://docs.aws.amazon.com/cdk/latest/guide/assets.html
+https://stackoverflow.com/questions/60905976/cloudfront-give-access-denied-response-created-through-aws-cdk-python-for-s3-buc
+https://github.com/aws/aws-cdk/issues/14019
+https://bobbyhadz.com/blog/cdk-delete-s3-bucket
