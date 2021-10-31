@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Investment Manager</title>
+
+    <link rel="stylesheet" href="/resources/lib/bootstrap/dist/css/bootstrap.css" />        
+    <!--<link rel="stylesheet" type="text/css" href="~/lib/datatables/css/jquery.dataTables.css" />-->
+    <link rel="stylesheet" href="/resources/lib/jquery-ui-1.12.1.custom/jquery-ui.min.css" />
+    <link rel="stylesheet" href="/resources/css/site.css" />
+
+    <script src="/resources/lib/jquery/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="/resources/lib/jquery-ui-1.12.1.custom/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="/resources/js/util.js" type="text/javascript"></script>
+    <script src="/resources/js/stockMarket.js" type="text/javascript"></script>
+    <script src="/resources/js/home.js" type="text/javascript"></script>
+    <script src="/resources/js/loginHandler.js" type="text/javascript"></script>    
+    <!--<script src="~/lib/datatables/js/jquery.dataTables.min.js" type="text/javascript"></script>-->
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+    <script>
+        function checkLoginState() {
+            FB.getLoginStatus(function(response) {
+                statusChangeCallback(response);
+            });
+        }
+      </script>    
+</head>
+<body>
+    <!-- FB Login -->
+    <!--<div id="fb-root"></div>-->
+    
+    <!--<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>-->
+    <fb:login-button scope="public_profile,email"></fb:login-button>
+    <!-- End FB Login -->
+
+    <div class="container body-content">
+        <div class="hiddenFields">
+            <input id="login" type="hidden" value="<%=InMaApp.ContextManager.Current.LoginId %>" />
+            <input id="authenticated" type="hidden" value="false" />
+            <input id="hfPortfolioId" type="hidden" value="@ViewData["PortfolioId"]" />
+            <input id="investAuthToken" type="hidden" value="@ViewData["InvestAuthToken"]" />
+            <input id="authProviderUserId" type="hidden" value="@ViewData["AuthProviderUserId"]" />
+            <input id="authProviderName" type="hidden" value="@ViewData["AuthProviderName"]" />
+        </div>
+        <div id="errorDiv"></div>
+        <div id="statusDiv"></div>
+
+        <!--SPECIFIC WIDGET-->
+        <div id="welcomeWidget" class="widget">
+            <div id="welcomeDiv" style="margin-left: 44px; margin-top: 44px; cursor: pointer; color: #ffffff;">
+                <div style="float: left; width: 500px; margin-top: 12px; text-align: justify;">
+                    Welcome to InvestmentManager. Learn how to invest in stocks and compete with your
+                    friends to see who is the best investor.
+                    <br /><br />To start using Investment Manager you must log on using one of the methods below. For your convenience you can use your existing Facebook, Twitter or Google+ account. Choose your preferred authentication method by clicking one of the authentication providers below.
+                </div>
+                <div style="float: left; margin-left: 40px; margin-top: 0px;">
+                    <img alt="" src="/resources/images/welcome-image-small.png" />
+                </div>
+                <div style="clear: both;">
+                </div>
+            </div>
+            <div id="loginDiv" style="margin-left: 44px; margin-top: 4px; cursor: pointer; color: #ffffff;">
+                <div style="margin-bottom: 20px;">
+
+                </div>
+                <div style="float: left;">
+                    <a href="/Home/Authorize?loginType=Facebook">
+                        <img alt="" title="Login with your Facebook account" src="/resources/images/auth/facebook-icon72.png" />
+                    </a>
+                </div>
+                <div style="float: left; margin-left: 60px;">
+                    <a href="/Home/Authorize?loginType=Twitter">
+                        <img alt="" title="Login with your Twitter account" src="/resources/images/auth/twitter-icon72.png" />
+                    </a>
+                </div>
+                <div style="float: left; margin-left: 60px;">
+                    <a href="/Home/Authorize?loginType=google">
+                        <img alt="" title="Login with your google+ account" src="/resources/images/auth/google-plus-icon72.png" />
+                    </a>
+                </div>
+                <div style="clear: both;"></div>
+                <div style="width: 500px; text-align: justify;">
+                    Once the log in process is complete you will automatically be redirected to the Investment Manager start screen, and you can start playing.
+                </div>
+                <div style="font-size: 9pt; margin-top: 28px; width: 500px; text-align: justify;">
+                    If this is the first time you are logging on to InvestmentManager you will be asked to allow InvestmentManager to access some of the basic information in your preferred account. This is information like your full name and your friends list. We require these information only to improve your gaming experience while using InvestmentManager. Have fun!
+                </div>
+            </div>
+        </div>
+        <div id="stockMarketWidget" class="widget">
+            <div class="bodyTopSection" style="position:relative;">
+                <img id="assetCategoryImg" style="position: absolute; top: 6px; left: 8px;" alt="unknown" src="/resources/images/stock-market-icon128.png" />
+                <div style="position: absolute; left: 148px; top: 38px; font-size: 26pt; text-shadow: 2px 2px #1c1c1c;">Stock Market</div>
+            </div>
+            <div id="assetCategories" style="margin-left: 46px; margin-top: 12px;"></div>
+            
+            <!-- Templates -->
+            <div id="assetCategoryTemplate" class="assetCategory" data-asset-category-id="" data-asset-category-title="">
+                <div style="margin-left: 34px; margin-top: 10px;">
+                    <img class="assetCategoryIcon" alt="" src="/resources/images/categories/unknown-icon128.png" />
+                </div>
+                <div class="assetCategoryTitle" style="width: 198px; text-align: center;">
+                </div>
+            </div>
+            <!-- End Templates -->
+            
+            <input id="portfolioId" type="hidden" value="@ViewData["PortfolioId"]" />
+        </div>
+        <!--SPECIFIC WIDGET END -->
+
+        <footer>
+            <div id="footer">
+                <div id="miHome" class="toolbarButton" style="left: 10px;">
+                    <img title="Home" style="width: 60px; height: 60px;" alt="" src="/resources/images/home-icon72.png" />
+                    <div style="position: absolute; left: 12px;" class="normalCaption">Home</div>
+                </div>
+                <div id="miShowStockMarket" class="toolbarButton authorized" style="left: 110px;">
+                    <img title="Stock market" style="width: 60px; height: 60px;" alt="" src="/resources/images/stock-market-icon72.png" />
+                    <div style="position: absolute; left: 8px;" class="normalCaption">Stocks</div>
+                </div>
+                <div id="miShowToDo" class="toolbarButton authorized" style="left: 210px;">
+                    <img style="width: 60px; height: 60px;" title="To Do List" alt="" src="/resources/images/clipboard-icon72.png" />
+                    <div style="position: absolute; left: 10px;" class="normalCaption">To Do</div>
+                </div>
+                <div id="miShowPortfolios" class="toolbarButton authorized" style="left: 310px;">
+                    <img title="Portfolios" style="width: 60px; height: 60px;" alt="" src="/resources/images/Pie-Chart-icon72.png" />
+                    <div style="position: absolute; left: -4px;" class="normalCaption">Portfolios</div>
+                </div>
+                <div id="miShowTournaments" class="toolbarButton authorized" style="left: 424px;">
+                    <img title="Tournaments" style="width: 60px; height: 60px;" alt="" src="/resources/images/Trophy-Gold-icon72.png" />
+                    <div style="position: absolute; left: -20px;" class="normalCaption">Tournaments</div>
+                </div>
+                <div class="toolbarButton" style="left: 510px;">
+                    <img title="Help" alt="" src="/resources/images/help-icon72.png" />
+                </div>
+                <div class="toolbarButton" style="left: 610px;top:30px;">
+                    <div class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="true" data-use-continue-as="false"></div>
+                </div>
+                <div style="position: absolute; bottom: 8px; right: 8px; font-size: 10pt; font-family: Consolas;">&copy; 2017 - Stelinno</div>
+            </div>            
+        </footer>
+    </div>    
+
+    <!-- Dialogs -->
+    <div id="generalDialog"></div>
+    <div id="buySellDialog" style="display:none; position:relative">
+        <img class="assetIcon" alt="Category" style="position:absolute;top:4px;left:4px; width: 72px; height: 72px;" src="/resources/images/categories/unknown-icon128.png" />
+        <div class="assetTitle" style="position:absolute;top:8px;left:94px; font-weight: bold;">Title</div>
+        <div class="assetSymbol" style="position:absolute;top:28px;left:94px;">Symbol</div>
+        <div id="buySellControlGroup" style="position:absolute;top:90px;left:8px;">
+            <label style="" for="btnBuySellDlgBuy">Buy</label><input type="radio" id="btnBuySellDlgBuy" name="buySellRG" style="width: 120px;" />
+            <label style="" for="btnBuySellDlgSell">Sell</label><input type="radio" id="btnBuySellDlgSell" name="buySellRG" />
+        </div>
+        <div id="nowToDoControlGroup" style="position:absolute;top:90px;left:154px;">
+            <label style="" for="btnBuySellDlgNow">Now</label><input type="radio" id="btnBuySellDlgNow" name="nowToDoRG" />
+            <label style="" for="btnBuySellDlgToDo">ToDo</label><input type="radio" id="btnBuySellDlgToDo" name="nowToDoRG" />
+        </div>
+        <div style="position:absolute;top:138px;left:10px;">Quantity</div>
+        <input id="tbQuantity" type="text" style="position:absolute;top:138px;left:84px; width: 120px; text-align: right;" value="1" />      
+        <div style="position:absolute;top:166px;left:10px;">Quote</div>
+        <input id="tbQuote" type="text" style="position:absolute;top:166px;left:84px; width:120px; text-align: right;" readonly="readonly" placeholder="0.00" />        
+        <div class="bottomArea">
+            <div class="beforeConfirm">
+                <div id="btnConfirmBuySell" style="position:absolute;top:210px;left:8px;">Confirm</div>
+                <div id="btnCancelBuySell" style="position:absolute;top:210px;left:94px;">Cancel</div>
+            </div>
+            <div class="afterConfirm">
+                <div id="btnOk" style="position:absolute;top:210px;left:8px; width: 100px; height: 30px;">
+                    <div style="position:absolute;top:4px;left:26px;">Done</div>
+                    <img style="position:absolute;top:6px;left:70px;width: 16px; height: 16px;" src="/resources/images/Actions-dialog-ok-apply-icon32.png" alt="" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Dialogs -->        
+</body>
+</html>

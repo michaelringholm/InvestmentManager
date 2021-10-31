@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <AWSProjectType>Lambda</AWSProjectType>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.Core" Version="1.2.0"/>
+    <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.1.0"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.14"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Services\Services.csproj"/>
+    <ProjectReference Include="..\DataEntities\DataEntities.csproj"/>
+    <ProjectReference Include="..\Models\Models.csproj"/>
+  </ItemGroup>
+</Project>
