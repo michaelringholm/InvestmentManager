@@ -7,10 +7,11 @@ import { Duration, Tag, Tags } from '@aws-cdk/core';
 import { IRole, ManagedPolicy, Policy, PolicyStatement, Role, ServicePrincipal } from '@aws-cdk/aws-iam';
 import { AdjustmentType, ScalingProcess, StepScalingAction } from '@aws-cdk/aws-autoscaling';
 
-export class AWSAutoScalingDemoStack extends Core.Stack {
+export class OMInvestNetworkStack extends Core.Stack {
+  public vpc: EC2.IVpc;
   constructor(scope: Core.Construct, id: string, props?: Core.StackProps) {
     super(scope, id, props);
-    var vpc = this.defineVPC();
+    this.vpc = this.defineVPC();
   }
 
   private defineInstanceType():InstanceType {

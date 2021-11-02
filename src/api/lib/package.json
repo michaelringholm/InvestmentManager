@@ -1,0 +1,9 @@
+{
+    "name": "om-invest-lib",
+    "displayName": "OM Invest Lib",
+    "main": "export.js",
+    "version": "0.1.0",
+    "dependencies": {
+        "aws-sdk": "^2.815.0"
+    }
+}

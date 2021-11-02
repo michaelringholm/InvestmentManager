@@ -2,3 +2,4 @@
 *.pdb
 bin
 obj
+node_modules

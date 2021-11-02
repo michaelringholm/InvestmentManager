@@ -15,7 +15,15 @@ export class OMInvestWebStack extends Core.Stack {
     super(scope, id, props);
     var bucket = this.defineWebBucket();
     var cdn = this.defineCDN(bucket);
+    //this.defineAssets(bucket);
     this.defineDeployment(bucket, cdn);
+  }
+
+  private defineAssets(bucket: IBucket) {
+    // Source.asset('../../src/static/')
+    /*const fileAsset = new Asset(this, 'SampleSingleFileAsset', {
+      path: ""//path.join(__dirname, 'file-asset.txt')
+    });*/
   }
 
   private defineDeployment(bucket: IBucket, cdn: CloudFront.IDistribution) {

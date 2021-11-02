@@ -6,7 +6,7 @@ var stockMarket = new StockMarket();
 
 function StockMarket() {
     var _this = this;
-    var StockMarketGetAssetCategoriesURL = "https://dwqk72nn5j.execute-api.eu-north-1.amazonaws.com/DEV/IMStockMarketAPI";
+    var StockMarketGetAssetCategoriesURL = "/DEV/IMStockMarketAPI";
     //var StockMarketGetAssetCategoriesURL = "https://su1v0cvbs9.execute-api.eu-north-1.amazonaws.com/DEV/IMStockMarketAPI";
     
 
@@ -50,7 +50,7 @@ function StockMarket() {
 
         $.ajax({
             type: "POST",
-            url: StockMarketGetAssetCategoriesURL, //"/Portfolio/ShowInstrumentCategories",
+            url: home.apiRoot+StockMarketGetAssetCategoriesURL, //"/Portfolio/ShowInstrumentCategories",
             /*headers: {
                 'X-Auth-Provider': authModel.authProvider,
                 'X-Auth-UserId': authModel.fbUserId,

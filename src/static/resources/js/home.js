@@ -22,6 +22,10 @@ function Home() {
         $(".widget").hide();
         $("#welcomeWidget").show();
     };
+
+    this.apiRoot = function() {
+        return "https://dwqk72nn5j.execute-api.eu-north-1.amazonaws.com";
+    };
 }
 
 function ShowLoginPage() {

@@ -1,0 +1,19 @@
+var Logger = require("./common/Logger.js");
+var AppContext = require("./common/AppContext.js");
+var FieldVerifier = require("./common/field-verifier.js");
+var HttpController = require("./common/HttpController.js");
+const LoginDTO = require('./login/LoginDTO.js');
+const LoginDAO = require('./login/LoginDAO.js');
+const AssetCategoryDTO = require('./asset/AssetCategoryDTO.js');
+const AssetCategoryDAO = require('./asset/AssetCategoryDAO.js');
+const CONSTS = require('./common/Constants.js');
+
+module.exports.AppContext = AppContext;
+module.exports.FieldVerifier = FieldVerifier;
+module.exports.HttpController = HttpController;
+module.exports.Logger = Logger;
+module.exports.CONSTS = CONSTS;
+module.exports.AssetCategoryDAO = AssetCategoryDAO;
+module.exports.AssetCategoryDTO = AssetCategoryDTO;
+module.exports.LoginDAO = LoginDAO;
+module.exports.LoginDTO = LoginDTO;
