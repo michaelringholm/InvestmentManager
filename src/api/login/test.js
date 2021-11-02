@@ -3,11 +3,13 @@ var handler = require("./index.js");
 
 
 console.log("Started...");
+if(!process.env["demoUserName"] || !process.env["demoPassword"]) { console.error("Please initialize your environment by setting the env variables [demoUserName] and [demoPassword]."); return; }
+
 data = { }
 
 var body = {
-    userName: "demo-mike",
-    password: "test"
+    userName: process.env["demoUserName"],
+    password: process.env["demoPassword"]
 };
 
 var request = { 
