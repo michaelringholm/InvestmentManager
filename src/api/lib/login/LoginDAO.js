@@ -29,7 +29,7 @@ function LoginDAO() {
 			}
 		},
 		(err, loginItems) => {
-			if(err) { callback(err, null); return; }			
+			if(err) { callback("DYNAMODB-ERR:"+err, null); return; }			
 			logger.logInfo("Got these data via statement:");
 			logger.logInfo(JSON.stringify(loginItems));
 			var loginDTO = AWS.DynamoDB.Converter.unmarshall(loginItems.Items[0]); // Seems only new fields are in Dynamo format

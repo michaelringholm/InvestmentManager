@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "aws-sdk": "^2.815.0",
+    "om-invest-lib": "file://../lib",
+    "uuid": "^8.3.2"
+  }
+}
