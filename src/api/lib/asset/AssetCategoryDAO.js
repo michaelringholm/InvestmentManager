@@ -68,29 +68,25 @@ function AssetCategoryDAO() {
 		return heroDTO;
 	}	
 	
-	var saveToDBAsync = async function(userGuid, heroDTO) {
+	var saveToDBAsync = async function(assetCategoryGuid, assetCategoryDTO) {
 		Logger.logInfo("AssetCategoryDAO.saveToDBAsync()");
-		if(!userGuid) { Logger.logError("Missing field [userGuid]."); throw new Error("Missing field [userGuid]."); }
-		var missingFields = new FV.FieldVerifier().Verify(heroDTO, ["heroName","heroClass"]); if(missingFields.length > 0) { throw new Error("Missing fields:" + JSON.stringify(missingFields)); }
+		if(!assetCategoryGuid) { Logger.logError("Missing field [assetCategoryGuid]."); throw new Error("Missing field [assetCategoryGuid]."); }
 		var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 		var params = {
-			TableName: appContext.HERO_TABLE_NAME,
+			TableName: appContext.ASSET_CATEGORY_TABLE_NAME,
 			Item: {
-			  'userGuid': {S: userGuid},
-			  'heroName': {S: heroDTO.heroName},
-			  'heroClass': {S: heroDTO.heroClass},
-			  'gender': {S: heroDTO.gender}
+			  'assetCategoryGuid': {S: assetCategoryGuid},
+			  'assetCategoryName': {S: assetCategoryDTO.assetCategoryName}
 			},
 			ReturnConsumedCapacity: "TOTAL", 
-			//ProjectionExpression: 'ATTRIBUTE_NAME'
 		};    
 		return new Promise((resolve, reject) => {
-			ddb.putItem(params, function(err, newHeroData) {
+			ddb.putItem(params, function(err, newAssetCategoryData) {
 				if (err) { Logger.logInfo(err); reject(err); return; }
 				else {       
-					var newHeroItem = AWS.DynamoDB.Converter.unmarshall(newHeroData); // Seems only new fields are in Dynamo format
-					var heroDTO = new HeroDTO(newHeroItem);
-					resolve(heroDTO);
+					var newAssetCategoryItem = AWS.DynamoDB.Converter.unmarshall(newAssetCategoryData); // Seems only new fields are in Dynamo format
+					var assetCategoryDTO = new AssetCategoryDTO(newAssetCategoryItem);
+					resolve(assetCategoryDTO);
 				}
 			});   
 		}); 
@@ -164,11 +160,10 @@ function AssetCategoryDAO() {
 		);
 	};
 
-	var getFromDBAsync = async function(userGuid, heroName) {
+	var getFromDBAsync = async function(assetCategoryGuid, assetCategoryName) {
 		Logger.logInfo("AssetCategoryDAO.getFromDBAsync()");
-		if(!userGuid) { Logger.logError("Missing field [userGuid]."); callback("Missing field [userGuid].", null); return; }
-		if(!heroName) { Logger.logError("Missing field [heroName]."); callback("Missing field [heroName].", null); return; }
-		//AWS.config.update({region: 'eu-central-1'});
+		if(!assetCategoryGuid) { Logger.logError("Missing field [assetCategoryGuid]."); callback("Missing field [assetCategoryGuid].", null); return; }
+		if(!assetCategoryName) { Logger.logError("Missing field [assetCategoryName]."); callback("Missing field [assetCategoryName].", null); return; }
 		var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 		Logger.logInfo("Calling AssetCategoryDAO.get() via statement...");
 		
@@ -176,19 +171,18 @@ function AssetCategoryDAO() {
 			ddb.query(
 				{
 					TableName: appContext.HERO_TABLE_NAME,
-					KeyConditionExpression: "userGuid = :userGuid and heroName = :heroName", // "userGuid = :userGuid and heroName = :heroName",
+					KeyConditionExpression: "assetCategoryGuid = :assetCategoryGuid and assetCategoryName = :assetCategoryName",
 					ExpressionAttributeValues: {
-						":userGuid": {S: userGuid},
-						":heroName": {S: heroName},            
+						":assetCategoryGuid": {S: assetCategoryGuid},
+						":assetCategoryName": {S: assetCategoryName},            
 					}
 				},
-				(err, heroData) => {
+				(err, assetCategoryData) => {
 					if(err) reject(err);
 					Logger.logInfo("Got these data via statement:");
-					Logger.logInfo(JSON.stringify(heroData));
-					var heroItem = AWS.DynamoDB.Converter.unmarshall(heroData.Items[0]); // Seems only new fields are in Dynamo format
-					Logger.logInfo("Hero [" + userGuid + "#" + heroName + "] loaded from DB!");					
-					resolve(heroItem);
+					Logger.logInfo(JSON.stringify(assetCategoryData));
+					var assetCategoryItem = AWS.DynamoDB.Converter.unmarshall(assetCategoryData.Items[0]);
+					resolve(assetCategoryItem);
 				}
 			);
 		});

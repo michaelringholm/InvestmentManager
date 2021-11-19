@@ -49,10 +49,10 @@ export class OMInvestWebStack extends Core.Stack {
         },      
         behaviors : [ {isDefaultBehavior: true}],        
       }],
-      /*viewerCertificate:  {        
+      viewerCertificate:  {        
         aliases: ["om-invest.sundgaar.people.aws.dev"],
-        props: {acmCertificateArn:usethevariable,minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_1_2016,sslSupportMethod:SSLMethod.SNI}
-      }*/
+        props: {acmCertificateArn:"arn:aws:acm:us-east-1:299199322523:certificate/380cde9f-72b9-48f6-9799-ff82118c76b0", minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_1_2016,sslSupportMethod:SSLMethod.SNI}
+      }
     });
             
     Tags.of(distribution).add(MetaData.NAME, MetaData.PREFIX+"cdn");
