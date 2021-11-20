@@ -5,6 +5,7 @@
     function Util() {
         var _this = this;
         var fnBuySellSuccessCallback = null;
+        this.GetLatestQuoteURL = "https://uv4gwr7k75.execute-api.eu-north-1.amazonaws.com/get-latest-quote-fn";
 
         this.construct = function () {
             console.log("Util construct called!");
@@ -127,19 +128,27 @@
 
         this.setLatestQuote = function (isin) {
             var authModel = new LoginHelper().getAuthModel();
-            var model = { isin: isin };
+            var model = { accessToken:"123", isin: isin };
 
             $.ajax({
                 type: "POST",
-                url: "/Asset/LatestQuote",
-                headers: {
+                url: this.GetLatestQuoteURL,
+                //url: home.apiRoot+StockMarketGetAssetCategoriesURL, //"/Portfolio/ShowInstrumentCategories",
+                /*headers: {
                     'X-Auth-Provider': authModel.authProvider,
                     'X-Auth-UserId': authModel.fbUserId,
                     'X-Auth-Token': authModel.investAuthToken
-                },
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(model),
+                },*/
+                origin: "http://localhost",
+                crossDomain: true,
+                xhrFields: {
+                    'withCredentials': false // tell the client to send the cookies if any for the requested domain
+                    },
+                contentType: "application/json",
+                dataType: "json",
+                cache: false,
+                //data: JSON.stringify(authModel),
+                data:JSON.stringify(model),
                 beforeSend: function () { $("#buySellDialog .bottomArea").hide(); $("#tbQuote").val("UPDATING...."); },
                 complete: function () { },
                 success: function (result) {
