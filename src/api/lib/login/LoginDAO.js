@@ -7,8 +7,8 @@ const UUID = require('uuid');
 
 function LoginDAO() {
 	var _this = this;
-	if(AWS.config.region == null) AWS.config.update({region: appContext.DEFAULT_REGION});
-	
+	if(AWS.config.region == null) AWS.config.update({region: appContext.DEFAULT_REGION});	
+		
 	this.exists = function(heroId) {
 		logger.logInfo("LoginDAO.exists");
 		throw "Not implemented";
@@ -16,11 +16,15 @@ function LoginDAO() {
 	
 	this.get = function(userName, callback) {
 		logger.logInfo("LoginDAO.get()...");
+		new AWS.STS().getCallerIdentity({}, function(err, data) {
+			if (err) { console.log("Error", err);} 
+			else { logger.logInfo("Account="+JSON.stringify(data.Account)); }
+		});
+	
 		if(!userName) { logger.logError("Missing field [userName]."); callback("Missing field [userName].", null); return; }
 		//AWS.config.update({region: 'eu-central-1'});
 		var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
-		logger.logInfo("Calling LoginDAO.get() via statement...");
-		
+		logger.logInfo("Calling LoginDAO.get() via statement...");		
 		ddb.query({
 			TableName: appContext.LOGIN_TABLE_NAME,
 			KeyConditionExpression: "userName = :userName",

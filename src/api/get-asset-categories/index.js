@@ -18,7 +18,9 @@ exports.handler = async function(event, context, callback) {
     var requestInput = JSON.parse(event.body);
     try {
         if(!requestInput.accessToken) throw new Error("Access token missing!");
-        var loginDTO = await LoginDAO.getByTokenAsync(requestInput.accessToken);
+        //var loginDTO = await LoginDAO.getByTokenAsync(requestInput.accessToken);
+        //Logger.logInfo("loginDTO="+JSON.stringify(loginDTO));
+        var assetCategories = await AssetCategoryDAO.getAllAsync();
         /*var heroDTO = await HeroDAO.getAsync(loginDTO.userGuid, loginDTO.activeHeroName);
         heroDTO.heroKey = loginDTO.userGuid+"#"+heroDTO.heroName;
         var battleDTO = await BattleDAO.loadAsync(heroDTO.heroKey);        
@@ -27,7 +29,7 @@ exports.handler = async function(event, context, callback) {
         var mapDTO = await MapCache.getMapAsync(heroDTO.currentMapKey);
         var map = new MidgaardMainMap(mapDTO);
         var location = map.getLocation(heroDTO.currentCoordinates);*/
-        HttpController.respondOK(origin, {hero:battleDTO.hero,battle:battleDTO,map:map,location:location}, callback);
+        HttpController.respondOK(origin, {assetCategories:assetCategories}, callback);
     }
     catch(ex) { Logger.logError(ex.stack); HttpController.respondError(origin, 500, ex.toString(), callback); return }    
 };

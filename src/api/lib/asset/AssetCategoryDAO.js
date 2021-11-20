@@ -7,29 +7,28 @@ var CONSTS = require('../common/Constants.js');
 
 function AssetCategoryDAO() {
 	var _this = this;
-	var bucketName = appContext.PREFIX+"s3-asset";
+	var bucketName = appContext.PREFIX+"asset-s3";
 	this.s3 = new AWS.S3();
 	if(AWS.config.region == null) AWS.config.update({region: 'eu-north-1'});
 	
-	this.exists = function(fileName, callback) {
-		Logger.logInfo("AssetCategoryDAO.exists");
-		_this.s3.listObjectsV2(
-			{
-				Bucket: bucketName,
-				Prefix: fileName
-			}, 
-			(err, s3Objects) => 
-			{
-				if (err) { Logger.logError("exists:"+err, err.stack); callback(err, false); return; }				
-				Logger.logInfo("Objects in bucket are [" + JSON.stringify(s3Objects) + "]");
-				if(s3Objects.KeyCount<1) { callback(null, false); return; }
-				for(var i=0; i<s3Objects.Contents.length;i++) {					
-					if(s3Objects.Contents[i].Key == fileName) { callback(null, true); return; }
-				}
-				callback(null, s3Objects.KeyCount==1);
-				return;
-			}
-		);
+	this.getAllAsync = async function() {
+		Logger.logInfo("AssetCategoryDAO.getAll");
+		var fileName = "asset-categories.json";
+		var exists = this.existsAsync(fileName);
+		if (!exists) throw new Error("File [" + fileName + "] does not exist!", null);
+
+		var params = {
+			Bucket: bucketName, 
+			Key: fileName
+		};
+		return new Promise((resolve, reject) => {
+			_this.s3.getObject(params, function(err, s3Object) {
+				if (err) { Logger.logError(err, err.stack); reject(err); }
+				Logger.logInfo("Data=" + JSON.stringify(s3Object.Body.toString()));
+				var data = JSON.parse(s3Object.Body.toString());
+				resolve(data);
+			});		
+		});
 	};
 
 	this.existsAsync = async function(fileName) {
@@ -52,6 +51,27 @@ function AssetCategoryDAO() {
 				}
 			);
 		});
+	};
+
+	/*this.exists = function(fileName, callback) {
+		Logger.logInfo("AssetCategoryDAO.exists");
+		_this.s3.listObjectsV2(
+			{
+				Bucket: bucketName,
+				Prefix: fileName
+			}, 
+			(err, s3Objects) => 
+			{
+				if (err) { Logger.logError("exists:"+err, err.stack); callback(err, false); return; }				
+				Logger.logInfo("Objects in bucket are [" + JSON.stringify(s3Objects) + "]");
+				if(s3Objects.KeyCount<1) { callback(null, false); return; }
+				for(var i=0; i<s3Objects.Contents.length;i++) {					
+					if(s3Objects.Contents[i].Key == fileName) { callback(null, true); return; }
+				}
+				callback(null, s3Objects.KeyCount==1);
+				return;
+			}
+		);
 	};
 
 	this.saveAsync = async function(userGuid, heroDTO) {
@@ -298,36 +318,7 @@ function AssetCategoryDAO() {
 		}
 		else
 			Logger.error("hero was null, not saving!");
-	};
-
-	this.getAll = function(userGuid, callback) {
-		Logger.logInfo("AssetCategoryDAO.getAll()");
-		if(!userGuid) { Logger.logError("Missing field [userGuid]."); callback("Missing field [userGuid].", null); return; }
-		//AWS.config.update({region: 'eu-central-1'});
-		var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
-		Logger.logInfo("Calling AssetCategoryDAO.getAll() via query...");
-		
-		// https://docs.amazonaws.cn/en_us/sdk-for-javascript/v2/developer-guide/dynamodb-example-query-scan.html
-		// https://www.fernandomc.com/posts/eight-examples-of-fetching-data-from-dynamodb-with-node/
-		ddb.query({
-			TableName: appContext.HERO_TABLE_NAME,
-			KeyConditionExpression: "userGuid = :userGuid",
-			ExpressionAttributeValues: {
-				":userGuid": {S: userGuid}
-			}
-		},
-		(err, heroItemsDDB) => {
-			if(err) { callback(err, null); return; }
-			Logger.logInfo("Got these heroes:");			
-			var heroItems = [];
-			for(var i=0;i<heroItemsDDB.Items.length;i++) {
-				var heroItem = AWS.DynamoDB.Converter.unmarshall(heroItemsDDB.Items[i]); 
-				heroItems.push(new HeroDTO(heroItem));
-			}
-			Logger.logInfo("heroItems="+JSON.stringify(heroItems));
-			callback(null, heroItems);
-		})
-	}	
+	};*/	
 	
 	this.construct = function() {
 		Logger.logInfo("AssetCategoryDAO.construct");

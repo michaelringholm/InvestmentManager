@@ -35,16 +35,20 @@ exports.handler = function(event, context, callback) {
                     LoginDAO.updateToken(loginDTO, function(err, updatedLoginDTO) {
                         if (err) { Logger.logError(err); respondError(origin, 500, err, callback); }
                         else {
-                            AssetCategoryDAO.getAll(loginDTO.userGuid, function(err, heroDTOs) {
+                            var responseData = { };
+                            responseData.accessToken = updatedLoginDTO.accessToken;
+                            responseData.userGuid = updatedLoginDTO.userGuid;
+                            respondOK(origin, responseData, callback);
+                            /*AssetCategoryDAO.getAll(loginDTO.userGuid, function(err, assetCategoryDTOs) {
                                 if (err) { Logger.logInfo(err); respondError(origin, 500, err, callback); }
-                                var responseData = { heroes: heroDTOs };
+                                var responseData = { assetCategories: assetCategoryDTOs };
                                 Logger.logInfo("Received this data from AssetCategoryDAO.getAll():");
-                                Logger.logInfo(JSON.stringify(heroDTOs));
+                                Logger.logInfo(JSON.stringify(assetCategoryDTOs));
                                 responseData.maxTurns = MAX_TURNS;
                                 responseData.accessToken = updatedLoginDTO.accessToken;
                                 responseData.userGuid = updatedLoginDTO.userGuid;
                                 respondOK(origin, responseData, callback);
-                            });
+                            });*/
                         }
                     });
                 }

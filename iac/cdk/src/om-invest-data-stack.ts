@@ -2,18 +2,19 @@ import * as Core from '@aws-cdk/core';
 import EC2 = require('@aws-cdk/aws-ec2');
 import S3 = require('@aws-cdk/aws-s3');
 import { IRole } from "@aws-cdk/aws-iam";
-import { IVpc } from '@aws-cdk/aws-ec2';
 import { AttributeType, BillingMode, Table } from '@aws-cdk/aws-dynamodb';
 import { MetaData } from './meta-data';
 import { Bucket } from '@aws-cdk/aws-s3';
-import { Tags } from '@aws-cdk/core';
+import { Asset } from '@aws-cdk/aws-s3-assets';
+import { BucketDeployment, Source } from '@aws-cdk/aws-s3-deployment';
 
 export class OMInvestDataStack extends Core.Stack {
     private apiRole:IRole;
-    constructor(scope: Core.Construct, id: string, props?: Core.StackProps) {
+    constructor(scope: Core.Construct, id: string, apiRole:IRole, props?: Core.StackProps) {
         super(scope, id, props);
-        //this.apiRole = apiRole;
+        this.apiRole = apiRole;
         this.createLoginTable();
+        this.createAssetBucket();
         /*this.createHeroTable();
         this.createBattleBucket();
         this.createHeroBucket();
@@ -65,4 +66,17 @@ export class OMInvestDataStack extends Core.Stack {
             partitionKey: {name: "userName", type: AttributeType.STRING}            
         });
     }
+
+    private createAssetBucket() {
+        var name = MetaData.PREFIX+"asset-s3";
+        var bucket = new Bucket(this, name, {
+            bucketName: name,
+        });
+        bucket.grantReadWrite(this.apiRole);
+        new BucketDeployment(this, MetaData.PREFIX+"asset-categories-data-file", {
+            sources: [Source.asset("../../data/asset/")],
+            destinationBucket: bucket,
+        });
+        Core.Tags.of(bucket).add(MetaData.NAME, name);
+    }  
 }

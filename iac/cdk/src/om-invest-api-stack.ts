@@ -10,13 +10,14 @@ import { IRole } from '@aws-cdk/aws-iam';
 import { IVpc } from '@aws-cdk/aws-ec2';
 
 export class OMInvestAPIStack extends Core.Stack {
-  private runtime:Lambda.Runtime = Lambda.Runtime.NODEJS_12_X;   
+  private runtime:Lambda.Runtime = Lambda.Runtime.NODEJS_12_X;
+  public apiRole:IRole; // Expose to grant access to buckets and DB
 
   constructor(scope: Core.Construct, id: string, vpc: IVpc, props?: Core.StackProps) {
     super(scope, id, props);
-    var apiRole = this.buildAPIRole();
+    this.apiRole = this.buildAPIRole();
     var apiSecurityGroup = this.createAPISecurityGroup(vpc);
-    this.createLoginFunction(apiRole, apiSecurityGroup, vpc);
+    this.createLoginFunction(this.apiRole, apiSecurityGroup, vpc);
   }
 
   private createAPISecurityGroup(vpc: IVpc): EC2.ISecurityGroup {

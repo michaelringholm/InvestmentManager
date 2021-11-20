@@ -15,9 +15,9 @@ logDebug("Using account="+process.env["CDK_DEFAULT_ACCOUNT"]);
 logDebug("Using region="+region);
 const app = new CDK.App();
 var networkStack = new OMInvestNetworkStack(app, MetaData.PREFIX+'network-stack', props);
-new OMInvestAPIStack(app, MetaData.PREFIX+'api-stack', networkStack.vpc, props);
+var apiStack = new OMInvestAPIStack(app, MetaData.PREFIX+'api-stack', networkStack.vpc, props);
 new OMInvestWebStack(app, MetaData.PREFIX+'web-stack', props);
-new OMInvestDataStack(app, MetaData.PREFIX+'data-stack', props);
+new OMInvestDataStack(app, MetaData.PREFIX+'data-stack', apiStack.apiRole, props);
 
 function logDebug(msg:String) {
     console.debug(msg);

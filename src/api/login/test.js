@@ -22,6 +22,9 @@ var request = {
 handler.handler(request, null, (err,response) => {
     if(err) console.error(err);
     console.log(response);
+    var responseBody = JSON.parse(response.body);
+    process.env["accessToken"]=responseBody.data.accessToken;
+    console.log("export accessToken="+responseBody.data.accessToken);
     console.log("Done.");
 });
 //new COM().Logger.warn("This is a warning!");
