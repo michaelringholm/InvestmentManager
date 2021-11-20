@@ -1,10 +1,22 @@
 [
     {
-        "AssetCategoryTitle":"Energy",
-        "PortfolioId":"1"
+        "title":"Energy",
+        "id":"1"
     },
     {
-        "AssetCategoryTitle":"Finance",
-        "PortfolioId":"2"
+        "title":"Finance",
+        "id":"2"
+    },
+    {
+        "title":"Shipping",
+        "id":"3"
+    },
+    {
+        "title":"Technology",
+        "id":"4"
+    },
+    {
+        "title":"Medical",
+        "id":"5"
     }
 ]

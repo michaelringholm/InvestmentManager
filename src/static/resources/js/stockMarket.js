@@ -6,8 +6,8 @@ var stockMarket = new StockMarket();
 
 function StockMarket() {
     var _this = this;
-    var StockMarketGetAssetCategoriesURL = "/DEV/IMStockMarketAPI";
-    //var StockMarketGetAssetCategoriesURL = "https://su1v0cvbs9.execute-api.eu-north-1.amazonaws.com/DEV/IMStockMarketAPI";
+    //var StockMarketGetAssetCategoriesURL = "/DEV/IMStockMarketAPI";
+    var StockMarketGetAssetCategoriesURL = "https://91o5npn4ql.execute-api.eu-north-1.amazonaws.com/get-asset-categories-fn";
     
 
     this.show = function() {
@@ -50,7 +50,8 @@ function StockMarket() {
 
         $.ajax({
             type: "POST",
-            url: home.apiRoot+StockMarketGetAssetCategoriesURL, //"/Portfolio/ShowInstrumentCategories",
+            url: StockMarketGetAssetCategoriesURL,
+            //url: home.apiRoot+StockMarketGetAssetCategoriesURL, //"/Portfolio/ShowInstrumentCategories",
             /*headers: {
                 'X-Auth-Provider': authModel.authProvider,
                 'X-Auth-UserId': authModel.fbUserId,
@@ -65,25 +66,32 @@ function StockMarket() {
             dataType: "json",
             cache: false,
             //data: JSON.stringify(authModel),
+            data:JSON.stringify({accessToken:"123"}),
             beforeSend: function () { ShowAjaxLoader();},
             complete: function () { HideAjaxLoader(); },
-            success: function (result) {
+            success: function (response) {
                 //$("#div1").html(result);
                 //SetSubTitle("Categories");
-                var assetCategories = result.assetCategories;
-                for (var assetCategoryIndex = 0; assetCategoryIndex < assetCategories.length; assetCategoryIndex++) {
-                    var assetCategory = assetCategories[assetCategoryIndex];
-                    var assetCategoryWidget = $("#assetCategoryTemplate").clone();
-                    $(assetCategoryWidget).removeAttr("id");
-                    $(assetCategoryWidget).attr("data-asset-category-id", assetCategory.id);
-                    $(assetCategoryWidget).attr("data-asset-category-title", assetCategory.title);
-                    $(assetCategoryWidget).find(".assetCategoryTitle").text(assetCategory.title);
-                    $(assetCategoryWidget).find(".assetCategoryIcon").attr("src", _this.titleToImgSrc(assetCategory.title));
-                    $(assetCategoryWidget).show();
-                    assetCategoryWidget.appendTo("#assetCategories");
-                }
+                try {
+                    $("#assetCategories").empty();
+                    var assetCategories = response.data.assetCategories;                   
+                    for (var assetCategoryIndex = 0; assetCategoryIndex < assetCategories.length; assetCategoryIndex++) {
+                        var assetCategory = assetCategories[assetCategoryIndex];
+                        var assetCategoryWidget = $("#assetCategoryTemplate").clone();
+                        $(assetCategoryWidget).removeAttr("id");
+                        $(assetCategoryWidget).attr("data-asset-category-id", assetCategory.id);
+                        $(assetCategoryWidget).attr("data-asset-category-title", assetCategory.title);
+                        $(assetCategoryWidget).find(".assetCategoryTitle").text(assetCategory.title);
+                        $(assetCategoryWidget).find(".assetCategoryIcon").attr("src", _this.titleToImgSrc(assetCategory.title));
+                        $(assetCategoryWidget).show();
+                        assetCategoryWidget.appendTo("#assetCategories");
+                    }
 
-                $(".assetCategory").click(function () { ShowAssetCategory($(this).attr("data-asset-category-title")); });
+                    $(".assetCategory").click(function () { ShowAssetCategory($(this).attr("data-asset-category-title")); });
+                }
+                catch(ex) { 
+                    ShowError(ex);
+                }
             },
             error: function (err1, err2, err3) {
                 ShowError(err1.responseText);
