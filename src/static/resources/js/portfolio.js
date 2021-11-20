@@ -1,9 +1,11 @@
 ﻿$(function () {
-    var portfolioDetails = new PortfolioDetails();
+    
     portfolioDetails.populateDetails();
 });
 
-function PortfolioDetails() {
+var portfolioDetails = new PortfolioDetails();
+
+function PortfolioDetailsController() {
     var _this = this;
     var util = UtilFactory.getInstance();
 

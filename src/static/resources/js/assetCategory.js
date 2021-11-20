@@ -64,8 +64,8 @@ function AssetCategoryController() {
                     }
 
 
-                    $(".asset").dblclick(function () { util.showBuySellDialog(this, "BUY", true, ShowPortfolioSecurityList); });
-                    $(".asset").on("swiperight", function () { util.showBuySellDialog(this, "BUY", true, ShowPortfolioSecurityList); });
+                    $(".asset").dblclick(function () { util.showBuySellDialog(this, "BUY", true, portfolioHeaderController.ShowPortfolioSecurityList); });
+                    $(".asset").on("swiperight", function () { util.showBuySellDialog(this, "BUY", true, portfolioHeaderController.ShowPortfolioSecurityList); });
                     $(".asset").draggable(
                         {
                             cursor: "move",
@@ -83,7 +83,7 @@ function AssetCategoryController() {
                             drop: function (event, ui) {
                                 //BuySecurity(ui.draggable);
                                 $(this).removeClass("dropZoneHover"); $(this).addClass("dropZone"); $(this).stop(true, true); $(this).effect("pulsate", { times: 1 }, 1);
-                                util.showBuySellDialog(ui.draggable, "BUY", true, ShowPortfolioSecurityList);
+                                util.showBuySellDialog(ui.draggable, "BUY", true, portfolioHeaderController.ShowPortfolioSecurityList);
                             }
                         });
                     /*$("#dzSellSecurity").droppable(

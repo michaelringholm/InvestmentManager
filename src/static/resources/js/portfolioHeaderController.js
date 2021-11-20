@@ -1,9 +1,10 @@
-﻿$(function () {
-    var portfolioHeader = new PortfolioHeader();
-    portfolioHeader.populateList();
+﻿$(function () {    
+    //portfolioHeader.populateList();
 });
 
-function PortfolioHeader() {
+var portfolioHeaderController = new PortfolioHeaderController();
+
+function PortfolioHeaderController() {
     var _this = this;
     var util = UtilFactory.getInstance();
     
@@ -72,6 +73,11 @@ function PortfolioHeader() {
             }
         });
     };
+
+    this.ShowPortfolioSecurityList = function (portfolioId) {
+        $(".widget").hide();
+        $("#portfolioHeaderWidget").show();
+    }
 
     this.GetPortfolioSecurityList = function (portfolioId) {
         $.ajax({
