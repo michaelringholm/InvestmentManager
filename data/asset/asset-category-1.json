@@ -1,0 +1,20 @@
+[
+    {
+        "id":"1",
+        "title":"Vestas",
+        "symbol":"VEST",
+        "quote":"100.23",
+        "isin":"VEST33123",
+        "assetCategoryTitle":"Energy",
+        "asset.change":"1.23"
+    },
+    {
+        "id":"2",
+        "title":"Ørsted",
+        "symbol":"COCA",
+        "quote":"560.22",
+        "isin":"ORST444",
+        "assetCategoryTitle":"Energy",
+        "asset.change":"5.23"
+    } 
+]

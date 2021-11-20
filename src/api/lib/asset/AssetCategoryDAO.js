@@ -31,6 +31,26 @@ function AssetCategoryDAO() {
 		});
 	};
 
+	this.getAsync = async function(assetCategoryId) {
+		Logger.logInfo("AssetCategoryDAO.getAsync");
+		var fileName = "asset-category-" + assetCategoryId + ".json";
+		var exists = this.existsAsync(fileName);
+		if (!exists) throw new Error("File [" + fileName + "] does not exist!", null);
+
+		var params = {
+			Bucket: bucketName, 
+			Key: fileName
+		};
+		return new Promise((resolve, reject) => {
+			_this.s3.getObject(params, function(err, s3Object) {
+				if (err) { Logger.logError(err, err.stack); reject(err); }
+				Logger.logInfo("Data=" + JSON.stringify(s3Object.Body.toString()));
+				var heroDTO = JSON.parse(s3Object.Body.toString());
+				resolve(heroDTO);
+			});		
+		});
+	};		
+
 	this.existsAsync = async function(fileName) {
 		Logger.logInfo("AssetCategoryDAO.exists");
 		return new Promise((resolve, reject) => {
