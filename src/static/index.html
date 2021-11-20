@@ -38,12 +38,12 @@
 
     <div class="container body-content">
         <div class="hiddenFields">
-            <input id="login" type="hidden" value="<%=InMaApp.ContextManager.Current.LoginId %>" />
+            <input id="login" type="hidden" value="InMaApp.ContextManager.Current.LoginId" />
             <input id="authenticated" type="hidden" value="false" />
-            <input id="hfPortfolioId" type="hidden" value="@ViewData["PortfolioId"]" />
-            <input id="investAuthToken" type="hidden" value="@ViewData["InvestAuthToken"]" />
-            <input id="authProviderUserId" type="hidden" value="@ViewData["AuthProviderUserId"]" />
-            <input id="authProviderName" type="hidden" value="@ViewData["AuthProviderName"]" />
+            <input id="hfPortfolioId" type="hidden" value="PortfolioId" />
+            <input id="investAuthToken" type="hidden" value="InvestAuthToken" />
+            <input id="authProviderUserId" type="hidden" value="AuthProviderUserId" />
+            <input id="authProviderName" type="hidden" value="AuthProviderName" />
         </div>
         <div id="errorDiv"></div>
         <div id="statusDiv"></div>
@@ -108,6 +108,70 @@
             <!-- End Templates -->
             
             <input id="portfolioId" type="hidden" value="@ViewData["PortfolioId"]" />
+        </div>
+        <div id="assetCategoryWidget" class="widget">
+            <div class="bodyTopSection" style="position:relative;">
+                <img id="assetCategoryImg" style="position: absolute; top: 6px; left: 8px;" alt="unknown" src="/resources/images/categories/unknown-icon128.png" />
+                <div id="assetCategoryTitle" style="position: absolute; left: 148px; top: 38px; font-size: 26pt; text-shadow: 2px 2px #1c1c1c;">Title</div>
+                <div id="dzBuySecurity" class="dropZone" style="position: absolute; right: 0px; height: 116px; width: 180px;">
+                    <div style="position: absolute; left: 0px; top: 4px; font-size: 10pt; font-weight: bold; text-transform: uppercase; text-align: center; width: 180px; font-style: italic;">Drop here to buy</div>
+                </div>
+            </div>
+            <div style="clear: both;">
+            </div>
+            <div style="" class="tableHeader">
+                <div style="float: left; margin-left: 44px; width: 220px;">Title</div>
+                <div style="float: left; margin-left: 40px; width: 140px;">Symbol</div>
+                <div style="float: left; margin-left: 20px; width: 74px; text-align: right;">Quote</div>
+                <div style="float: left; margin-left: 20px; width: 74px; text-align: right;">Change</div>
+                <div style="float: left; margin-left: 20px; width: 74px; text-align: right;">Change %</div>
+            </div>
+            <div style="clear: both;">
+            </div>
+            <div id="assets" style="margin-top: 4px;"></div>
+                <!-- <%foreach (var asset in Model.Assets)
+                {
+                String quote = InMaApp.DisplayHelper.FormatDouble(asset.quote);
+                String assetTitle = asset.title;
+                if (assetTitle != null && assetTitle.Length > 28)
+                assetTitle = assetTitle.Substring(0, 25) + "...";
+            
+                String changePrefix = "";
+                String changeColor = "";
+            
+                if (asset.change == 0)
+                {
+                changePrefix = "";
+                changeColor = "#3482B0";
+                }
+                else if (asset.change > 0)
+                {
+                changePrefix = "+";
+                changeColor = "#4e9b41";
+                }
+                else
+                {
+                changePrefix = "";
+                changeColor = "#b24031";
+                }
+            
+                %> -->
+            
+            
+            
+            <!-- Templates -->
+            <div id="assetTemplate" class="asset" data-asset-id="" data-asset-symbol="" data-asset-quote="" data-asset-title="" data-asset-img-src="" data-asset-category-title="">
+                <div style="float: left; margin-left: 4px; margin-top: 4px;">
+                    <img class="assetCategoryIcon" title="AssetTitle" alt="" src="/resources/images/categories/unknown-icon128.png" style="width: 32px; height: 32px;" />
+                </div>
+                <div class="assetTitle" style="float: left; margin-left: 8px; width: 220px;">N/A</div>
+                <div class="assetSymbol" style="float: left; margin-left: 40px; width: 140px;">N/A</div>
+                <div class="assetQuote" style="float: left; margin-left: 20px; width: 74px; text-align: right;">N/A</div>
+                <div class="assetChange" style="float: left; margin-left: 20px; width: 74px; text-align: right; font-weight: bold; color: red;">N/A</div>
+                <div class="assetChangePct" style="float: left; margin-left: 20px; width: 74px; text-align: right; font-weight: bold; color: red;">N/A</div>
+                <input id="draggableAssetImgSrc" type="hidden" value="/resources/images/categories/unknown-icon128.png" />
+            </div>
+            <!-- End of Templates -->
         </div>
         <!--SPECIFIC WIDGET END -->
 

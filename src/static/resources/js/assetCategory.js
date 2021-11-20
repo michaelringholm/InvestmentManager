@@ -10,7 +10,9 @@ function AssetCategoryController() {
     var util = UtilFactory.getInstance();
     var GetAssetCategoryURL = " https://uv4gwr7k75.execute-api.eu-north-1.amazonaws.com/get-asset-category-fn";
 
-    this.populateAssetCategory = function (assetCategoryId, assetCategoryTitle) {
+    this.showAssetCategory = function (assetCategoryId, assetCategoryTitle) {
+        $(".widget").hide();
+        $("#assetCategoryWidget").show();
         var authModel = new LoginHelper().getAuthModel();
         //var model = { portfolioId: portfolioId, assetCategoryTitle: assetCategoryTitle, assetCategoryId: assetCategoryId};
         var model = { accessToken:"123", assetCategoryTitle: assetCategoryTitle, assetCategoryID: assetCategoryId};
@@ -38,7 +40,7 @@ function AssetCategoryController() {
             success: function (response) {
                 //SetSubTitle("Categories/" + title);                
                 try {
-                    var assets = response.data.assets;
+                    var assets = response.data.assetCategory;
                     for (var assetIndex = 0; assetIndex < assets.length; assetIndex++) {
                         var asset = assets[assetIndex];
                         var assetWidget = $("#assetTemplate").clone();

@@ -87,7 +87,7 @@ function StockMarket() {
                         assetCategoryWidget.appendTo("#assetCategories");
                     }
 
-                    $(".assetCategory").click(function () { assetCategoryController.populateAssetCategory($(this).attr("data-asset-category-id"), $(this).attr("data-asset-category-title")); });
+                    $(".assetCategory").click(function () { assetCategoryController.showAssetCategory($(this).attr("data-asset-category-id"), $(this).attr("data-asset-category-title")); });
                 }
                 catch(ex) { 
                     ShowError(ex);

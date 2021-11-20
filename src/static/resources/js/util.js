@@ -184,17 +184,17 @@
 
         this.titleToImgSrc = function (title) {
             if (title === "Shipping")
-                return "/images/categories/Truck-icon128.png";
+                return "/resources/images/categories/Truck-icon128.png";
             if (title === "Finance")
-                return "/images/categories/bank-icon128.png";
+                return "/resources/images/categories/bank-icon128.png";
             if (title === "Medical")
-                return "/images/categories/first-aid-kit-icon128.png";
+                return "/resources/images/categories/first-aid-kit-icon128.png";
             if (title === "Technology")
-                return "/images/categories/PCB-icon128.png";
+                return "/resources/images/categories/PCB-icon128.png";
             if (title === "Energy")
-                return "/images/categories/Status-battery-charging-icon128.png";
+                return "/resources/images/categories/Status-battery-charging-icon128.png";
             else
-                return "/images/categories/unknown-icon128.png";
+                return "/resources/images/categories/unknown-icon128.png";
         };
 
         _this.construct();
