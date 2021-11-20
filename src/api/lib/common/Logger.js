@@ -7,7 +7,8 @@ function Logger() {
 	};
 
 	this.logError = function(msg) {
-		console.error('[ERROR]:' + msg);
+		//console.error('[ERROR]:' + msg);
+		console.error(new Error('[ERROR]:' + msg).stack);
 	};
 		
 	this.logWarn = function(msg) {

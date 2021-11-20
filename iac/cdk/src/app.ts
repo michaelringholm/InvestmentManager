@@ -5,6 +5,7 @@ import { OMInvestWebStack } from './om-invest-web-stack';
 import { MetaData } from './meta-data';
 import { OMInvestNetworkStack } from './om-invest-network-stack';
 import { OMInvestAPIStack } from './om-invest-api-stack';
+import { OMInvestDataStack } from './om-invest-data-stack';
 
 //var region = process.env["CDK_DEFAULT_REGION"]
 var region = "eu-north-1";
@@ -16,6 +17,7 @@ const app = new CDK.App();
 var networkStack = new OMInvestNetworkStack(app, MetaData.PREFIX+'network-stack', props);
 new OMInvestAPIStack(app, MetaData.PREFIX+'api-stack', networkStack.vpc, props);
 new OMInvestWebStack(app, MetaData.PREFIX+'web-stack', props);
+new OMInvestDataStack(app, MetaData.PREFIX+'data-stack', props);
 
 function logDebug(msg:String) {
     console.debug(msg);

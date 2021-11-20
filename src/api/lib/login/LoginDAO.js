@@ -7,7 +7,7 @@ const UUID = require('uuid');
 
 function LoginDAO() {
 	var _this = this;
-	if(AWS.config.region == null) AWS.config.update({region: 'eu-north-1'});
+	if(AWS.config.region == null) AWS.config.update({region: appContext.DEFAULT_REGION});
 	
 	this.exists = function(heroId) {
 		logger.logInfo("LoginDAO.exists");
@@ -172,7 +172,7 @@ function LoginDAO() {
 	this.updateToken = function(loginDTO, callback) {
 		logger.logInfo("LoginDAO.updateToken()...");
 		loginDTO.accessToken = UUID.v4();
-		var missingFields = new FV.FieldVerifier().Verify(loginDTO, ["userGuid"]); if(missingFields.length > 0) { callback("Missing fields:" + JSON.stringify(missingFields), null); return; }
+		var missingFields = new FV.FieldVerifier().Verify(loginDTO, ["userName"]); if(missingFields.length > 0) { callback("Missing fields:" + JSON.stringify(missingFields), null); return; }
 		var docClient = new AWS.DynamoDB.DocumentClient();
 		
 		var params = {

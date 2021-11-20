@@ -30,10 +30,10 @@ exports.handler = function(event, context, callback) {
                 respondError(origin, 401, "Invalid login", callback);
             }
             else {
-                if(loginDTO.password == requestInput.password) {
+                if(loginDTO.password && loginDTO.password.length>3 && loginDTO.password == requestInput.password) {
                     Logger.logInfo("Password accepted");
                     LoginDAO.updateToken(loginDTO, function(err, updatedLoginDTO) {
-                        if (err) { Logger.logInfo(err); respondError(origin, 500, err, callback); }
+                        if (err) { Logger.logError(err); respondError(origin, 500, err, callback); }
                         else {
                             AssetCategoryDAO.getAll(loginDTO.userGuid, function(err, heroDTOs) {
                                 if (err) { Logger.logInfo(err); respondError(origin, 500, err, callback); }
@@ -49,7 +49,7 @@ exports.handler = function(event, context, callback) {
                     });
                 }
                 else {
-                    Logger.logError("Wrong password, was [" + requestInput.password + "] exptected [" + loginDTO.password.S + "]");
+                    Logger.logError("Wrong password, was [" + requestInput.password + "] exptected [" + loginDTO.password + "]");
                     respondError(origin, 401, "Invalid login", callback);
                 }
             }
