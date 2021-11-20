@@ -2,6 +2,8 @@ import * as CloudFront from '@aws-cdk/aws-cloudfront';
 import { CloudFrontWebDistribution, OriginAccessIdentity, ViewerCertificate } from '@aws-cdk/aws-cloudfront';
 import { Distribution, IDistribution, SecurityPolicyProtocol, SSLMethod } from '@aws-cdk/aws-cloudfront/lib/distribution';
 import { IRole, Role, ServicePrincipal } from '@aws-cdk/aws-iam';
+import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
+import { CloudFrontTarget } from '@aws-cdk/aws-route53-targets';
 import { BucketDeployment } from '@aws-cdk/aws-s3-deployment/lib/bucket-deployment';
 import { Source } from '@aws-cdk/aws-s3-deployment/lib/source';
 import { BlockPublicAccess, Bucket, BucketEncryption, IBucket } from '@aws-cdk/aws-s3/lib/bucket';
@@ -11,19 +13,14 @@ import { Certificate } from 'crypto';
 import { MetaData } from './meta-data';
 
 export class OMInvestWebStack extends Core.Stack {
-  constructor(scope: Core.Construct, id: string, props?: Core.StackProps) {
+  private acmCertificateArn:string;
+  constructor(scope: Core.Construct, id: string, acmCertificateArn: string, props?: Core.StackProps) {
     super(scope, id, props);
+    this.acmCertificateArn = acmCertificateArn;
     var bucket = this.defineWebBucket();
     var cdn = this.defineCDN(bucket);
     //this.defineAssets(bucket);
     this.defineDeployment(bucket, cdn);
-  }
-
-  private defineAssets(bucket: IBucket) {
-    // Source.asset('../../src/static/')
-    /*const fileAsset = new Asset(this, 'SampleSingleFileAsset', {
-      path: ""//path.join(__dirname, 'file-asset.txt')
-    });*/
   }
 
   private defineDeployment(bucket: IBucket, cdn: CloudFront.IDistribution) {
@@ -51,9 +48,19 @@ export class OMInvestWebStack extends Core.Stack {
       }],
       viewerCertificate:  {        
         aliases: ["om-invest.sundgaar.people.aws.dev"],
-        props: {acmCertificateArn:"arn:aws:acm:us-east-1:299199322523:certificate/380cde9f-72b9-48f6-9799-ff82118c76b0", minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_1_2016,sslSupportMethod:SSLMethod.SNI}
+        props: {acmCertificateArn: this.acmCertificateArn, minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_1_2016,sslSupportMethod:SSLMethod.SNI}
       }
     });
+
+    // https://docs.aws.amazon.com/cdk/api/latest/docs/aws-route53-targets-readme.html
+    var hostedZone = HostedZone.fromLookup(this, MetaData.PREFIX+"hosted-zone", {
+      domainName: "sundgaar.people.aws.dev",
+    });
+    new ARecord(this, "arecord", {
+      recordName: "om-invest.sundgaar.people.aws.dev",
+      target: RecordTarget.fromAlias(new CloudFrontTarget(distribution)),
+      zone: hostedZone
+    });    
             
     Tags.of(distribution).add(MetaData.NAME, MetaData.PREFIX+"cdn");
     return distribution;
