@@ -6,6 +6,7 @@ const LoginDTO = require('./login/LoginDTO.js');
 const LoginDAO = require('./login/LoginDAO.js');
 const AssetCategoryDTO = require('./asset/AssetCategoryDTO.js');
 const AssetCategoryDAO = require('./asset/AssetCategoryDAO.js');
+const AssetDAO = require('./asset/AssetDAO.js');
 const CONSTS = require('./common/Constants.js');
 
 module.exports.AppContext = AppContext;
@@ -17,3 +18,4 @@ module.exports.AssetCategoryDAO = AssetCategoryDAO;
 module.exports.AssetCategoryDTO = AssetCategoryDTO;
 module.exports.LoginDAO = LoginDAO;
 module.exports.LoginDTO = LoginDTO;
+module.exports.AssetDAO = AssetDAO;

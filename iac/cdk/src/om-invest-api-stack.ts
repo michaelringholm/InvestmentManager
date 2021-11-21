@@ -19,6 +19,7 @@ export class OMInvestAPIStack extends Core.Stack {
     var apiSecurityGroup = this.createAPISecurityGroup(vpc);
     this.createGetAssetCategoriesFunction(this.apiRole, apiSecurityGroup, vpc);
     this.createGetAssetCategoryFunction(this.apiRole, apiSecurityGroup, vpc);
+    this.createGetLatestQuoteFunction(this.apiRole, apiSecurityGroup, vpc);
   }
 
   private createAPISecurityGroup(vpc: IVpc): EC2.ISecurityGroup {
@@ -72,6 +73,11 @@ export class OMInvestAPIStack extends Core.Stack {
   private createGetAssetCategoryFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
     return this.createLambdaFunction(apiRole, apiSecurityGroup, "get-asset-category-fn", "index.handler", "../../src/api/get-asset-category", vpc);
   }  
+
+
+private createGetLatestQuoteFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
+    return this.createLambdaFunction(apiRole, apiSecurityGroup, "get-latest-quote-fn", "index.handler", "../../src/api/get-latest-quote", vpc);
+  }    
 
   private buildAPIRole(): IAM.IRole {
     var role = new IAM.Role(this, MetaData.PREFIX+"api-role", {
