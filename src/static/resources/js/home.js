@@ -48,7 +48,6 @@ function ShowLoginPage() {
     });
 }
 
-
 function ShowTournamentParticipants(tournamentId) {
     $.ajax({
         type: "get",
@@ -140,7 +139,7 @@ function SetSubTitle(subTitle) {
 }
 
 function ShowError(error) {
-    console.error(error);
+    console.error(new Error(error));
     $("#errorDiv").html(error);
     $("#errorDiv").dialog("open");
 }

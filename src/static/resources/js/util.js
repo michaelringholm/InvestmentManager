@@ -5,17 +5,15 @@
     function Util() {
         var _this = this;
         var fnBuySellSuccessCallback = null;
-        this.GetLatestQuoteURL = "https://uv4gwr7k75.execute-api.eu-north-1.amazonaws.com/get-latest-quote-fn";
+        this.GetLatestQuoteURL = "https://vc0h5tfjod.execute-api.eu-north-1.amazonaws.com/get-latest-quote-fn";
+        this.BuyAssetURL = "https://vc0h5tfjod.execute-api.eu-north-1.amazonaws.com/buy-asset-fn";
 
         this.construct = function () {
-            console.log("Util construct called!");
-            $("#btnConfirmBuySell").button().click(function () { _this.buySellAsset(); });
-            $("#btnCancelBuySell").button().click(function () { $("#buySellDialog").dialog("close"); });
-            $("#btnOk").button().click(function () { $("#buySellDialog").dialog("close"); });
-            $("#buySellControlGroup").controlgroup();
-            $("#nowToDoControlGroup").controlgroup();
-            $("#buySellDialog .bottomArea .beforeConfirm").show();
-            $("#buySellDialog .bottomArea .afterConfirm").hide();
+            console.log("Util construct called!");                          
+        };
+
+        var initBuySellDialog = function() {
+            if ( $("#buySellDialog").hasClass("ui-dialog-content") ) return;
             $("#buySellDialog").dialog({
                 title: "Buy/Sell", width: 330, height: 360, autoOpen: false, open: function (event, ui)
                 {
@@ -23,14 +21,22 @@
                     $("#buySellDialog .bottomArea .afterConfirm").hide();
                     $("#tbQuantity").focus();
                 }
-            });            
-        };
+            });
+            $("#btnConfirmBuySell").button().click(function () { _this.buySellAsset(); });
+            $("#btnCancelBuySell").button().click(function () { $("#buySellDialog").dialog("close"); });
+            $("#btnOk").button().click(function () { $("#buySellDialog").dialog("close"); });
+            $("#buySellControlGroup").controlgroup();
+            $("#nowToDoControlGroup").controlgroup();
+            $("#buySellDialog .bottomArea .beforeConfirm").show();
+            $("#buySellDialog .bottomArea .afterConfirm").hide();               
+        }
 
         this.showBuySellDialog = function (asset, buySellCode, instantBuySell, fnCallOnSuccess) {
             _this.fnBuySellSuccessCallback = fnCallOnSuccess;
             var symbol = $(asset).attr("data-asset-symbol");
             var isin = $(asset).attr("data-asset-isin");
-            _this.setLatestQuote(isin);
+            var assetGuid = $(asset).attr("data-asset-id");
+            _this.setLatestQuote(assetGuid, isin);
             var title = $(asset).attr("data-asset-title");
             var categoryTitle = $(asset).attr("data-asset-category-title");
 
@@ -41,11 +47,11 @@
             $("#buySellDialog .assetIcon").attr("src", _this.titleToImgSrc(categoryTitle));
             if (buySellCode == "BUY") $("#btnBuySellDlgBuy").prop("checked", true); else $("#btnBuySellDlgSell").prop("checked", true);
             if (instantBuySell) $("#btnBuySellDlgToDo").prop("checked", true); else $("#btnBuySellDlgNow").prop("checked", true);
-            $("#buySellControlGroup").controlgroup("refresh");
-            $("#nowToDoControlGroup").controlgroup("refresh");            
+            //$("#buySellControlGroup").controlgroup("refresh");
+            //$("#nowToDoControlGroup").controlgroup("refresh");            
 
-            if (!$("#buySellDialog").dialog("isOpen"))
-                $("#buySellDialog").dialog("open");
+            initBuySellDialog();
+            if(!$("#buySellDialog").dialog("isOpen")) $("#buySellDialog").dialog("open");
         };
 
         this.buySellAsset = function () {
@@ -74,15 +80,23 @@
 
             $.ajax({
                 type: "POST",
-                url: "/Asset/Buy",
-                headers: {
+                url: this.BuyAssetURL,
+                //url: home.apiRoot+StockMarketGetAssetCategoriesURL, //"/Portfolio/ShowInstrumentCategories",
+                /*headers: {
                     'X-Auth-Provider': authModel.authProvider,
                     'X-Auth-UserId': authModel.fbUserId,
                     'X-Auth-Token': authModel.investAuthToken
-                },
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(model),
+                },*/
+                origin: "http://localhost",
+                crossDomain: true,
+                xhrFields: {
+                    'withCredentials': false // tell the client to send the cookies if any for the requested domain
+                    },
+                contentType: "application/json",
+                dataType: "json",
+                cache: false,
+                //data: JSON.stringify(authModel),
+                data:JSON.stringify(model),
                 success: function (result) {
                     $("#buySellDialog .bottomArea .beforeConfirm").hide();
                     $("#buySellDialog .bottomArea .afterConfirm").show();
@@ -126,9 +140,9 @@
             return '<div data-asset-symbol="' + $(element).attr("data-asset-symbol") + '" data-asset-quote="' + $(element).attr("data-asset-quote") + '" class="draggableAsset" style=""><img src="' + imgSrc + '" style="width: 32px; height: 32px; margin-left: 10px;" /><div class="caption" style="margin-left: 10px; margin-top: 4px;">Symbol</div><div style="margin-left: 10px; margin-top: 0px;">' + $(element).attr("data-asset-symbol") + '</div></div>';
         };
 
-        this.setLatestQuote = function (isin) {
+        this.setLatestQuote = function (assetGuid, isin) {
             var authModel = new LoginHelper().getAuthModel();
-            var model = { accessToken:"123", isin: isin };
+            var model = { accessToken:"123", assetGuid: assetGuid, isin: isin };
 
             $.ajax({
                 type: "POST",
@@ -151,9 +165,9 @@
                 data:JSON.stringify(model),
                 beforeSend: function () { $("#buySellDialog .bottomArea").hide(); $("#tbQuote").val("UPDATING...."); },
                 complete: function () { },
-                success: function (result) {
+                success: function (response) {
                     $("#buySellDialog .bottomArea").show();
-                    $("#tbQuote").val(result.quote);
+                    $("#tbQuote").val(response.data.quote.quote);
                 },
                 error: function (err1, err2, err3) {
                     $("#tbQuote").val("UPDATE FAILED!");

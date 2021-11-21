@@ -67,7 +67,7 @@ function AssetDAO() {
 				if (err) { Logger.logError(err, err.stack); reject(err); }
 				Logger.logInfo("Data=" + JSON.stringify(s3Object.Body.toString()));
 				var quotes = JSON.parse(s3Object.Body.toString());
-				var quote = quotes.filter(q => q.guid > assetGuid);
+				var quote = quotes.filter(q => q.guid > assetGuid)[0];
 				resolve(quote);
 			});		
 		});
