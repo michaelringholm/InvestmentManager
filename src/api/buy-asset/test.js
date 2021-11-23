@@ -6,7 +6,12 @@ console.log("Started...");
 if(!process.env["accessToken"]) { console.error("Please initialize your environment by setting the env variable [accessToken] when running api methods locally. Consider calling login test method first."); return; }
 var body = {
     accessToken: process.env["accessToken"],
-    assetGuid: "1"
+    portfolioGuid: "1",
+    asset: {
+        isin: "asdas",
+        amount: "10",
+        guid: "dasldasldk"
+    }
 };
 
 var request = { 
@@ -18,8 +23,8 @@ var request = {
 
 handler.handler(request, null, (err, response) => {
     if(err) { console.error(err); throw(err); }
-    console.log(response);
+    /*console.log(response);
     var quote = JSON.parse(response.body).data.quote;
     console.log("quote="+JSON.stringify(quote));
-    console.log("Done.");
+    console.log("Done.");*/
 });

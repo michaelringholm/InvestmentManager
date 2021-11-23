@@ -1,26 +1,23 @@
 var Logger = require('../common/Logger.js');
 var appContext = require('../common/AppContext.js');
-var FV = require('../common/field-verifier.js');
-var HeroDTO = require('./AssetCategoryDTO.js');
+var HeroDTO = require('./PortfolioDTO.js');
 var AWS = require("aws-sdk");
 var CONSTS = require('../common/Constants.js');
 
 function PortfolioDAO() {
 	var _this = this;
-	var bucketName = appContext.PREFIX+"asset-s3";
+	var bucketName = appContext.PREFIX+"portfolio-s3";
 	this.s3 = new AWS.S3();
 	if(AWS.config.region == null) AWS.config.update({region: 'eu-north-1'});
 
-    var saveDetailsAsync = async function(heroKey, heroDTO) {
-		Logger.logInfo("AssetCategoryDAO.saveDetailsAsync");
-		if(heroDTO) {
-			var fileName = "hero-" + heroKey + ".json";
-			patchHero(heroDTO);			
-			Logger.logInfo("Hero after patching=["+JSON.stringify(heroDTO)+"]");
+    this.setAsync = async function(portfolioGuid, portfolioDTO) {
+		Logger.logInfo("PortfolioDAO.saveDetailsAsync");
+		if(portfolioGuid && portfolioDTO) {
+			var fileName = "portfolio-" + portfolioGuid + ".json";
 			//var exists = this.existsAsync(fileName);
-			//if (!exists) { callback("Hero details file [" + fileName + "] does not exist!", null); return; }			
+			//if (!exists) { callback("Portfolio details file [" + fileName + "] does not exist!", null); return; }			
 			var params = {
-				Body: JSON.stringify(heroDTO),
+				Body: JSON.stringify(portfolioDTO),
 				Bucket: bucketName, 
 				Key: fileName
 			};
@@ -33,8 +30,28 @@ function PortfolioDAO() {
 			});
 		}
 		else
-			Logger.error("hero was null, not saving!");
-	};	    
+			Logger.error("PortfolioDTO was null, not saving!");
+	};	   
+	
+	this.getAsync = async function(portfolioGuid) {
+		Logger.logInfo("PortfolioDAO.getAsync");
+		var fileName = "portfolio-" + portfolioGuid + ".json";
+		var exists = this.existsAsync(fileName);
+		if (!exists) throw new Error("File [" + fileName + "] does not exist!", null);
+
+		var params = {
+			Bucket: bucketName, 
+			Key: fileName
+		};
+		return new Promise((resolve, reject) => {
+			_this.s3.getObject(params, function(err, s3Object) {
+				if (err) { Logger.logError(err, err.stack); reject(err); }
+				Logger.logInfo("Data=" + JSON.stringify(s3Object.Body.toString()));
+				var heroDTO = JSON.parse(s3Object.Body.toString());
+				resolve(heroDTO);
+			});		
+		});
+	};	
 	
 	this.getAllAsync = async function() {
 		Logger.logInfo("AssetCategoryDAO.getAll");
@@ -52,26 +69,6 @@ function PortfolioDAO() {
 				Logger.logInfo("Data=" + JSON.stringify(s3Object.Body.toString()));
 				var data = JSON.parse(s3Object.Body.toString());
 				resolve(data);
-			});		
-		});
-	};
-
-	this.getAsync = async function(assetCategoryId) {
-		Logger.logInfo("AssetCategoryDAO.getAsync");
-		var fileName = "asset-category-" + assetCategoryId + ".json";
-		var exists = this.existsAsync(fileName);
-		if (!exists) throw new Error("File [" + fileName + "] does not exist!", null);
-
-		var params = {
-			Bucket: bucketName, 
-			Key: fileName
-		};
-		return new Promise((resolve, reject) => {
-			_this.s3.getObject(params, function(err, s3Object) {
-				if (err) { Logger.logError(err, err.stack); reject(err); }
-				Logger.logInfo("Data=" + JSON.stringify(s3Object.Body.toString()));
-				var heroDTO = JSON.parse(s3Object.Body.toString());
-				resolve(heroDTO);
 			});		
 		});
 	};		

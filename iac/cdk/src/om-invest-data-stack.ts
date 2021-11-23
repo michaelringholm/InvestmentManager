@@ -15,11 +15,34 @@ export class OMInvestDataStack extends Core.Stack {
         this.apiRole = apiRole;
         this.createLoginTable();
         this.createAssetBucket();
+        this.createPortfolioBucket();
         /*this.createHeroTable();
         this.createBattleBucket();
         this.createHeroBucket();
         this.createMapBucket();*/
     }
+
+    private createPortfolioBucket() {
+        var name = MetaData.PREFIX+"portfolio-s3";
+        var bucket = new Bucket(this, name, {
+            bucketName: name,
+        });
+        bucket.grantReadWrite(this.apiRole);
+        Core.Tags.of(bucket).add(MetaData.NAME, name);
+    }
+
+    private createAssetBucket() {
+        var name = MetaData.PREFIX+"asset-s3";
+        var bucket = new Bucket(this, name, {
+            bucketName: name,
+        });
+        bucket.grantReadWrite(this.apiRole);
+        new BucketDeployment(this, MetaData.PREFIX+"asset-categories-data-file", {
+            sources: [Source.asset("../../data/asset/")],
+            destinationBucket: bucket,
+        });
+        Core.Tags.of(bucket).add(MetaData.NAME, name);
+    }     
 
     /*private createMapBucket() {
         var name = MetaData.PREFIX+"map";
@@ -65,18 +88,5 @@ export class OMInvestDataStack extends Core.Stack {
             billingMode: BillingMode.PAY_PER_REQUEST,
             partitionKey: {name: "userName", type: AttributeType.STRING}            
         });
-    }
-
-    private createAssetBucket() {
-        var name = MetaData.PREFIX+"asset-s3";
-        var bucket = new Bucket(this, name, {
-            bucketName: name,
-        });
-        bucket.grantReadWrite(this.apiRole);
-        new BucketDeployment(this, MetaData.PREFIX+"asset-categories-data-file", {
-            sources: [Source.asset("../../data/asset/")],
-            destinationBucket: bucket,
-        });
-        Core.Tags.of(bucket).add(MetaData.NAME, name);
-    }  
+    } 
 }
