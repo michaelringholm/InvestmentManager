@@ -1,4 +1,4 @@
-functionName=om-hq-login-fn
+functionName=om-invest-get-asset-category-fn
 clear
 echo Compressing function code...
 #zip -rq drop.zip .

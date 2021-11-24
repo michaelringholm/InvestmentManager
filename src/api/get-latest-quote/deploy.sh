@@ -1,4 +1,4 @@
-functionName=om-hq-login-fn
+functionName=functionName=om-invest-get-latest-quote-fn
 clear
 echo Compressing function code...
 #zip -rq drop.zip .

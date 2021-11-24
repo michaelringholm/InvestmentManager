@@ -17,10 +17,27 @@ export class OMInvestAPIStack extends Core.Stack {
     super(scope, id, props);
     this.apiRole = this.buildAPIRole();
     var apiSecurityGroup = this.createAPISecurityGroup(vpc);
+    this.createLoginFunction(this.apiRole, apiSecurityGroup, vpc);
     this.createGetAssetCategoriesFunction(this.apiRole, apiSecurityGroup, vpc);
     this.createGetAssetCategoryFunction(this.apiRole, apiSecurityGroup, vpc);
     this.createGetLatestQuoteFunction(this.apiRole, apiSecurityGroup, vpc);
   }
+
+  private createLoginFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
+    return this.createLambdaFunction(apiRole, apiSecurityGroup, "login-fn", "index.handler", "../../src/api/login", vpc);
+  }
+
+  private createGetAssetCategoriesFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
+    return this.createLambdaFunction(apiRole, apiSecurityGroup, "get-asset-categories-fn", "index.handler", "../../src/api/get-asset-categories", vpc);
+  }
+
+  private createGetAssetCategoryFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
+    return this.createLambdaFunction(apiRole, apiSecurityGroup, "get-asset-category-fn", "index.handler", "../../src/api/get-asset-category", vpc);
+  }  
+
+  private createGetLatestQuoteFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
+    return this.createLambdaFunction(apiRole, apiSecurityGroup, "get-latest-quote-fn", "index.handler", "../../src/api/get-latest-quote", vpc);
+  }    
 
   private createAPISecurityGroup(vpc: IVpc): EC2.ISecurityGroup {
     var postFix = "api-sg";
@@ -64,20 +81,7 @@ export class OMInvestAPIStack extends Core.Stack {
     
     Core.Tags.of(lambdaFunction).add(MetaData.NAME, MetaData.PREFIX+name);
     return lambdaFunction;
-  } 
-
-  private createGetAssetCategoriesFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
-    return this.createLambdaFunction(apiRole, apiSecurityGroup, "get-asset-categories-fn", "index.handler", "../../src/api/get-asset-categories", vpc);
-  }
-
-  private createGetAssetCategoryFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
-    return this.createLambdaFunction(apiRole, apiSecurityGroup, "get-asset-category-fn", "index.handler", "../../src/api/get-asset-category", vpc);
-  }  
-
-
-private createGetLatestQuoteFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
-    return this.createLambdaFunction(apiRole, apiSecurityGroup, "get-latest-quote-fn", "index.handler", "../../src/api/get-latest-quote", vpc);
-  }    
+  }   
 
   private buildAPIRole(): IAM.IRole {
     var role = new IAM.Role(this, MetaData.PREFIX+"api-role", {

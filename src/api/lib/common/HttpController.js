@@ -1,9 +1,11 @@
 var AppContext = require('./AppContext.js');
+var Logger = require('../common/Logger.js');
 
 function HttpController() {
     var _this = this;
 
     this.tweakOrigin = function(origin) {
+        Logger.logInfo("Incoming preflight origin=["+origin+"]")
         var tweakedOrigin = "-";        
         AppContext.ALLOWED_ORIGINS.forEach(allowedOrigin => {
             if(allowedOrigin == origin) tweakedOrigin = origin;

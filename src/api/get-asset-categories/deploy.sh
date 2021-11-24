@@ -1,10 +1,10 @@
-functionName=om-hq-login-fn
+functionName=om-invest-get-asset-categories-fn
 clear
 echo Compressing function code...
 #zip -rq drop.zip .
 7z a -r drop.zip *
-echo Uploading to Lambda...
-aws lambda update-function-code --function-name $functionName --zip-file fileb://drop.zip > /dev/null
+echo "Uploading to Lambda function [$functionName] ..."
+#Waws lambda update-function-code --function-name $functionName --zip-file fileb://drop.zip > /dev/null
 echo Cleaning up...
 rm drop.zip
 echo Done.
