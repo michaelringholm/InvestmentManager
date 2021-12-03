@@ -21,6 +21,7 @@ export class OMInvestAPIStack extends Core.Stack {
     this.createGetAssetCategoriesFunction(this.apiRole, apiSecurityGroup, vpc);
     this.createGetAssetCategoryFunction(this.apiRole, apiSecurityGroup, vpc);
     this.createGetLatestQuoteFunction(this.apiRole, apiSecurityGroup, vpc);
+    this.createBuyAssetFunction(this.apiRole, apiSecurityGroup, vpc);
   }
 
   private createLoginFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
@@ -37,6 +38,10 @@ export class OMInvestAPIStack extends Core.Stack {
 
   private createGetLatestQuoteFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
     return this.createLambdaFunction(apiRole, apiSecurityGroup, "get-latest-quote-fn", "index.handler", "../../src/api/get-latest-quote", vpc);
+  }    
+
+  private createBuyAssetFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
+    return this.createLambdaFunction(apiRole, apiSecurityGroup, "buy-asset-fn", "index.handler", "../../src/api/buy-asset", vpc);
   }    
 
   private createAPISecurityGroup(vpc: IVpc): EC2.ISecurityGroup {
