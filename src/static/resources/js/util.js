@@ -6,11 +6,33 @@
         var _this = this;
         var fnBuySellSuccessCallback = null;
         this.GetLatestQuoteURL = "https://vc0h5tfjod.execute-api.eu-north-1.amazonaws.com/get-latest-quote-fn";
-        this.BuyAssetURL = "https://vc0h5tfjod.execute-api.eu-north-1.amazonaws.com/buy-asset-fn";
+        this.BuyAssetURL = "https://530i46p1e8.execute-api.eu-north-1.amazonaws.com/buy-asset-fn";
 
         this.construct = function () {
             console.log("Util construct called!");                          
         };
+
+        this.setCookie = function(cookieName, cookieValue, expirationInDays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (expirationInDays * 24 * 60 * 60 * 1000));
+            let expires = "expires="+d.toUTCString();
+            document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+          }
+          
+        this.getCookie = function(cookieName) {
+            let name = cookieName + "=";
+            let ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+                }
+            }
+            return null;
+        }
 
         var initBuySellDialog = function() {
             if ( $("#buySellDialog").hasClass("ui-dialog-content") ) return;
@@ -76,7 +98,7 @@
 
         this.buyAsset = function (symbol, isin, quote, quantity, status, fnCallOnSuccess) {
             var authModel = new LoginHelper().getAuthModel();
-            var model = { authToken: $("#investAuthToken").val(), portfolioId: GetSelectedPortfolioId(), quantity: quantity, asset: { symbol: symbol, isin: isin, quote: quote, status: status } };
+            var model = { accessToken:"123", authToken: $("#investAuthToken").val(), portfolioId: GetSelectedPortfolioId(), quantity: quantity, asset: { symbol: symbol, isin: isin, quote: quote, status: status } };
 
             $.ajax({
                 type: "POST",

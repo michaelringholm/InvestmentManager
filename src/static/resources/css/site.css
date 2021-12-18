@@ -180,7 +180,9 @@ input[type="text"].modernTextBox {
 
 input[type="password"] {
     width: 200px;
-    border: 1px solid #CCC;
+    border: 0px;
+    border-bottom: solid 1px grey;
+    background-color: rgba(49, 49, 49, 0.89);
 }
 
 /* TABLE
@@ -607,4 +609,16 @@ img {
 
 .widget {
     display:none;
+}
+
+.emailLoginLink {
+    font-size: 9pt; text-transform: uppercase; cursor: pointer; color: #ffffff; text-decoration: underline;
+}
+
+button {
+    background-color:rgba(87, 81, 81, 0.8); border-radius:1rem
+}
+
+button:hover {
+    border-color:rgba(69, 190, 21, 1.0); border-radius:1rem
 }

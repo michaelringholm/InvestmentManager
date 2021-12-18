@@ -155,6 +155,7 @@ function StockMarket() {
                         drop: function (event, ui) {
                             //BuySecurity(ui.draggable);
                             $(this).removeClass("dropZoneHover"); $(this).addClass("dropZone"); $(this).stop(true, true); $(this).effect("pulsate", { times: 1 }, 1);
+                            if(!loginHelper.isLoggedIn()) { util.showLoginScreen(); return; }
                             ShowBuySellDialog(ui.draggable, "BUY", true, ShowPortfolioSecurityList);
                         }
                     });

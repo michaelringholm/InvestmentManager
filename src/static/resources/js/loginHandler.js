@@ -1,6 +1,7 @@
-﻿$(function () {
+﻿var loginHelper;
+$(function () {
     // http://invest.ihedge.local
-    var loginHelper = new LoginHelper();
+    loginHelper = new LoginHelper();
 
     //$.getScript('https://connect.facebook.net/en_US/sdk.js', function(){
     window.fbAsyncInit = function() {
@@ -49,6 +50,57 @@
 function LoginHelper() {
 
     var _this = this;
+    var util = UtilFactory.getInstance();
+    var CreateEmailLoginURL = " https://???/create-email-login-fn";
+    
+    var construct = function() {
+        $("#btnEmailLoginCreate").click(function() {_this.createEmailLogin(stockMarket.show);});
+    }
+
+    this.createEmailLogin = function (fnCallOnSuccess) {
+        //var authModel = new LoginHelper().getAuthModel();
+        var model = { accessToken:"123", authToken: $("#investAuthToken").val() };
+
+        $.ajax({
+            type: "POST",
+            url: CreateEmailLoginURL,
+            //url: home.apiRoot+StockMarketGetAssetCategoriesURL, //"/Portfolio/ShowInstrumentCategories",
+            /*headers: {
+                'X-Auth-Provider': authModel.authProvider,
+                'X-Auth-UserId': authModel.fbUserId,
+                'X-Auth-Token': authModel.investAuthToken
+            },*/
+            origin: "http://localhost",
+            crossDomain: true,
+            xhrFields: {
+                'withCredentials': false // tell the client to send the cookies if any for the requested domain
+                },
+            contentType: "application/json",
+            dataType: "json",
+            cache: false,
+            //data: JSON.stringify(authModel),
+            data:JSON.stringify(model),
+            success: function (result) {
+                $("#buySellDialog .bottomArea .beforeConfirm").hide();
+                $("#buySellDialog .bottomArea .afterConfirm").show();
+                _this.fnBuySellSuccessCallback();
+            },
+            error: function (err1, err2, err3) {
+                ShowError(err1.responseText);
+            }
+        });
+    };    
+
+    this.isLoggedIn = function() { 
+        var accessToken = util.getCookie("accessToken");        
+        return (accessToken!=null);
+    }
+
+    this.showLoginScreen = function() { 
+        var accessToken = util.getCookie("accessToken");        
+        $(".widget").hide();
+        $("#welcomeWidget").show();
+    }
 
     this.getUserKey = function () {
         return $("#authProviderName").val() + $("#authProviderUserId").val();
@@ -159,5 +211,7 @@ function LoginHelper() {
             }
         });*/
     };
+
+    construct();
 }
 

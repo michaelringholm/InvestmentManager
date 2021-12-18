@@ -83,6 +83,7 @@ function AssetCategoryController() {
                             drop: function (event, ui) {
                                 //BuySecurity(ui.draggable);
                                 $(this).removeClass("dropZoneHover"); $(this).addClass("dropZone"); $(this).stop(true, true); $(this).effect("pulsate", { times: 1 }, 1);
+                                if(!loginHelper.isLoggedIn()) { loginHelper.showLoginScreen(); return; }
                                 util.showBuySellDialog(ui.draggable, "BUY", true, portfolioHeaderController.ShowPortfolioSecurityList);
                             }
                         });

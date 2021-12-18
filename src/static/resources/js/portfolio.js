@@ -17,6 +17,7 @@ function PortfolioDetailsController() {
                 drop: function (event, ui) {
                     //BuySecurity(ui.draggable);
                     $(this).removeClass("dropZoneHover"); $(this).addClass("dropZone"); $(this).stop(true, true); $(this).effect("pulsate", { times: 1 }, 1);
+                    if(!loginHelper.isLoggedIn()) { util.showLoginScreen(); return; }
                     util.showBuySellDialog(ui.draggable, "BUY", true, _this.populateDetails);
                 }
             });
@@ -27,6 +28,7 @@ function PortfolioDetailsController() {
                 drop: function (event, ui) {
                     $(this).removeClass("dropZoneHover"); $(this).addClass("dropZone"); $(this).stop(true, true); $(this).effect("pulsate", { times: 1 }, 1);
                     //SellSecurity(ui.draggable);
+                    if(!loginHelper.isLoggedIn()) { util.showLoginScreen(); return; }
                     util.showBuySellDialog(ui.draggable, "SELL", true, _this.populateDetails);
                 }
             });
