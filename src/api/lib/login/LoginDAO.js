@@ -90,7 +90,27 @@ function LoginDAO() {
 				resolve(loginDTO);
 			});
 		});		
-	};	
+	};
+	
+	this.createLoginAsync = async function(email, password, passwordRepeat) {
+		if(!email) throw new Error("Missing field [email].");
+		if(!password) throw new Error("Missing field [password].");
+		if(!passwordRepeat) throw new Error("Missing field [passwordRepeat].");
+		//var docClient = new AWS.DynamoDB.DocumentClient();
+		var dbItemStr = JSON.stringify({email:email, password:password});
+		var dynamoDB = new AWS.DynamoDB();
+		var params = {			
+			Statement: "INSERT INTO " + appContext.LOGIN_TABLE_NAME + " VALUE ${dbItemStr}"
+		};
+
+		return new Promise((resolve, reject) => {
+			dynamoDB.executeStatement(params, (err, newTableItem) => {
+				if(err) { reject(err, null); return; }
+				var newLogin = AWS.DynamoDB.Converter.unmarshall(newTableItem.Attributes); // Seems only new fields are in Dynamo format
+				resolve(newLogin);
+			})
+		});
+	}
 
 	this.setActiveHeroNameAsync = async function(userName, activeHeroName) {
 		if(!userName) throw new Error("Missing field [userName].");

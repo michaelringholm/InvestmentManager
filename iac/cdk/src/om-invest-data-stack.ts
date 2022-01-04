@@ -86,7 +86,7 @@ export class OMInvestDataStack extends Core.Stack {
         new Table(this, name, {
             tableName: name,
             billingMode: BillingMode.PAY_PER_REQUEST,
-            partitionKey: {name: "userName", type: AttributeType.STRING}            
+            partitionKey: {name: "email", type: AttributeType.STRING}            
         });
     } 
 }

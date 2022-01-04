@@ -6,7 +6,9 @@ var handler = require("./index.js");
 console.log("Started...");
 
 var body = {
-    accessToken: process.env["accessToken"]
+    email: process.env["demoEmail"],
+    password: process.env["demoPassword"],
+    passwordRepeat: process.env["demoPassword"]
 };
 
 var request = { 

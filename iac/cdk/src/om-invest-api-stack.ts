@@ -18,6 +18,7 @@ export class OMInvestAPIStack extends Core.Stack {
     this.apiRole = this.buildAPIRole();
     var apiSecurityGroup = this.createAPISecurityGroup(vpc);
     this.createLoginFunction(this.apiRole, apiSecurityGroup, vpc);
+    this.createCreateEmailLoginFunction(this.apiRole, apiSecurityGroup, vpc);
     this.createGetAssetCategoriesFunction(this.apiRole, apiSecurityGroup, vpc);
     this.createGetAssetCategoryFunction(this.apiRole, apiSecurityGroup, vpc);
     this.createGetLatestQuoteFunction(this.apiRole, apiSecurityGroup, vpc);
@@ -26,6 +27,10 @@ export class OMInvestAPIStack extends Core.Stack {
 
   private createLoginFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
     return this.createLambdaFunction(apiRole, apiSecurityGroup, "login-fn", "index.handler", "../../src/api/login", vpc);
+  }
+
+  private createCreateEmailLoginFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
+    return this.createLambdaFunction(apiRole, apiSecurityGroup, "create-email-login-fn", "index.handler", "../../src/api/create-email-login", vpc);
   }
 
   private createGetAssetCategoriesFunction(apiRole: IRole, apiSecurityGroup: ISecurityGroup, vpc: IVpc):Lambda.Function {
